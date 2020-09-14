@@ -13,4 +13,4 @@ temperatures = session.query(Temperature).all()
 # Print Data
 print("***** Tempertaure Readings: ")
 for reading in temperatures:
-    print(f'({reading.timestamp}) {reading.thermometer_number} |{reading.temperature}')
+    print(f'[Thermometer {reading.thermometer_number} | {reading.timestamp}] Temperature: {reading.temperature}')
