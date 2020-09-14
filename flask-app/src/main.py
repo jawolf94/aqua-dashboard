@@ -1,16 +1,27 @@
+from flask import Flask, jsonify, request
 from .entities.entity import Session, engine, Base
-from .entities.temperature import Temperature
+from .entities.temperature import Temperature, TemperatureSchema
+
+# Create a Flask Application
+app = Flask(__name__)
 
 # Generate DB Schema
 Base.metadata.create_all(engine)
 
-# Start session with DB
-session = Session()
+# Defines GET behavior for '/temperature' route.
+@app.route('/temperature')
+def get_temp():
 
-# Get existing data
-temperatures = session.query(Temperature).all()
+    # Fetch all temperature data from DB
+    session = Session()
+    temperature_objects = session.query(Temperature).all()
 
-# Print Data
-print("***** Tempertaure Readings: ")
-for reading in temperatures:
-    print(f'[Thermometer {reading.thermometer_number} | {reading.timestamp}] Temperature: {reading.temperature}')
+    # Serialize Data with Marshmallow Schema
+    schema = TemperatureSchema(many=True)
+    temperatures = schema.dump(temperature_objects)
+
+    # Close DB connection
+    session.close()
+
+    # Serialize & return
+    return jsonify(temperatures)
