@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {TemperaturesApiService} from './temperatures/temperatures-api.service';
 import {Temperature} from './temperatures/temperature.model';
 
@@ -20,10 +20,9 @@ export class AppComponent implements OnInit, OnDestroy {
     ngOnInit() {
       this.temperatureListSubs = this.temperaturesApi
         .getTemperatures()
-        .subscribe(res => {
-          this.temperatureList = res;
-        },
-        console.error
+        .subscribe(
+            res => { this.temperatureList = res;},
+            err => { console.log(err); }
         );
     }
 

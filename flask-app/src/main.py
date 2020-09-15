@@ -1,9 +1,13 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from .entities.entity import Session, engine, Base
 from .entities.temperature import Temperature, TemperatureSchema
 
 # Create a Flask Application
 app = Flask(__name__)
+
+# Allow Cross Origin Resource Sharing
+CORS(app)
 
 # Generate DB Schema
 Base.metadata.create_all(engine)
