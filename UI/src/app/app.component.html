@@ -2,8 +2,4 @@
   <h1>Temperature</h1>
 </div>
 <h2>Recent Temperature Readings</h2>
-<ul>
-  <li *ngFor='let temperature of temperatureList'>
-    [{{temperature.thermometer_number}} | {{temperature.timestamp}}] {{temperature.temperature}}
-  </li>
-</ul>
+<router-outlet></router-outlet>

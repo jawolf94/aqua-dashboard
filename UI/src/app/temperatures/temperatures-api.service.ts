@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {EMPTY, Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {API_URL} from '../env';
 import {Temperature} from './temperature.model';
@@ -20,5 +20,11 @@ export class TemperaturesApiService {
                     return throwError(err);
                 })
             );
+    }
+
+    saveReading(reading : Temperature): Observable<any> {
+        // ToDo: Implement call back when flask endpoint is made available
+        console.log(reading.temperature);
+        return EMPTY;
     }
 }

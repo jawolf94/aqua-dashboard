@@ -1,0 +1,8 @@
+<div>
+    <button routerLink='/add-reading'>Add Reading</button>
+    <ul>
+        <li *ngFor='let temperature of temperatureList'>
+            [{{temperature.thermometer_number}} | {{temperature.timestamp}}] {{temperature.temperature}}
+        </li>
+    </ul>
+</div>
