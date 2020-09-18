@@ -1,8 +1,32 @@
 <div>
-    <button routerLink='/add-reading'>Add Reading</button>
-    <ul>
-        <li *ngFor='let temperature of temperatureList'>
-            [{{temperature.thermometer_number}} | {{temperature.timestamp}}] {{temperature.temperature}}
-        </li>
-    </ul>
+
+    <mat-table [dataSource]="temperatureList" class="mat-elevation-z8">
+
+        <!-- Time Column-->
+        <ng-container matColumnDef="timestamp">
+            <mat-header-cell *matHeaderCellDef>Time</mat-header-cell>
+            <mat-cell *matCellDef="let temperature">{{temperature.timestamp}}</mat-cell>
+        </ng-container>
+
+        <!-- Thermometer Number Column -->
+        <ng-container matColumnDef="tnum">
+            <mat-header-cell *matHeaderCellDef>Thermometer #</mat-header-cell>
+            <mat-cell *matCellDef="let temperature">{{temperature.thermometer_number}}</mat-cell>
+        </ng-container>
+
+        <!--Temperature Column-->
+        <ng-container  matColumnDef="temp">
+            <mat-header-cell *matHeaderCellDef>Temperature</mat-header-cell>
+            <mat-cell *matCellDef="let temperature">{{temperature.temperature}}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    </mat-table>
+
+    <!-- Add Reading Button-->
+    <button mat-fab class="new-reading" routerLink='/add-reading' aria-label="Add Temperature Reading">
+        <i class="material-icons">add</i>
+    </button>
 </div>

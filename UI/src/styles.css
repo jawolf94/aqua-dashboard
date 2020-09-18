@@ -3,3 +3,11 @@
 body {
     margin: 0;
 }
+
+button.new-reading{
+    top: 15px;
+}
+
+  .full-width {
+    width: 100%;
+  }

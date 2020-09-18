@@ -1,13 +1,11 @@
 import {Component} from '@angular/core';
-import {DatePipe} from '@angular/common'
-import {TemperaturesApiService} from './temperatures-api.service';
 import {Router} from '@angular/router';
-import { finalize } from 'rxjs/operators';
+
+import {TemperaturesApiService} from './temperatures-api.service';
 
 @Component({
     selector: 'reading-form',
-    templateUrl: './reading-form.component.html',
-    providers: [DatePipe]
+    templateUrl: './reading-form.component.html'
 })
 export class ReadingFormComponent{
     reading = {
@@ -23,11 +21,13 @@ export class ReadingFormComponent{
     }
 
     saveReading(){
-        this.temperatureApi
-            .saveReading(this.reading)
-            .subscribe(
-                () => this.router.navigate(['/']),
-                err => alert(err)
-            )
+        this.router.navigate(['/']);
+        // ToDo: Uncomment when API is available
+        // this.temperatureApi
+        //     .saveReading(this.reading)
+        //     .subscribe(
+        //         () => this.router.navigate(['/']),
+        //         err => alert(err)
+        //     )
     }
 }

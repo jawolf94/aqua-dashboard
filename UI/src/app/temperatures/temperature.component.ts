@@ -1,4 +1,5 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
+
 import {Subscription} from 'rxjs';
 import {Temperature} from './temperature.model';
 import {TemperaturesApiService} from './temperatures-api.service';
@@ -7,10 +8,11 @@ import {TemperaturesApiService} from './temperatures-api.service';
     selector: 'temeratures',
     templateUrl: './temperature.component.html'    
 })
-
 export class TemperatureComponent implements OnInit, OnDestroy {
     temperatureListSubs: Subscription;
     temperatureList: Temperature[];
+
+    displayedColumns: string[] = ['timestamp', 'tnum', 'temp'];
 
     constructor(private temperatureAPI: TemperaturesApiService){}
 
@@ -18,7 +20,9 @@ export class TemperatureComponent implements OnInit, OnDestroy {
         this.temperatureListSubs = this.temperatureAPI
             .getTemperatures()
             .subscribe(
-                res => {this.temperatureList = res;},
+                res => {
+                    this.temperatureList = res;
+                },
                 err => { console.log(err); }
             )
     }
