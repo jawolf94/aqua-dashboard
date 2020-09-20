@@ -1,12 +1,15 @@
-from marshmallow import Schema, fields
-from sqlalchemy import Column, Integer, Float
+from sqlalchemy import Column, Float, Integer
 from sqlalchemy.types import TIMESTAMP
-from .entity import Entity, Base
+
+from .entity import Base, Entity
+
 
 class Temperature(Entity, Base):
+    """Class which defines schema for temperature table"""
     
     __tablename__ = "temperature"
 
+    # Column Definitions
     timestamp = Column(TIMESTAMP, primary_key=True)
     thermometer_number = Column(Integer)
     temperature = Column(Float)
@@ -19,11 +22,3 @@ class Temperature(Entity, Base):
         self.timestamp = timestamp
         self.thermometer_number = thermometer_number
         self.temperature = temperature
-
-class TemperatureSchema(Schema):
-    timestamp = fields.DateTime()
-    thermometer_number = fields.Integer()
-    temperature = fields.Float()
-
-
-
