@@ -13,10 +13,10 @@ def get_latest_readings(num_readings=None):
 
     if num_readings == None:
         # Gets all readings
-        reading_objs = session.query(Reading).all()
+        reading_objs = session.query(Reading).order_by(Reading.timestamp.desc()).all()
     else:
-        # Gets specified number of readings
-        reading_objs = session.query(Reading).sort_by(Reading.timestamp.desc()).limit(num_readings)
+        # Gets specified number of readings from most recent entries
+        reading_objs = session.query(Reading).order_by(Reading.timestamp.desc()).limit(num_readings).all()
 
     # Close session before returning
     session.close() 

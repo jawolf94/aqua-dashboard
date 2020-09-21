@@ -20,11 +20,15 @@ Base.metadata.create_all(engine)
 @app.route('/latest-reading')
 def latest_reading():
     # Retrieve latest reading from tank_readings
-    reading_objs = get_latest_readings(1)
+    reading_obj = get_latest_readings(1)
+
+    # Remove from list to return as single reading
+    if(len(reading_obj) > 0):
+        reading_obj = reading_obj[0]
 
     # Serialize and return query results
     schema = ReadingSchema()
-    reading = schema.dump(reading_objs)
+    reading = schema.dump(reading_obj)
     
     return jsonify(reading)
 
