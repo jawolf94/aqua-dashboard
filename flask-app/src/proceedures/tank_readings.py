@@ -40,4 +40,9 @@ def save_reading(reading):
         reading (entity.reading) - Reading entity to save to table
     """
 
-    print(reading)
+    # Create new session the add reading
+    session = Session()
+    session.add(reading)
+    session.commit()
+
+    session.close()
