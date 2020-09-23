@@ -1,0 +1,37 @@
+<mat-card>
+    <h2>New Reading</h2>
+
+    <!-- Ammonia Input Feild-->
+    <mat-form-field class="full-width">
+        <mat-label>Ammonia</mat-label>
+        <input matInput placeholder="0.0" (keyup)="updateAmmonia($event)"/>
+    </mat-form-field>
+
+    <!-- Nitrite Input Feild-->
+    <mat-form-field class="full-width">
+        <mat-label>Nitrite</mat-label>
+        <input matInput placeholder="0.0" (keyup)="updateNitrite($event)"/>
+    </mat-form-field>
+
+    <!-- Nitrate Input Feild-->
+    <mat-form-field class="full-width">
+        <mat-label>Nitrate</mat-label>
+        <input matInput placeholder="0.0" (keyup)="updateNitrate($event)"/>
+    </mat-form-field>
+
+    <!-- PH Input Feild-->
+    <mat-form-field class="full-width">
+        <mat-label>PH</mat-label>
+        <input matInput placeholder="0.0" (keyup)="updatePH($event)"/>
+    </mat-form-field>
+
+    <!-- Temperature Input Feild-->
+    <mat-form-field class="full-width">
+        <mat-label>Temperature</mat-label>
+        <input matInput placeholder="00.0" (keyup)="updateTemperature($event)"/>
+    </mat-form-field>
+
+    <!-- Save Reading Button-->
+    <button mat-raised-button color="primary" (click)="saveReading()">Save Reading</button>
+
+</mat-card>
