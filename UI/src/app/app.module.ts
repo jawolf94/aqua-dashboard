@@ -10,19 +10,22 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule, Routes} from '@angular/router';
 
 import {AppComponent} from './app.component';
-import {ReadingFormComponent} from './temperatures/reading-form.component';
+import {ReadingApiService} from './readings/reading-api.service';
+import {ReadingTableComponent} from './readings/reading-table/reading-table.component';
+import {ReadingFormComponent} from './readings/manual-reading-form/reading-form.component';
 import {TemperatureComponent} from './temperatures/temperature.component';
 import {TemperaturesApiService} from './temperatures/temperatures-api.service';
 
 const appRoutes: Routes = [
   {path: 'add-reading', component: ReadingFormComponent},
-  {path: '', component: TemperatureComponent}
+  {path: '', component: ReadingTableComponent}
 ]
 
 @NgModule({
   declarations: [
     AppComponent,
     ReadingFormComponent,
+    ReadingTableComponent,
     TemperatureComponent
   ],
   imports: [
@@ -38,7 +41,7 @@ const appRoutes: Routes = [
       appRoutes,
     )
   ],
-  providers: [TemperaturesApiService],
+  providers: [ReadingApiService, TemperaturesApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

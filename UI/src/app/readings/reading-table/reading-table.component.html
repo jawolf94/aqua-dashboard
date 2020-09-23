@@ -1,0 +1,56 @@
+<div>
+
+    <mat-table [dataSource]="readingList" class="mat-elevation-z8">
+
+        <!-- Time Column-->
+        <ng-container matColumnDef="timestamp">
+            <mat-header-cell *matHeaderCellDef>Time</mat-header-cell>
+            <mat-cell *matCellDef="let reading">{{reading.timestamp}}</mat-cell>
+        </ng-container>
+
+        <!-- Ammonia Column -->
+        <ng-container matColumnDef="ammonia_ppm">
+            <mat-header-cell *matHeaderCellDef>Ammonia(PPM)</mat-header-cell>
+            <mat-cell *matCellDef="let reading">{{reading.ammonia_ppm}}</mat-cell>
+        </ng-container>
+
+        <!--Nitrite Column-->
+        <ng-container  matColumnDef="nitrite_ppm">
+            <mat-header-cell *matHeaderCellDef>Nitrite(PPM)</mat-header-cell>
+            <mat-cell *matCellDef="let reading">{{reading.nitrite_ppm}}</mat-cell>
+        </ng-container>
+
+        <!--Nitrate Column-->
+        <ng-container  matColumnDef="nitrate_ppm">
+            <mat-header-cell *matHeaderCellDef>Nitrate(PPM)</mat-header-cell>
+            <mat-cell *matCellDef="let reading">{{reading.nitrate_ppm}}</mat-cell>
+        </ng-container>
+
+        <!--PH Column-->
+        <ng-container  matColumnDef="ph">
+            <mat-header-cell *matHeaderCellDef>PH</mat-header-cell>
+            <mat-cell *matCellDef="let reading">{{reading.ph}}</mat-cell>
+        </ng-container>
+
+        <!--Temperature Column-->
+        <ng-container  matColumnDef="temperature">
+            <mat-header-cell *matHeaderCellDef>Temperature(F)</mat-header-cell>
+            <mat-cell *matCellDef="let reading">{{reading.temperature}}</mat-cell>
+        </ng-container>
+
+        <!--Manual Column-->
+        <ng-container  matColumnDef="manual">
+            <mat-header-cell *matHeaderCellDef>Manual</mat-header-cell>
+            <mat-cell *matCellDef="let reading">{{reading.manual}}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    </mat-table>
+
+    <!-- Add Reading Button-->
+    <button mat-fab class="new-reading" routerLink='/add-reading' aria-label="Add New Reading">
+        <i class="material-icons">add</i>
+    </button>
+</div>
