@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from marshmallow import EXCLUDE
 
 from .entities.entity import Base, Session, engine
 from .entities.temperature import Temperature
@@ -54,7 +55,7 @@ def save_manual_reading():
     """ Saves a manually entered reading into tank_readings table"""
 
     # Load Reading object from the request into SQL entity
-    posted_reading = ReadingSchema().load(request.get_json())
+    posted_reading = ReadingSchema(exclude=("timestamp", "manual"), unknown=EXCLUDE).load(request.get_json())
 
     # Fill in blank values from user's request
     completed_reading = complete_reading_schema(posted_reading)
@@ -64,9 +65,7 @@ def save_manual_reading():
     save_reading(reading)
 
     # Return new reading
-    new_reading = ReadingSchema().dump(reading)
-
-    return jsonify(new_reading)
+    return jsonify(completed_reading)
 
 
 # ToDo: Remove code when UI is updated. Functionality is depreciated.

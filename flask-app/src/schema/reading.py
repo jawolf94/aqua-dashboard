@@ -1,8 +1,8 @@
 from marshmallow import Schema, fields
 from sqlalchemy.inspection import inspect
 
-from ..entities import Reading
-from ..proceedures import get_latest_readings
+from ..entities.reading import Reading
+from ..proceedures.tank_readings import get_latest_readings
 
 
 class ReadingSchema(Schema):
@@ -20,10 +20,14 @@ class ReadingSchema(Schema):
 
 def complete_reading_schema(schema):
     """ Fills in blank values from a schema with the most recent readings.
+        Does not set excluded values (timestamp & manual)
 
         schema (schema.reading) - Schema representing a tank reading.
         returns (schema.reading) - Enitity representing a tank reading
     """
+
+    # Values to exclude from data fill
+    excluded_values = ['timestamp', 'manual']
 
     # Get the most recent reading
     readings = get_latest_readings(1)
@@ -37,9 +41,9 @@ def complete_reading_schema(schema):
         last_reading = Reading(None, None, None, None, None, None, None)
 
     # Check expected columns for existance in schema
-    for column in inspect(last_reading).attr:
+    for column in inspect(last_reading).attrs:
         # check for value in schema
-        if column.key not in schema.keys():
-            schema[column] = column.value
+        if column.key not in schema.keys() and column.key not in excluded_values:
+            schema[column.key] = column.value
 
     return schema
