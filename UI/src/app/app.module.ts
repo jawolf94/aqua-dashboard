@@ -13,8 +13,6 @@ import {AppComponent} from './app.component';
 import {ReadingApiService} from './readings/reading-api.service';
 import {ReadingTableComponent} from './readings/reading-table/reading-table.component';
 import {ReadingFormComponent} from './readings/manual-reading-form/reading-form.component';
-import {TemperatureComponent} from './temperatures/temperature.component';
-import {TemperaturesApiService} from './temperatures/temperatures-api.service';
 
 const appRoutes: Routes = [
   {path: 'add-reading', component: ReadingFormComponent},
@@ -26,7 +24,6 @@ const appRoutes: Routes = [
     AppComponent,
     ReadingFormComponent,
     ReadingTableComponent,
-    TemperatureComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +38,7 @@ const appRoutes: Routes = [
       appRoutes,
     )
   ],
-  providers: [ReadingApiService, TemperaturesApiService],
+  providers: [ReadingApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
