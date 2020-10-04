@@ -1,11 +1,13 @@
 <div>
     <h1>Overview</h1>
     <!--Grid List to display overview Cards for latest tank reading data-->
-    <mat-grid-list cols="3" rowHeight="200px">
+    <mat-grid-list cols="{{ (layout | async )?.columns}}" rowHeight="200px">
         <mat-grid-tile *ngFor="let param of displayedCards;">
 
             <!--Overview Card with tankparamter data-->
-            <reading-card  
+            <reading-card
+                [colspan]="(layout | async)?.overview.col_span"
+                [rowspan]="(layout | async)?.overview.row_span"  
                 [icon]="'check'" 
                 [value]="latestReading[param]" 
                 [unit]="cardLabels[param].unit" 

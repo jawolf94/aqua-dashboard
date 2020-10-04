@@ -1,5 +1,7 @@
+import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import { Subscription } from 'rxjs';
+import {map} from 'rxjs/operators'
 
 import { ReadingApiService } from '../reading-api.service';
 import { Reading } from '../reading.model';
@@ -55,11 +57,37 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
         }
     }
 
+    // GridList parameters based on window size.
+    layout = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+        map(
+            ({matches}) => {
+                if(matches){
+                    return {
+                        columns: 1,
+                        overview: {
+                            col_span: 1,
+                            row_span: 1
+                        }
+                    }
+                }
+                else{
+                    return {
+                        columns: 3,
+                        overview: {
+                            col_span: 1,
+                            row_span: 1,
+                        }
+                    }
+                }
+            }
+        )
+    );
+
     /**
      * Constructs ReadingDashboardComponent.
      * @param readingAPI API Service which retruns tank reading data.
      */
-    constructor(private readingAPI: ReadingApiService){}
+    constructor(private readingAPI: ReadingApiService, private breakpointObserver: BreakpointObserver){}
 
     /**
      * Initalizes this component. 
