@@ -8,10 +8,11 @@
             <reading-card
                 [colspan]="(layout | async)?.overview.col_span"
                 [rowspan]="(layout | async)?.overview.row_span"  
-                [icon]="'check'" 
+                [icon]="cardLabels[param].icon" 
                 [value]="latestReading[param]" 
                 [unit]="cardLabels[param].unit" 
-                [label]="cardLabels[param].label">
+                [label]="cardLabels[param].label"
+                [isDateTime]="param === 'timestamp'">
             </reading-card>
 
         </mat-grid-tile>

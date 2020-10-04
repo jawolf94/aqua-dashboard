@@ -29,31 +29,37 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
     cardLabels = {
         "ammonia_ppm": {
             "label": "Ammonia(NH3)",
-            "unit": "ppm"
+            "unit": "ppm",
+            "icon": "check"
         },
     
         "nitrite_ppm": {
             "label": "Nitrite(N02)",
-            "unit": "ppm"
+            "unit": "ppm",
+            "icon": "check"
         },
     
         "nitrate_ppm": {
             "label": "Nitrate(N03)",
-            "unit": "ppm"
+            "unit": "ppm",
+            "icon": "check"
         }, 
     
         "ph": {
             "label": "PH",
-            "unit": ""
+            "unit": "",
+            "icon": "check"
         },
     
         "temperature": {
             "label": "Temperature",
-            "unit": "F\xB0"
+            "unit": "F\xB0",
+            "icon": "check"
         },
         "timestamp":{
-            "label": "Time",
-            "unit": ""
+            "label": "",
+            "unit": "",
+            "icon": "access_time"
         }
     }
 

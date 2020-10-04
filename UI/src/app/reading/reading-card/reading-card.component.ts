@@ -21,4 +21,7 @@ export class ReadingCardComponent{
     // String for material icon name
     @Input() icon: string; 
 
+    // Boolean which can be set to true if displaying DateTime object
+    @Input() isDateTime: Boolean = false;
+
 }

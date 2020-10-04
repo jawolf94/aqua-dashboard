@@ -10,11 +10,13 @@
 
         <!-- Parameter Value-->
         <mat-card-title class="no-margin">
-            <h1 class="no-margin">{{value}} {{unit}}</h1>
+            <h1 *ngIf="!isDateTime" class="no-margin">{{value}} {{unit}}</h1>
+            <h1 *ngIf="isDateTime" class="no-margin">{{value | date: 'shortTime'}}</h1>
         </mat-card-title>
     </mat-card-header>
 
     <!-- Parameter Label -->
-    <h3 class="card-label">{{label}}</h3>
+    <h3 *ngIf="!isDateTime" class="card-label">{{label}}</h3>
+    <h3 *ngIf="isDateTime" class="card-label">{{value | date:'fullDate'}}</h3>
     
 </mat-card>
