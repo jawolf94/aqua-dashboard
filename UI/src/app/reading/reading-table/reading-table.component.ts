@@ -5,7 +5,7 @@ import {Reading} from '../reading.model'
 import {ReadingApiService} from '../reading-api.service';
 
 @Component({
-    selector: 'readings',
+    selector: 'reading-table',
     templateUrl: './reading-table.component.html'
 })
 /**

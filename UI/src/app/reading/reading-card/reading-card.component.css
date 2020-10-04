@@ -1,0 +1,32 @@
+.overview-card{
+    position: absolute; 
+    top: 40px; 
+    bottom: 40px; 
+    left: 15px; 
+    right: 15px; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center;
+}
+
+.flex-center-content{
+    margin: 0px;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+}
+
+.card-icon{
+    transform: scale(1.5);
+}
+
+.no-margin{
+    margin: 0px !important;
+}
+
+.card-label{
+    font-weight: 400; 
+    margin: 0px; 
+    text-align: center; 
+    color: gray;
+}
