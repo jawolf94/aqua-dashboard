@@ -10,7 +10,7 @@ from .parameter_config import tank_parameters
 from .proceedures.tank_readings import get_latest_readings, save_reading
 from .schema.reading import complete_reading_schema, ReadingSchema
 from .schema.temperature import TemperatureSchema
-from .validators import check_parameters
+from .validators.reading_validators import check_parameters
 
 # To Do: Turn this into an application factory
 # Create a Flask Application
@@ -78,10 +78,10 @@ def save_manual_reading():
         for param in results["invalid_parameters"]:
 
             # Find and remove unit label
-            ppm_index = param.indexof("_ppm")
-            if ppm_index > 0:
+            try:
+                ppm_index = param.index("_ppm")
                 pretty_param = param[:ppm_index]
-            else:
+            except ValueError:
                 pretty_param = param
 
             print(pretty_param)

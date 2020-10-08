@@ -31,7 +31,8 @@ def check_parameters(reading, expected_vals):
             max_val = expected_vals[upper_case_param]["MAX"]
 
             # Fail validation parameter falls outside of range
-            if min_val <= reading[parameter] <= max_val:
+            param_val = reading[parameter]
+            if param_val  < min_val  or param_val >  max_val:
                 result["valid"] = False
                 result["invalid_parameters"].append(parameter)
 
