@@ -6,6 +6,7 @@ from marshmallow import EXCLUDE
 from .entities.entity import Base, Session, engine
 from .entities.temperature import Temperature
 from .entities.reading import Reading
+from .parameter_config import tank_parameters
 from .proceedures.tank_readings import get_latest_readings, save_reading
 from .schema.reading import complete_reading_schema, ReadingSchema
 from .schema.temperature import TemperatureSchema
@@ -20,11 +21,8 @@ CORS(app)
 # Generate DB Schema
 Base.metadata.create_all(engine)
 
-# Load tank paramters from config
-try:
-    app.config.from_pyfile('parameter_config.py')
-except Exception as e:
-    print(e)
+# Store tank paramters from config
+app.config["tank_parameters"] = tank_parameters
 
 
 @app.route('/all-readings')

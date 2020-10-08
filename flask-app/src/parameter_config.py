@@ -11,14 +11,14 @@ tank_parameters = {
     },
 
     "NITRATE": {
-        "MIN": 0.0
+        "MIN": 0.0,
         "MAX": 20
-    }
+    },
 
     "PH": {
         "MIN": 6.0,
         "MAX": 7.0
-    }
+    },
 
     "TEMPERATURE": {
         "MIN": 72,
