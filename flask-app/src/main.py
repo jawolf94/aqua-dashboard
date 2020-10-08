@@ -10,6 +10,7 @@ from .proceedures.tank_readings import get_latest_readings, save_reading
 from .schema.reading import complete_reading_schema, ReadingSchema
 from .schema.temperature import TemperatureSchema
 
+# To Do: Turn this into an application factory
 # Create a Flask Application
 app = Flask(__name__)
 
@@ -18,6 +19,12 @@ CORS(app)
 
 # Generate DB Schema
 Base.metadata.create_all(engine)
+
+# Load tank paramters from config
+try:
+    app.config.from_pyfile('parameter_config.py')
+except Exception as e:
+    print(e)
 
 
 @app.route('/all-readings')
