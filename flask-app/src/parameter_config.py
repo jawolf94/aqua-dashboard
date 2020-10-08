@@ -1,18 +1,18 @@
 tank_parameters = {
 
-    "AMMONIA": {
+    "AMMONIA_PPM": {
         "MIN": 0.0,
         "MAX": 0.2
     },
 
-    "NITRITE": {
+    "NITRITE_PPM": {
         "MIN": 0.0,
         "MAX": 0.2
     },
 
-    "NITRATE": {
+    "NITRATE_PPM": {
         "MIN": 0.0,
-        "MAX": 20
+        "MAX": 20.0
     },
 
     "PH": {

@@ -10,6 +10,7 @@ from .parameter_config import tank_parameters
 from .proceedures.tank_readings import get_latest_readings, save_reading
 from .schema.reading import complete_reading_schema, ReadingSchema
 from .schema.temperature import TemperatureSchema
+from .validators import check_parameters
 
 # To Do: Turn this into an application factory
 # Create a Flask Application
@@ -64,6 +65,27 @@ def save_manual_reading():
 
     # Fill in blank values from user's request
     completed_reading = complete_reading_schema(posted_reading)
+
+    # Check if tank reading contains expected values
+    results = check_parameters(completed_reading, app.config["tank_parameters"])
+
+    if results["valid"]:
+        # Success
+        print("All parameters in range")
+    else:
+        # Print invalid parameters
+        print("Warning: Tank Parameters out of range. Check:")
+        for param in results["invalid_parameters"]:
+
+            # Find and remove unit label
+            ppm_index = param.indexof("_ppm")
+            if ppm_index > 0:
+                pretty_param = param[:ppm_index]
+            else:
+                pretty_param = param
+
+            print(pretty_param)
+            
     reading = Reading(**completed_reading, manual=1, timestamp=datetime.now())
 
     # Save reading to table
