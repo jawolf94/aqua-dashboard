@@ -3,6 +3,7 @@
  */
 export class Reading{
     constructor(
+        public id?: Number,
         public timestamp?: Date,
         public ammonia_ppm?: Number,
         public nitrite_ppm?: Number,

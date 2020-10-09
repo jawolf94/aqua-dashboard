@@ -20,7 +20,7 @@ export class ReadingTableComponent implements OnInit, OnDestroy{
     readingList: Reading[];
 
     // Columns for the table to display
-    displayedColumns: string[] = ['timestamp', 'ammonia_ppm', 'nitrite_ppm', 'nitrate_ppm','ph', 'temperature', 'manual'];
+    displayedColumns: string[] = ['id','timestamp', 'ammonia_ppm', 'nitrite_ppm', 'nitrate_ppm','ph', 'temperature', 'manual'];
 
     constructor(private ReadingApi: ReadingApiService){}
 
