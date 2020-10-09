@@ -55,12 +55,11 @@ def latest_reading():
 
     return jsonify(reading)
 
-
 @app.route('/save-manual-reading', methods=['POST'])
 def save_manual_reading():
     """ Saves a manually entered reading into tank_readings table"""
 
-    # Load Reading object from the request into SQL entity
+    # Deserialize request data
     posted_reading = ReadingSchema(exclude=("timestamp", "manual"), unknown=EXCLUDE).load(request.get_json())
 
     # Fill in blank values from user's request
@@ -85,7 +84,8 @@ def save_manual_reading():
                 pretty_param = param
 
             print(pretty_param)
-            
+
+    # Load Reading object from the request into SQL entity        
     reading = Reading(**completed_reading, manual=1, timestamp=datetime.now())
 
     # Save reading to table

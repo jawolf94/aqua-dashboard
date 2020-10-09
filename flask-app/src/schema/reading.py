@@ -9,6 +9,7 @@ class ReadingSchema(Schema):
     """Class which defines a template for serialization of tank reading data"""
 
     # Field definitions for serialization
+    id = fields.Integer()
     timestamp = fields.DateTime()
     ammonia_ppm = fields.Float()
     nitrite_ppm = fields.Float()

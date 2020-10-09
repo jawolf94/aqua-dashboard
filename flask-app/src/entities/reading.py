@@ -9,7 +9,8 @@ class Reading(Base, Entity):
     __tablename__ = "tank_readings"
 
     # Column Definitions
-    timestamp = Column(TIMESTAMP, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincement=True)
+    timestamp = Column(TIMESTAMP)
     ammonia_ppm = Column(Float)
     nitrite_ppm = Column(Float)
     nitrate_ppm = Column(Float)
