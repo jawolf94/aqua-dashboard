@@ -28,7 +28,7 @@ def complete_reading_schema(schema):
     """
 
     # Values to exclude from data fill
-    excluded_values = ['timestamp', 'manual']
+    excluded_values = ['timestamp', 'manual', 'id']
 
     # Get the most recent reading
     readings = get_latest_readings(1)

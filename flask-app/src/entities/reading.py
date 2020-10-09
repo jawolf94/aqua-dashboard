@@ -9,7 +9,7 @@ class Reading(Base, Entity):
     __tablename__ = "tank_readings"
 
     # Column Definitions
-    id = Column(Integer, primary_key=True, autoincement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     timestamp = Column(TIMESTAMP)
     ammonia_ppm = Column(Float)
     nitrite_ppm = Column(Float)
@@ -24,6 +24,7 @@ class Reading(Base, Entity):
         Entity.__init__(self)
 
         # Set values in schema
+        # Note: ID autoincrements so it is not set.
         self.timestamp = timestamp
         self.ammonia_ppm = ammonia_ppm
         self.nitrite_ppm = nitrite_ppm

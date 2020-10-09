@@ -24,7 +24,7 @@ def check_parameters(reading, expected_vals):
         upper_case_param = parameter.upper()
 
         # Check if reading value has expected bounds
-        if upper_case_param in expected_vals:
+        if upper_case_param in expected_vals and reading[parameter] is not None:
             
             # Get expected bounds
             min_val = expected_vals[upper_case_param]["MIN"]
