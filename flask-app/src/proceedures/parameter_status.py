@@ -1,7 +1,7 @@
 # Defines all proceedures to read and write data for the parameter_status table
 
 from ..entities.parameter_status import ParameterStatus 
-from ..entities.entity  import Session
+from ..database import DB
 
 def store_parameter_status(reading_id, invalid_params=[]):
     """
@@ -22,7 +22,7 @@ def store_parameter_status(reading_id, invalid_params=[]):
     status = ParameterStatus(reading_id, ammonia_ppm, nitrite_ppm, nitrate_ppm, ph, temperature)
 
     # Create Session and store in table
-    session = Session()
+    session = DB.Session()
     session.add(status)
     session.commit()
     session.close()

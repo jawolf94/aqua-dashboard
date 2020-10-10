@@ -1,7 +1,9 @@
 from sqlalchemy import Column, Integer
-from .entity import Base, Entity
 
-class ParameterStatus(Base, Entity):
+from ..database import DB
+from .entity import Entity
+
+class ParameterStatus(DB.Base, Entity):
     """Class which defines schema for the parameter_status table"""
 
     __tablename__ = "parameter_status"

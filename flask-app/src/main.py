@@ -3,7 +3,8 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from marshmallow import EXCLUDE
 
-from .entities.entity import Base, Session, engine
+from .app_config import config
+from .database  import DB
 from .entities.temperature import Temperature
 from .entities.reading import Reading
 from .parameter_config import tank_parameters
@@ -20,11 +21,11 @@ app = Flask(__name__)
 # Allow Cross Origin Resource Sharing
 CORS(app)
 
-# Generate DB Schema
-Base.metadata.create_all(engine)
-
 # Store tank paramters from config
 app.config["tank_parameters"] = tank_parameters
+
+# Generate DB Schema
+DB.Base.metadata.create_all(DB.engine)
 
 
 @app.route('/all-readings')
@@ -79,22 +80,3 @@ def save_manual_reading():
 
     # Return new reading
     return jsonify(completed_reading)
-
-
-# ToDo: Remove code when UI is updated. Functionality is depreciated.
-@app.route('/temperature')
-def get_temp():
-    """Defines GET behavior for '/temperature' route."""
-    # Fetch all temperature data from DB
-    session = Session()
-    temperature_objects = session.query(Temperature).all()
-
-    # Serialize Data with Marshmallow Schema
-    schema = TemperatureSchema(many=True)
-    temperatures = schema.dump(temperature_objects)
-
-    # Close DB connection
-    session.close()
-
-    # Serialize & return
-    return jsonify(temperatures)
