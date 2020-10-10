@@ -7,6 +7,7 @@ from .entities.entity import Base, Session, engine
 from .entities.temperature import Temperature
 from .entities.reading import Reading
 from .parameter_config import tank_parameters
+from .proceedures.parameter_status import store_parameter_status
 from .proceedures.tank_readings import get_latest_readings, save_reading
 from .schema.reading import complete_reading_schema, ReadingSchema
 from .schema.temperature import TemperatureSchema
@@ -65,31 +66,16 @@ def save_manual_reading():
     # Fill in blank values from user's request
     completed_reading = complete_reading_schema(posted_reading)
 
-    # Check if tank reading contains expected values
-    results = check_parameters(completed_reading, app.config["tank_parameters"])
-
-    if results["valid"]:
-        # Success
-        print("All parameters in range")
-    else:
-        # Print invalid parameters
-        print("Warning: Tank Parameters out of range. Check:")
-        for param in results["invalid_parameters"]:
-
-            # Find and remove unit label
-            try:
-                ppm_index = param.index("_ppm")
-                pretty_param = param[:ppm_index]
-            except ValueError:
-                pretty_param = param
-
-            print(pretty_param)
 
     # Load Reading object from the request into SQL entity        
     reading = Reading(**completed_reading, manual=1, timestamp=datetime.now())
 
     # Save reading to table
     save_reading(reading)
+
+    # Check if parameters from reading are in expected ranges and store
+    results = check_parameters(completed_reading, app.config["tank_parameters"])
+    store_parameter_status(reading.id, results["invalid_params"])
 
     # Return new reading
     return jsonify(completed_reading)

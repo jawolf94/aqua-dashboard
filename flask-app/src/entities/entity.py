@@ -22,5 +22,4 @@ Base = declarative_base()
 class Entity():
 
     def __init__(self):
-        #To Do: Add created and updated columns for good practice
         pass
