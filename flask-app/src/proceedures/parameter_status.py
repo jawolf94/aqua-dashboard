@@ -1,8 +1,9 @@
 # Defines all proceedures to read and write data for the parameter_status table
 
 from ..entities.parameter_status import ParameterStatus 
+from ..entities.entity  import Session
 
-def store_parameter_status(reading_id, invalid_params=[])
+def store_parameter_status(reading_id, invalid_params=[]):
     """
         Stores status of parameters for a given reading. Parameter is stored as 1 if valid, 0 otherwise
 
@@ -23,4 +24,5 @@ def store_parameter_status(reading_id, invalid_params=[])
     # Create Session and store in table
     session = Session()
     session.add(status)
+    session.commit()
     session.close()

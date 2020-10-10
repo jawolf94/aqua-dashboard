@@ -14,7 +14,7 @@ db_path = db_url + db_name
 engine = create_engine(db_path)
 
 # Create Session
-Session = sessionmaker(bind=engine)
+Session = sessionmaker(bind=engine, expire_on_commit=False)
 
 # Creates a base class to enable field declartions
 Base = declarative_base()

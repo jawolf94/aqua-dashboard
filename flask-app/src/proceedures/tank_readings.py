@@ -44,5 +44,4 @@ def save_reading(reading):
     session = Session()
     session.add(reading)
     session.commit()
-
     session.close()

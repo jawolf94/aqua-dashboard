@@ -67,7 +67,7 @@ def save_manual_reading():
     completed_reading = complete_reading_schema(posted_reading)
 
 
-    # Load Reading object from the request into SQL entity        
+    # Load Reading object from the request into SQL entity
     reading = Reading(**completed_reading, manual=1, timestamp=datetime.now())
 
     # Save reading to table
@@ -75,7 +75,7 @@ def save_manual_reading():
 
     # Check if parameters from reading are in expected ranges and store
     results = check_parameters(completed_reading, app.config["tank_parameters"])
-    store_parameter_status(reading.id, results["invalid_params"])
+    store_parameter_status(reading.id, results["invalid_parameters"])
 
     # Return new reading
     return jsonify(completed_reading)

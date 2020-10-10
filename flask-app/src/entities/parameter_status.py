@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer
 from .entity import Base, Entity
 
-def ParameterStatus(Base, Entity):
+class ParameterStatus(Base, Entity):
     """Class which defines schema for the parameter_status table"""
 
     __tablename__ = "parameter_status"
@@ -14,7 +14,7 @@ def ParameterStatus(Base, Entity):
     ph = Column(Integer, primary_key=True)
     temperature = Column(Integer, primary_key=True)
 
-    def __init__(self, reading_id, ammonia_ppm, nitrite_ppm, ph, temperature):
+    def __init__(self, reading_id, ammonia_ppm, nitrite_ppm, nitrate_ppm,  ph, temperature):
         # Init parent class
         Entity.__init__(self)
 
