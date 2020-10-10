@@ -1,4 +1,5 @@
 # Defines all proceedures to read and write data for the parameter_status table
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 from ..entities.parameter_status import ParameterStatus 
 from ..database import DB
@@ -26,3 +27,34 @@ def store_parameter_status(reading_id, invalid_params=[]):
     session.add(status)
     session.commit()
     session.close()
+
+def read_parameter_status(reading_id):
+    """
+        Retreives the paramater statuses for the reading with the specified ID.
+
+        reading_id (int) - id used to retreive matching parameter status.
+
+        returns (entites.ParameterStatus) - The ParamaterStatus for the given reading.
+    """
+
+    # Create Session
+    session = DB.Session()
+
+    try:
+        # Query for matching reading_id
+        status = session.query(ParameterStatus).\
+            filter(ParameterStatus.reading_id == reading_id).\
+            one()
+    except NoResultFound:
+        # Return no results to the user if nothing could be found
+        return None
+
+    except MultipleResultsFound:
+        # Return Error if multiple results match the reading_id.
+        raise LookupError()
+
+    # Close session before returning
+    session.close()
+
+    # Return result
+    return status

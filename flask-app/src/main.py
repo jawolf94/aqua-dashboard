@@ -8,10 +8,10 @@ from .database  import DB
 from .entities.temperature import Temperature
 from .entities.reading import Reading
 from .parameter_config import tank_parameters
-from .proceedures.parameter_status import store_parameter_status
+from .proceedures.parameter_status import read_parameter_status, store_parameter_status
 from .proceedures.tank_readings import get_latest_readings, save_reading
+from .schema.parameter_status import ParameterStatusSchema
 from .schema.reading import complete_reading_schema, ReadingSchema
-from .schema.temperature import TemperatureSchema
 from .validators.reading_validators import check_parameters
 
 # To Do: Turn this into an application factory
@@ -39,7 +39,6 @@ def all_readings():
     readings = schema.dump(reading_objs)
 
     return jsonify(readings)
-
 
 @app.route('/latest-reading')
 def latest_reading():
@@ -80,3 +79,32 @@ def save_manual_reading():
 
     # Return new reading
     return jsonify(completed_reading)
+
+
+@app.route('/check-parameter-status', methods=['POST'])
+def check_parameter_status():
+    # Deserialize request data
+    posted_data = ParameterStatusSchema(unknown=EXCLUDE).load(request.get_json())
+
+    # Pass reading_id to proceedure
+    try:
+        # Get status from database
+        status_obj = read_parameter_status(posted_data["reading_id"])
+
+        if status_obj is not None:
+            # Create respnse schema and return
+            schema = ParameterStatusSchema()
+            status = schema.dump(status_obj)
+
+            return jsonify(status), 200
+
+        else:
+            # Return 404 if reading cannot be found
+            return jsonify("{}"), 404
+
+    except KeyError as err:
+        # Return 400 Error if reading_id was not specified.
+        return jsonify("{}"), 400
+    except LookupError:
+        # Return 409 if multiple keys were found
+        return jsonify("{}"), 409
