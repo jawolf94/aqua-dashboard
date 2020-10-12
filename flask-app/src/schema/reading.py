@@ -9,6 +9,7 @@ class ReadingSchema(Schema):
     """Class which defines a template for serialization of tank reading data"""
 
     # Field definitions for serialization
+    id = fields.Integer()
     timestamp = fields.DateTime()
     ammonia_ppm = fields.Float()
     nitrite_ppm = fields.Float()
@@ -27,7 +28,7 @@ def complete_reading_schema(schema):
     """
 
     # Values to exclude from data fill
-    excluded_values = ['timestamp', 'manual']
+    excluded_values = ['timestamp', 'manual', 'id']
 
     # Get the most recent reading
     readings = get_latest_readings(1)

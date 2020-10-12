@@ -1,5 +1,5 @@
 # Defines all proccedures that read and write data to tank_readings SQL Table
-from ..entities.entity import Session
+from ..database import DB
 from ..entities.reading import Reading
 
 
@@ -13,7 +13,7 @@ def get_latest_readings(num_readings=None):
     """
 
     # Create session with SQL DB
-    session = Session()
+    session = DB.Session()
 
     if num_readings is None:
         # Gets all readings
@@ -41,8 +41,7 @@ def save_reading(reading):
     """
 
     # Create new session the add reading
-    session = Session()
+    session = DB.Session()
     session.add(reading)
     session.commit()
-
     session.close()

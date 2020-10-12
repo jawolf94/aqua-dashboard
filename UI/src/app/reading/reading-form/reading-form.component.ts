@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {Reading} from '../reading.model';
+import {Reading} from '../models/reading.model';
 import {ReadingApiService} from '../reading-api.service';
 
 

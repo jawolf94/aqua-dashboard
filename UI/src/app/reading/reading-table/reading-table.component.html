@@ -2,6 +2,11 @@
 
     <mat-table [dataSource]="readingList" class="mat-elevation-z8">
 
+        <!-- ID Column-->
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+            <mat-cell *matCellDef="let reading">{{reading.id}}</mat-cell>
+        </ng-container>
         <!-- Time Column-->
         <ng-container matColumnDef="timestamp">
             <mat-header-cell *matHeaderCellDef>Time</mat-header-cell>

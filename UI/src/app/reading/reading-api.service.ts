@@ -3,8 +3,9 @@ import { Injectable } from "@angular/core";
 import { Observable} from 'rxjs';
 import { catchError} from 'rxjs/operators';
 
-import {Reading} from './reading.model';
 import {API_URL} from '../env';
+import {ParameterStatus} from './models/parameter_status.model';
+import {Reading} from './models/reading.model';
 
 /**
  * Service which performs GET and POST opperations to Tank Reading APIs
@@ -43,7 +44,24 @@ export class ReadingApiService{
                         return new Observable<Reading[]>();
                     }
                 )
-            )
+            );
+    }
+
+    /**
+     * @param reading ParamaterStatus object with ID set to desired reading to check. 
+     * @returns Observable<ParameterStatus> which represents the status of an invdivdual reading. 
+     */
+    checkParameterStatus(reading: ParameterStatus): Observable<ParameterStatus>{
+        return this.httpClient
+            .post<ParameterStatus>(`${API_URL}/check-parameter-status`, reading)
+            .pipe(
+                catchError(
+                    err=> {
+                        console.log(err.message);
+                        return new Observable<ParameterStatus>();
+                    }
+                )
+            );
     }
 
     /**
