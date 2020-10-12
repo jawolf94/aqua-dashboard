@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import {Reading} from '../reading.model'
+import {Reading} from '../models/reading.model'
 import {ReadingApiService} from '../reading-api.service';
 
 @Component({

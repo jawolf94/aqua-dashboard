@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer
+from sqlalchemy.types import Boolean
 
 from ..database import DB
 from .entity import Entity
@@ -10,11 +11,11 @@ class ParameterStatus(DB.Base, Entity):
 
     # Column definitions
     reading_id = Column(Integer, primary_key=True)
-    ammonia_ppm = Column(Integer, primary_key=True)
-    nitrite_ppm = Column(Integer, primary_key=True)
-    nitrate_ppm = Column(Integer, primary_key=True)
-    ph = Column(Integer, primary_key=True)
-    temperature = Column(Integer, primary_key=True)
+    ammonia_ppm = Column(Boolean)
+    nitrite_ppm = Column(Boolean)
+    nitrate_ppm = Column(Boolean)
+    ph = Column(Boolean)
+    temperature = Column(Boolean)
 
     def __init__(self, reading_id, ammonia_ppm, nitrite_ppm, nitrate_ppm,  ph, temperature):
         # Init parent class

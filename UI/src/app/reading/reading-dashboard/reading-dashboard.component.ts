@@ -4,10 +4,8 @@ import { Subscription } from 'rxjs';
 import {map} from 'rxjs/operators'
 
 import { ReadingApiService } from '../reading-api.service';
-import { Reading } from '../reading.model';
-
-// Values stored in latest reading which are displayed as overview cards
-const cardsToDisplay: string[] = ['ammonia_ppm', 'nitrite_ppm', 'nitrate_ppm', 'ph', 'temperature', 'timestamp'];
+import { Reading } from '../models/reading.model';
+import { ParameterStatus } from '../models/parameter_status.model';
 
 /**
  * Component which defines the reading overview.
@@ -22,6 +20,9 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
     // Subscritopn to service returing the latest reading.
     lastReadingSub: Subscription;
 
+    // Subscription to service returning reading status.
+    lastReadingStatusSub: Subscription;
+
     // Reading model with latest reading data.
     latestReading: Reading;
 
@@ -30,31 +31,31 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
         "ammonia_ppm": {
             "label": "Ammonia(NH3)",
             "unit": "ppm",
-            "icon": "check"
+            "icon": "cached"
         },
     
         "nitrite_ppm": {
             "label": "Nitrite(N02)",
             "unit": "ppm",
-            "icon": "check"
+            "icon": "cached"
         },
     
         "nitrate_ppm": {
             "label": "Nitrate(N03)",
             "unit": "ppm",
-            "icon": "check"
+            "icon": "cached"
         }, 
     
         "ph": {
             "label": "PH",
             "unit": "",
-            "icon": "check"
+            "icon": "cached"
         },
     
         "temperature": {
             "label": "Temperature",
             "unit": "F\xB0",
-            "icon": "check"
+            "icon": "cached"
         },
         "timestamp":{
             "label": "",
@@ -105,9 +106,10 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
             .subscribe(
                 res => {
                     this.latestReading = res;
+                    this.updateIcons()
                 },
                 err => {console.log(err);}
-            )
+            );
     }
 
     /**
@@ -116,6 +118,36 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
      */
     ngOnDestroy(){
         this.lastReadingSub.unsubscribe();
+    }
+
+    /**
+     * Updates the icons on the overview cards depending on their parameter's status.
+     */
+    updateIcons(){
+        if(this.latestReading.id != null){
+            // Create ParamaterStatus object for service to check parameters
+            var paramStatus:ParameterStatus = new ParameterStatus();
+            paramStatus.reading_id = this.latestReading.id;
+
+            // Request status and subscribe.
+            this.lastReadingStatusSub = this.readingAPI
+                .checkParameterStatus(paramStatus)
+                .subscribe(
+                    res=> {
+                        // On success update the icons of each card
+                        Object.keys(res).forEach(key => {
+                            // If key exists in card list, update it
+                            if( Object.keys(this.cardLabels).includes(key) ){
+
+                                // Display check if valid, wanring otherwise
+                                this.cardLabels[key]["icon"] = res[key] ? "check" : "report_problem";
+                            }
+                        });
+                        
+                    },
+                    err => {console.log(err); }
+                )
+        }
     }
 
 
@@ -127,7 +159,8 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
     get displayedCards(){
         // Check if latest reading was obtained and return keys for display
         if(this.latestReading != null){
-            return cardsToDisplay.filter(key => Object.keys(this.latestReading).includes(key));
+            return Object.keys(this.cardLabels)
+                .filter(key => Object.keys(this.latestReading).includes(key));
         }
 
         // Return empty list if no reading is available.
