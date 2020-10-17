@@ -1,11 +1,11 @@
 from sqlalchemy import Column, Float, Integer
 from sqlalchemy.types import TIMESTAMP
 
-from ..database import DB
+from ..database import Base
 from .entity import Entity
 
 
-class Temperature(Entity, DB.Base):
+class Temperature(Entity, Base):
     """Class which defines schema for temperature table"""
     
     __tablename__ = "temperature"

@@ -2,7 +2,7 @@
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 from ..entities.parameter_status import ParameterStatus 
-from ..database import DB
+from ..database import Session
 
 def store_parameter_status(reading_id, invalid_params=[]):
     """
@@ -23,7 +23,7 @@ def store_parameter_status(reading_id, invalid_params=[]):
     status = ParameterStatus(reading_id, ammonia_ppm, nitrite_ppm, nitrate_ppm, ph, temperature)
 
     # Create Session and store in table
-    session = DB.Session()
+    session = Session()
     session.add(status)
     session.commit()
     session.close()
@@ -38,7 +38,7 @@ def read_parameter_status(reading_id):
     """
 
     # Create Session
-    session = DB.Session()
+    session = Session()
 
     try:
         # Query for matching reading_id
