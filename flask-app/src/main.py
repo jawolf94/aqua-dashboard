@@ -1,3 +1,4 @@
+from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 from flask import Flask, jsonify
 from flask_cors import CORS
@@ -29,6 +30,12 @@ def create_app():
 
     # Register Blueprints with application
     app.register_blueprint(reading)
+
+    # Schedule task to automatically generate tank readings
+    if config["READINGS"]["AUTOMATIC"]:
+        scheduler = BackgroundScheduler()
+        scheduler.add_job(func=create_reading, trigger='interval', minutes=config["READINGS"]["INTERVAL"])
+        scheduler.start()
 
     #Test Automatic reading
     # ToDo: Add to scheduler instead

@@ -6,6 +6,7 @@ config = {
 
     "READINGS": {
         "AUTOMATIC": True,
+        "INTERVAL": 5,
         "SENSORS": {
             "TEMPERATURE": True
         }

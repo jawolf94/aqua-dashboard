@@ -10,7 +10,7 @@
 
         <!-- Parameter Value-->
         <mat-card-title class="no-margin">
-            <h1 *ngIf="!isDateTime" class="no-margin">{{value}} {{unit}}</h1>
+            <h1 *ngIf="!isDateTime" class="no-margin">{{value | number: '.1-2'}} {{unit}}</h1>
             <h1 *ngIf="isDateTime" class="no-margin">{{value | date: 'shortTime'}}</h1>
         </mat-card-title>
     </mat-card-header>
