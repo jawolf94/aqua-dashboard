@@ -49,7 +49,6 @@ def save_manual_reading():
     # Fill in blank values from user's request
     completed_reading = complete_reading_schema(posted_reading)
 
-
     # Load Reading object from the request into SQL entity
     reading = Reading(**completed_reading, manual=1, timestamp=datetime.now())
 

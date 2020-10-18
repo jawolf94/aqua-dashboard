@@ -6,14 +6,13 @@ from .app_config import config
 from .database  import Base, Engine
 from .endpoints.reading import reading
 from .parameter_config import tank_parameters
+from .sensors.automatic_readings import create_reading 
 
 
 def create_app():
     """
     Application factory for flask-app endpoints. Returns a flask app
     """
-
-    #ToDo: Breakout application factory into blueprints
 
     # Create a Flask Application
     app = Flask(__name__)
@@ -30,5 +29,12 @@ def create_app():
 
     # Register Blueprints with application
     app.register_blueprint(reading)
+
+    #Test Automatic reading
+    # ToDo: Add to scheduler instead
+    @app.route('/test-auto-reading')
+    def test_auto_reading():
+        create_reading()
+        return jsonify("Success")
 
     return app

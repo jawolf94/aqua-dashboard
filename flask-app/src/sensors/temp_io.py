@@ -11,9 +11,12 @@ class TempIO:
         # File where sensor data is written
         self.therm_driver = '/sys/bus/w1/devices/28-0301a2795434/w1_slave'
 
-    """ Reads raw data from w1_driver"""
     def __read_temp_raw(self):
+        """ Reads raw data from w1_driver
+            Raises - FileNotFound Error if sensor is not writing
+        """
         # Open files and get all lines
+
         f = open(self.therm_driver, 'r')
         lines = f.readlines()
 
@@ -21,10 +24,12 @@ class TempIO:
         f.close()
         return lines
 
-    """ Reads temperature data from raw data.
-        Temperature value is returned in Fahrenheit
-    """
     def read_temp(self):
+        """ Reads temperature data from raw data.
+            Temperature value is returned in Fahrenheit.
+
+            Raises - BufferError if temp is not written to file correctly.
+        """
 
         # Read current data in file
         lines = self.__read_temp_raw()
