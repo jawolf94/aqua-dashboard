@@ -1,110 +1,47 @@
+from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 from flask_cors import CORS
-from marshmallow import EXCLUDE
 
 from .app_config import config
-from .database  import DB
-from .entities.temperature import Temperature
-from .entities.reading import Reading
+from .database  import Base, Engine
+from .endpoints.reading import reading
 from .parameter_config import tank_parameters
-from .proceedures.parameter_status import read_parameter_status, store_parameter_status
-from .proceedures.tank_readings import get_latest_readings, save_reading
-from .schema.parameter_status import ParameterStatusSchema
-from .schema.reading import complete_reading_schema, ReadingSchema
-from .validators.reading_validators import check_parameters
-
-# To Do: Turn this into an application factory
-# Create a Flask Application
-app = Flask(__name__)
-
-# Allow Cross Origin Resource Sharing
-CORS(app)
-
-# Store tank paramters from config
-app.config["tank_parameters"] = tank_parameters
-
-# Generate DB Schema
-DB.Base.metadata.create_all(DB.engine)
+from .sensors.automatic_readings import create_reading 
 
 
-@app.route('/all-readings')
-def all_readings():
-    """ Returns serialized list of all tank_readings to caller"""
-    # Retrieve all readings from tank_readings
-    reading_objs = get_latest_readings()
+def create_app():
+    """
+    Application factory for flask-app endpoints. Returns a flask app
+    """
 
-    # Serialize and retun query results
-    schema = ReadingSchema(many=True)
-    readings = schema.dump(reading_objs)
+    # Create a Flask Application
+    app = Flask(__name__)
 
-    return jsonify(readings)
+    # Allow Cross Origin Resource Sharing
+    CORS(app)
 
-@app.route('/latest-reading')
-def latest_reading():
-    """Returns serialized latest reading from tank_reading db to caller"""
-    # Retrieve latest reading from tank_readings
-    reading_obj = get_latest_readings(1)
+    # Store configs
+    app.config["tank_parameters"] = tank_parameters
+    app.config["app_config"] = config
 
-    # Remove from list to return as single reading
-    if(len(reading_obj) > 0):
-        reading_obj = reading_obj[0]
+    # Generate DB Schema
+    Base.metadata.create_all(Engine)
 
-    # Serialize and return query results
-    schema = ReadingSchema()
-    reading = schema.dump(reading_obj)
+    # Register Blueprints with application
+    app.register_blueprint(reading)
 
-    return jsonify(reading)
+    # Schedule task to automatically generate tank readings
+    if config["READINGS"]["AUTOMATIC"]:
+        scheduler = BackgroundScheduler()
+        scheduler.add_job(func=create_reading, trigger='interval', minutes=config["READINGS"]["INTERVAL"])
+        scheduler.start()
 
-@app.route('/save-manual-reading', methods=['POST'])
-def save_manual_reading():
-    """ Saves a manually entered reading into tank_readings table"""
+    #Test Automatic reading
+    # ToDo: Add to scheduler instead
+    @app.route('/test-auto-reading')
+    def test_auto_reading():
+        create_reading()
+        return jsonify("Success")
 
-    # Deserialize request data
-    posted_reading = ReadingSchema(exclude=("timestamp", "manual"), unknown=EXCLUDE).load(request.get_json())
-
-    # Fill in blank values from user's request
-    completed_reading = complete_reading_schema(posted_reading)
-
-
-    # Load Reading object from the request into SQL entity
-    reading = Reading(**completed_reading, manual=1, timestamp=datetime.now())
-
-    # Save reading to table
-    save_reading(reading)
-
-    # Check if parameters from reading are in expected ranges and store
-    results = check_parameters(completed_reading, app.config["tank_parameters"])
-    store_parameter_status(reading.id, results["invalid_parameters"])
-
-    # Return new reading
-    return jsonify(completed_reading)
-
-
-@app.route('/check-parameter-status', methods=['POST'])
-def check_parameter_status():
-    # Deserialize request data
-    posted_data = ParameterStatusSchema(unknown=EXCLUDE).load(request.get_json())
-
-    # Pass reading_id to proceedure
-    try:
-        # Get status from database
-        status_obj = read_parameter_status(posted_data["reading_id"])
-
-        if status_obj is not None:
-            # Create respnse schema and return
-            schema = ParameterStatusSchema()
-            status = schema.dump(status_obj)
-
-            return jsonify(status), 200
-
-        else:
-            # Return 404 if reading cannot be found
-            return jsonify("{}"), 404
-
-    except KeyError as err:
-        # Return 400 Error if reading_id was not specified.
-        return jsonify("{}"), 400
-    except LookupError:
-        # Return 409 if multiple keys were found
-        return jsonify("{}"), 409
+    return app

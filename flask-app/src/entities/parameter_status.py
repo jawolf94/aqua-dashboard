@@ -1,10 +1,10 @@
 from sqlalchemy import Column, Integer
 from sqlalchemy.types import Boolean
 
-from ..database import DB
+from ..database import Base
 from .entity import Entity
 
-class ParameterStatus(DB.Base, Entity):
+class ParameterStatus(Base, Entity):
     """Class which defines schema for the parameter_status table"""
 
     __tablename__ = "parameter_status"

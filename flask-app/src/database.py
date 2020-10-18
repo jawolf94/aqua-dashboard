@@ -4,22 +4,15 @@ from sqlalchemy.orm import sessionmaker
 
 from .app_config import config
 
-class DataBase():
+# Get Database config from current_app
+db_config = config["DATABASE"]
+db_path = db_config["DB_URL"] + db_config["DB_NAME"]
 
-    def __init__(self, db_config):      
-        # Get Database config from current_app
-        db_path = db_config["DB_URL"] + db_config["DB_NAME"]
+# Instantiate DB Engine (SQL Pool & Dialect)
+Engine = create_engine(db_path)
 
-        # Instantiate DB Engine (SQL Pool & Dialect)
-        self.engine = create_engine(db_path)
+# Create Session Class
+Session = sessionmaker(bind=Engine, expire_on_commit=False)
 
-        # Create Session Class
-        self.Session = sessionmaker(bind=self.engine, expire_on_commit=False)
-
-        # Create Base Class to enable field declartions
-        self.Base = declarative_base()
-
-        global DB
-        DB = self 
-
-DB = DataBase(config["DATABASE"])
+# Create Base Class to enable field declartions
+Base = declarative_base()

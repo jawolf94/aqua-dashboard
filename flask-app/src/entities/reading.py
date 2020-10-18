@@ -1,10 +1,10 @@
 from sqlalchemy import Column, Float, Integer
 from sqlalchemy.types import TIMESTAMP
 
-from ..database import DB
+from ..database import Base
 from .entity import Entity
 
-class Reading(DB.Base, Entity):
+class Reading(Base, Entity):
     """Class which defines schema for tank_readings table"""
 
     __tablename__ = "tank_readings"
