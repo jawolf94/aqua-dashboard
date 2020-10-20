@@ -1,11 +1,12 @@
 from datetime import datetime
 from flask import Blueprint, current_app, jsonify, request
-from marshmallow import EXCLUDE
+from marshmallow import EXCLUDE, ValidationError
 
 from ..entities.temperature import Temperature
 from ..entities.reading import Reading
 from ..proceedures.parameter_status import read_parameter_status, store_parameter_status
-from ..proceedures.tank_readings import get_latest_readings, save_reading
+from ..proceedures.tank_readings import get_latest_readings, get_readings_between, save_reading
+from ..schema.date import DateSchema
 from ..schema.parameter_status import ParameterStatusSchema
 from ..schema.reading import complete_reading_schema, ReadingSchema
 from ..validators.reading_validators import check_parameters
@@ -39,6 +40,48 @@ def latest_reading():
     reading = schema.dump(reading_obj)
 
     return jsonify(reading)
+
+@reading.route('/readings-between')
+def readings_between():
+    """Returns serialized list of readings between given timestamps"""
+
+    try:
+        # Deserialize timestamp from request
+        request_obj = DateSchema(many=True).load(request.json)
+
+        # Retrieve readings from DB
+        if len(request_obj) > 1:
+            # Get readings in datetime range
+            start = request_obj[0]["datetime"]
+            end = request_obj[1]["datetime"]
+
+            readings = get_readings_between(start, end)
+
+        elif len(request_obj) == 1:
+            # Get all readings from datetime until now
+            start = request_obj[0]["datetime"]
+
+            readings = get_readings_between(start)
+            
+        else:
+            # Return Error - No time specified
+            message = {"error": "No timestamp specified" }
+            return jsonify(message), 400
+
+        reading_schema = ReadingSchema(many=True)
+        reading_schema = reading_schema.dump(readings)
+
+        return jsonify(reading_schema), 200
+
+    except ValidationError as err:
+        # Return 400 error if request is mal-formed
+        message = {"error": err.err}
+        return jsonify(message), 400
+        
+    except Exception as e:
+        message = {"error": e}
+        return jsonify(message), 500
+
 
 @reading.route('/save-manual-reading', methods=['POST'])
 def save_manual_reading():
