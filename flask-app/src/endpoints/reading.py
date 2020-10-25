@@ -46,28 +46,20 @@ def readings_between():
     """Returns serialized list of readings between given timestamps"""
 
     try:
-        # Deserialize timestamp from request
-        request_obj = DateSchema(many=True).load(request.json)
+        # Parse request data from the query string
+        start = request.args.get('start')
+        end = request.args.get('end')
 
-        # Retrieve readings from DB
-        if len(request_obj) > 1:
-            # Get readings in datetime range
-            start = request_obj[0]["datetime"]
-            end = request_obj[1]["datetime"]
+        if start is not None:
+            # Retreive readings if at  least start is specified
+            readings = get_readings_between(start,end)
 
-            readings = get_readings_between(start, end)
-
-        elif len(request_obj) == 1:
-            # Get all readings from datetime until now
-            start = request_obj[0]["datetime"]
-
-            readings = get_readings_between(start)
-            
         else:
             # Return Error - No time specified
             message = {"error": "No timestamp specified" }
             return jsonify(message), 400
 
+        # Serialize and return readings
         reading_schema = ReadingSchema(many=True)
         reading_schema = reading_schema.dump(readings)
 
@@ -75,7 +67,7 @@ def readings_between():
 
     except ValidationError as err:
         # Return 400 error if request is mal-formed
-        message = {"error": err.err}
+        message = {"error": "Invalid request. Query string is mal-formed."}
         return jsonify(message), 400
         
     except Exception as e:

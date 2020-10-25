@@ -2,7 +2,7 @@
     <h1>Overview</h1>
     <!--Grid List to display overview Cards for latest tank reading data-->
     <mat-grid-list cols="{{ (layout | async )?.columns}}" rowHeight="200px">
-        <mat-grid-tile *ngFor="let param of displayedCards;">
+        <mat-grid-tile *ngFor="let param of displayedOverviewCards;">
 
             <!--Overview Card with tankparamter data-->
             <reading-card
@@ -20,4 +20,12 @@
 
     <!-- Today Overview Graphs -->
     <h1>Today's Trends</h1>
+
+    <!-- Grid List of all graphs with today's reading data -->
+    <mat-grid-list cols="2" rowHeight="400px">
+        <mat-grid-tile *ngFor="let param of displayedGraphs;">
+            <chart-card-line>
+            </chart-card-line>
+        </mat-grid-tile>
+    </mat-grid-list>
 </div>

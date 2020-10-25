@@ -1,6 +1,6 @@
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import { Subscription } from 'rxjs';
+import { ObjectUnsubscribedError, Subscription } from 'rxjs';
 import {map} from 'rxjs/operators'
 
 import { ReadingApiService } from '../reading-api.service';
@@ -17,14 +17,13 @@ import { ParameterStatus } from '../models/parameter_status.model';
 })
 export class ReadingDashboardComponent implements OnInit, OnDestroy{
 
-    // Subscritopn to service returing the latest reading.
-    lastReadingSub: Subscription;
-
-    // Subscription to service returning reading status.
+    // Subscriptions to Reading endpoints
     lastReadingStatusSub: Subscription;
+    lastReadingSub: Subscription;
+    todaysReadingsSub: Subscription;
 
-    // Reading model with latest reading data.
     latestReading: Reading;
+    todaysReadings: Reading[];
 
     // Dictionary of labels/units used to display overview card data.
     cardLabels = {
@@ -101,15 +100,38 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
      * Subscribes to ReadingApiService and gets latest tank reading.
      */
     ngOnInit(){
+
+        // Subscribe to last reading enpoint
         this.lastReadingSub = this.readingAPI
             .getLatestReading()
             .subscribe(
                 res => {
+                    // Set latest reading and get parameter statuses.
                     this.latestReading = res;
                     this.updateIcons()
                 },
                 err => {console.log(err);}
             );
+
+        // Set up params to request today's readings
+        var today: Date = new Date();
+        var startOfDay:Date = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate(),
+            0,0,0
+        );
+
+        // Subscribe to readingsBetween endpoint with readings
+        this.todaysReadingsSub = this.readingAPI
+            .getReadingsBetween(startOfDay)
+            .subscribe(
+                res=> {
+                    // Set todaysReadings on resolution
+                    this.todaysReadings = res;
+                },
+                err => {console.log(err);}
+            )
     }
 
     /**
@@ -156,7 +178,7 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
      * @returns List fields to display as keys for Reading Model properties.
      * List will be empty if no reading is available. 
      */
-    get displayedCards(){
+    get displayedOverviewCards(){
         // Check if latest reading was obtained and return keys for display
         if(this.latestReading != null){
             return Object.keys(this.cardLabels)
@@ -165,6 +187,15 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
 
         // Return empty list if no reading is available.
         return [];
+    }
+
+    /**
+     * Generates an array of fields to display/generate graphs.
+     * @returns Array of strings representing keys in a Reading.
+     */
+    get displayedGraphs(){
+        return Object.keys(this.cardLabels)
+            .filter(key => key !== 'timestamp');
     }
 
 }
