@@ -7,6 +7,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {MatTableModule} from '@angular/material/table';
 import {MatToolbarModule} from '@angular/material/toolbar';
 
+import {CommonComponentsModule} from '../common-components/common-components.module';
 import {ReadingApiService} from './reading-api.service';
 import {ReadingRoutingModule} from './reading.routing';
 import {ReadingCardComponent} from './reading-card/reading-card.component';
@@ -26,6 +27,7 @@ import {ReadingTableComponent} from './reading-table/reading-table.component';
     ],
     imports:[
         CommonModule,
+        CommonComponentsModule,
         MatButtonModule,
         MatCardModule,
         MatInputModule,
