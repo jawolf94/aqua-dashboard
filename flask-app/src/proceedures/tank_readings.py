@@ -33,6 +33,37 @@ def get_latest_readings(num_readings=None):
     # Return query results
     return reading_objs
 
+def get_readings_between(start, end=None):
+    """ Gets all readings between given timestamps.
+        If no end time is given func will return all readings from start to latest.
+
+        start (datetime.datetime): All returned readings will occur on or after this time.
+        end (datetime.datetime): All returned readings will occur on or before this time.
+    """
+
+    # Create a session with SQL DB
+    session = Session()
+
+    reading_objs = []
+    if end is not None:
+        # Get all readings stored between start and end (inclusive)
+        reading_objs = session.query(Reading).\
+            filter(Reading.timestamp >= start, Reading.timestamp <= end).\
+            order_by(Reading.timestamp.asc()).\
+            all()
+
+    elif start is not None:
+        # Get all readings stored from start (inclusive) onward
+        reading_objs = session.query(Reading).\
+            filter(Reading.timestamp >= start).\
+            order_by(Reading.timestamp.asc()).\
+            all()
+    
+    #Close session before returning
+    session.close()
+
+    # Return retrieved readings
+    return reading_objs
 
 def save_reading(reading):
     """ Saves a tank reading as a row in the tank_readings table

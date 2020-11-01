@@ -1,11 +1,13 @@
 from datetime import datetime
 from flask import Blueprint, current_app, jsonify, request
-from marshmallow import EXCLUDE
+import json
+from marshmallow import EXCLUDE, ValidationError
 
 from ..entities.temperature import Temperature
 from ..entities.reading import Reading
 from ..proceedures.parameter_status import read_parameter_status, store_parameter_status
-from ..proceedures.tank_readings import get_latest_readings, save_reading
+from ..proceedures.tank_readings import get_latest_readings, get_readings_between, save_reading
+from ..schema.date import DateSchema
 from ..schema.parameter_status import ParameterStatusSchema
 from ..schema.reading import complete_reading_schema, ReadingSchema
 from ..validators.reading_validators import check_parameters
@@ -39,6 +41,53 @@ def latest_reading():
     reading = schema.dump(reading_obj)
 
     return jsonify(reading)
+
+@reading.route('/readings-between')
+def readings_between():
+    """Returns serialized list of readings between given timestamps"""
+
+    try:
+        # Parse request data from the query string
+        start = request.args.get('start')
+        end = request.args.get('end')
+
+        if start is not None:
+
+            # Deserialize start data
+            start = json.loads(start)
+            start = DateSchema().load(start)
+            start = start["datetime"]
+
+            if end is not None:
+                # Deserialize end date if passed
+                end = json.loads(end)
+                end = DateSchema().load(end)
+                end = end["datetime"]
+
+            # Retreive readings
+            readings = get_readings_between(start,end)
+            
+        else:
+            # Return Error - No start time specified
+            message = {"error": "No timestamp specified" }
+            return jsonify(message), 400
+
+        # Serialize and return readings
+        reading_schema = ReadingSchema(many=True)
+        reading_schema = reading_schema.dump(readings)
+
+        return jsonify(reading_schema), 200
+
+    except ValidationError as err:
+        # Return 400 error if request is mal-formed
+        message = {"error": "Invalid request. Query string is mal-formed."}
+        return jsonify(message), 400
+        
+    except Exception as e:
+        # Catch any exceptions thrown and return error code
+        message = {"error": e}
+        return jsonify(message), 500
+
 
 @reading.route('/save-manual-reading', methods=['POST'])
 def save_manual_reading():

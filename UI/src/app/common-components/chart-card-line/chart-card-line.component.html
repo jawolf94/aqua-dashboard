@@ -1,0 +1,20 @@
+<mat-card class="chart-card mat-elevation-z8">
+
+    <!-- NG2 Chart-->
+    <div *ngIf="hasChartData()" class="chart-container">
+        <canvas baseChart
+            [datasets]="displayChartData.chartDataSet"
+            [labels]="displayChartData.chartLabels"
+            [colors]="lineColors"
+            [chartType]="chartType"
+            [options]="chartOptions"
+        >         
+        </canvas>
+    </div>
+
+    <!-- Not Enough Data Message -->
+    <div class="no-data-text">
+        <h2 *ngIf="!hasChartData()">Not Enough Data</h2>
+    </div>
+   
+</mat-card>

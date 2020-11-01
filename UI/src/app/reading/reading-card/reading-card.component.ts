@@ -1,12 +1,12 @@
 import {Component, Input} from '@angular/core';
 
 /**
- * Displays data for a specif reading parameters
+ * Displays data for a specific reading parameters
  */
 @Component({
     selector: 'reading-card',
     templateUrl: './reading-card.component.html',
-    styleUrls: ['./reading-card.component.css']
+    styleUrls: ['../../app.component.css', './reading-card.component.css']
 })
 export class ReadingCardComponent{
     // Reading parameter value 

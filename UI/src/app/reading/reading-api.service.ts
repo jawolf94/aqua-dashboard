@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from "@angular/core";
 import { Observable} from 'rxjs';
 import { catchError} from 'rxjs/operators';
 
 import {API_URL} from '../env';
+import {DateTimeModel} from './models/datetime.model'
 import {ParameterStatus} from './models/parameter_status.model';
 import {Reading} from './models/reading.model';
 
@@ -45,6 +46,47 @@ export class ReadingApiService{
                     }
                 )
             );
+    }
+
+    /**
+     * Requests readings between the start and end time specified.
+     * @param start - Datetime. The earliest readings to
+     * @param end 
+     * @returns
+     */
+    getReadingsBetween(start:Date, end?:Date): Observable<Reading[]>{
+        // Create Datetime models for request
+        var requestParams:HttpParams = new HttpParams()
+            .set(
+                'start', 
+                JSON.stringify(
+                    { datetime: start } as DateTimeModel
+                )
+            );
+
+        if(end){
+            // Set end param if passed in.
+            requestParams = requestParams
+                .set(
+                    'end',
+                    JSON.stringify(
+                        { datetime: end } as DateTimeModel
+                    )
+                );
+        }
+
+        // Request and return Observable
+        return this.httpClient
+            .get<Reading[]>(`${API_URL}/readings-between`, {params: requestParams})
+            .pipe(
+                catchError(
+                    err=>{
+                        console.log(err.message);
+                        return new Observable<Reading[]>();
+                    }
+                )
+            );
+           
     }
 
     /**

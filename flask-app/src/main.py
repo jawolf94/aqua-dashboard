@@ -37,11 +37,4 @@ def create_app():
         scheduler.add_job(func=create_reading, trigger='interval', minutes=config["READINGS"]["INTERVAL"])
         scheduler.start()
 
-    #Test Automatic reading
-    # ToDo: Add to scheduler instead
-    @app.route('/test-auto-reading')
-    def test_auto_reading():
-        create_reading()
-        return jsonify("Success")
-
     return app
