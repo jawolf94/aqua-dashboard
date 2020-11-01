@@ -20,12 +20,11 @@
 
     <!-- Today Overview Graphs -->
     <h1>Today's Trends</h1>
-
-    <!-- Grid List of all graphs with today's reading data -->
-    <mat-grid-list cols="2" rowHeight="400px">
-        <mat-grid-tile *ngFor="let param of displayedGraphs;">
-            <chart-card-line>
-            </chart-card-line>
-        </mat-grid-tile>
-    </mat-grid-list>
+    <chart-card-line *ngFor="let chart of chartData" class="trends-charts"
+        [chartData]="chart"
+        [sampling]="(layout | async)?.charts.sampling"
+        [lineColors]="chartLineColor"
+        [pointRadius]='(layout | async)?.charts.pointSize'
+        [pointHitRadius]='(layout | async)?.charts.pointRadius'>
+    </chart-card-line>
 </div>

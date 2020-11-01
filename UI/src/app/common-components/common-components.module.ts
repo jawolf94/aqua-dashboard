@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { NgModule } from '@angular/core';
 
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ChartsModule } from 'ng2-charts';
 
 import { ChartCardLineComponent } from './chart-card-line/chart-card-line.component';
 
@@ -16,8 +16,8 @@ import { ChartCardLineComponent } from './chart-card-line/chart-card-line.compon
     ],
     imports: [
         CommonModule,
+        ChartsModule,
         MatCardModule,
-        NgxChartsModule
     ],
     exports: [
         ChartCardLineComponent

@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask import Blueprint, current_app, jsonify, request
+import json
 from marshmallow import EXCLUDE, ValidationError
 
 from ..entities.temperature import Temperature
@@ -51,11 +52,23 @@ def readings_between():
         end = request.args.get('end')
 
         if start is not None:
-            # Retreive readings if at  least start is specified
-            readings = get_readings_between(start,end)
 
+            # Deserialize start data
+            start = json.loads(start)
+            start = DateSchema().load(start)
+            start = start["datetime"]
+
+            if end is not None:
+                # Deserialize end date if passed
+                end = json.loads(end)
+                end = DateSchema().load(end)
+                end = end["datetime"]
+
+            # Retreive readings
+            readings = get_readings_between(start,end)
+            
         else:
-            # Return Error - No time specified
+            # Return Error - No start time specified
             message = {"error": "No timestamp specified" }
             return jsonify(message), 400
 
@@ -71,6 +84,7 @@ def readings_between():
         return jsonify(message), 400
         
     except Exception as e:
+        # Catch any exceptions thrown and return error code
         message = {"error": e}
         return jsonify(message), 500
 

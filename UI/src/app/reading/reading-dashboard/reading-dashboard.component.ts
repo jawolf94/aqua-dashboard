@@ -1,11 +1,16 @@
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import { ObjectUnsubscribedError, Subscription } from 'rxjs';
-import {map} from 'rxjs/operators'
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { formatDate } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { map } from 'rxjs/operators'
 
-import { ReadingApiService } from '../reading-api.service';
+import { ChartDataSets } from 'chart.js';
+import { Color, Label } from 'ng2-charts';
+
 import { Reading } from '../models/reading.model';
 import { ParameterStatus } from '../models/parameter_status.model';
+import { ReadingApiService } from '../reading-api.service';
+import { CardChartData } from '../../common-components/card-chart-data.model';
 
 /**
  * Component which defines the reading overview.
@@ -13,7 +18,8 @@ import { ParameterStatus } from '../models/parameter_status.model';
  */
 @Component({
     selector: 'reading-dashboard',
-    templateUrl: './reading-dashboard.component.html'
+    templateUrl: './reading-dashboard.component.html',
+    styleUrls: ['./reading-dashboard.component.css']
 })
 export class ReadingDashboardComponent implements OnInit, OnDestroy{
 
@@ -22,10 +28,11 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
     lastReadingSub: Subscription;
     todaysReadingsSub: Subscription;
 
+    // Class intance vars for recent reading data
     latestReading: Reading;
     todaysReadings: Reading[];
 
-    // Dictionary of labels/units used to display overview card data.
+    // Mapping of labels/units used to display overview card data.
     cardLabels = {
         "ammonia_ppm": {
             "label": "Ammonia(NH3)",
@@ -63,7 +70,22 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
         }
     }
 
-    // GridList parameters based on window size.
+    // Chart display data & options
+    chartData:CardChartData[];
+
+    chartLineColor:Color[]= [
+        {
+            backgroundColor: 'rgba(128,164,179, 0.2)',
+            borderColor: 'rgba(128,164,179,1)',
+            pointBackgroundColor: 'rgba(170,191,199,1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(170,191,199,0.8)'
+        }
+    ]
+
+
+    // Parameters dynamically set based on window size
     layout = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
         map(
             ({matches}) => {
@@ -73,6 +95,11 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
                         overview: {
                             col_span: 1,
                             row_span: 1
+                        },
+                        charts: {
+                            sampling: 1,
+                            pointSize: 4,
+                            pointRadius: 3
                         }
                     }
                 }
@@ -82,6 +109,11 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
                         overview: {
                             col_span: 1,
                             row_span: 1,
+                        },
+                        charts: {
+                            sampling: 1,
+                            pointSize: 4,
+                            pointRadius: 3
                         }
                     }
                 }
@@ -108,7 +140,7 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
                 res => {
                     // Set latest reading and get parameter statuses.
                     this.latestReading = res;
-                    this.updateIcons()
+                    this.updateIcons();
                 },
                 err => {console.log(err);}
             );
@@ -129,6 +161,10 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
                 res=> {
                     // Set todaysReadings on resolution
                     this.todaysReadings = res;
+
+                    // Process chart data for display
+                    this.chartData = this.assembleAllChartData();
+
                 },
                 err => {console.log(err);}
             )
@@ -141,6 +177,72 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
     ngOnDestroy(){
         this.lastReadingSub.unsubscribe();
     }
+
+    /**
+     * Processes chart data for display on overview graphs for all desired parameters.
+     * @returns CardChartData[] - Array of Chart Data. Each for use in sepreate chart-card-line components
+     */
+    assembleAllChartData():CardChartData[]{
+        var charts:CardChartData[]= [];
+        this.displayedGraphs.forEach(param => 
+            {
+                // Generate Data series 
+                var chart:CardChartData = this.formatChartData(param);
+                charts.push(chart);
+            }
+        )
+
+        return charts;
+    }
+
+    /**
+     * Formats reading data into CardChartData for a line charts.
+     * @param key - String specifying data to display. Should be key in readings.
+     * @returns - Data series representing that paramater
+     */
+    formatChartData(key: string):CardChartData{
+
+        // Check if today's data is available
+        if(!Object.keys(this.cardLabels).includes(key)
+            || !this.todaysReadings
+            || this.todaysReadings.length <= 1){
+
+            // Return empty series data if key was not present.
+            return null;
+        }
+
+        // Create Series Data
+        var series:ChartDataSets = {
+            label: this.cardLabels[key]["label"],
+            data: []
+        };
+      
+
+        // Create Label Array
+        var labels:Label[] = []
+
+        // Format each reading into a DataPoint
+        this.todaysReadings.forEach(reading => {
+            if(Object.keys(reading).includes(key)){
+                
+                // Add data to series
+                series.data.push(reading[key]);
+
+                // Create label for x-axis
+                var time:string = formatDate(
+                    reading['timestamp'],
+                    "shortTime",
+                    "en-US",
+                    "EST");
+
+                    labels.push(time);
+            }
+            
+        });
+
+        return {chartDataSet: [series], chartLabels: labels};
+    }
+
 
     /**
      * Updates the icons on the overview cards depending on their parameter's status.

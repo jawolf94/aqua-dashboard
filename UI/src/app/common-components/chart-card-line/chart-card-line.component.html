@@ -1,25 +1,20 @@
-<mat-card class="overview-card mat-elevation-z8">
+<mat-card class="chart-card mat-elevation-z8">
 
-    <!--NGX Chart-->
-    <ngx-charts-line-chart *ngIf="lineChartData"
-        [results]="lineChartData"
-        [scheme]="colorScheme"
-        [schemeType]="colorSchemeType"
-        [legend]="showLegend"
-        [legendPosition]="legendPosition"
-        [legendTitle]="legendTitle"
-        [xAxis]="showXAxis"
-        [showXAxisLabel]="showXLabel"
-        [xAxisLabel]="xLabel"
-        [yAxis]="showYAxis"
-        [showYAxisLabel]="showYLabel"
-        [yAxisLabel]="yLabel"
-        [showGridLines]="showGridLines">
-    </ngx-charts-line-chart>
+    <!-- NG2 Chart-->
+    <div *ngIf="hasChartData()" class="chart-container">
+        <canvas baseChart
+            [datasets]="displayChartData.chartDataSet"
+            [labels]="displayChartData.chartLabels"
+            [colors]="lineColors"
+            [chartType]="chartType"
+            [options]="chartOptions"
+        >         
+        </canvas>
+    </div>
 
-    <!-- No Data Found Message-->
-    <mat-card-title *ngIf="!lineChartData">
-        <h1 class="no-data-text"> No Data Found </h1>
-    </mat-card-title>
-
+    <!-- Not Enough Data Message -->
+    <div class="no-data-text">
+        <h2 *ngIf="!hasChartData()">Not Enough Data</h2>
+    </div>
+   
 </mat-card>
