@@ -123,7 +123,8 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
 
     /**
      * Constructs ReadingDashboardComponent.
-     * @param readingAPI API Service which retruns tank reading data.
+     * @param readingAPI API Service which represents tank reading data.
+     * @param breakpointObserver Observer which represents the size of the screen
      */
     constructor(private readingAPI: ReadingApiService, private breakpointObserver: BreakpointObserver){}
 
@@ -171,7 +172,7 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
     }
 
     /**
-     * Called when component is destroyed.
+     * Called when this component is destroyed.
      * Unsubscribes from ReadingApiService
      */
     ngOnDestroy(){

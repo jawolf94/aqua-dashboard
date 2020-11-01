@@ -13,8 +13,8 @@
     </div>
 
     <!-- Not Enough Data Message -->
-    <div class="no-data-text">
-        <h2 *ngIf="!hasChartData()">Not Enough Data</h2>
+    <div *ngIf="!hasChartData()" class="no-data-text">
+        <h2>Not Enough Data</h2>
     </div>
    
 </mat-card>
