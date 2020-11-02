@@ -78,14 +78,6 @@ export class ReadingApiService{
         // Request and return Observable
         return this.httpClient
             .get<Reading[]>(`${API_URL}/readings-between`, {params: requestParams})
-            .pipe(
-                catchError(
-                    err=>{
-                        console.log(err.message);
-                        return new Observable<Reading[]>();
-                    }
-                )
-            );
            
     }
 

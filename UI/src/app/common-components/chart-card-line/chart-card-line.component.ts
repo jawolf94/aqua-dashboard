@@ -50,7 +50,7 @@ export class ChartCardLineComponent implements OnChanges {
     ngOnChanges(){
 
         // Create deep copy of chart data to preserve origional data set.
-        this.displayChartData = JSON.parse(JSON.stringify(this.chartData));
+        this.displayChartData = JSON.parse(JSON.stringify(this.chartData)); 
         
         // Sample data if passed in
         if(this.hasChartData()){

@@ -97,7 +97,7 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
                             row_span: 1
                         },
                         charts: {
-                            sampling: 1,
+                            sampling: 4,
                             pointSize: 4,
                             pointRadius: 3
                         }
@@ -134,6 +134,9 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
      */
     ngOnInit(){
 
+        // Assemble charts before netowork calls to make page appear more responsive
+        this.chartInit();
+
         // Subscribe to last reading enpoint
         this.lastReadingSub = this.readingAPI
             .getLatestReading()
@@ -167,8 +170,20 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
                     this.chartData = this.assembleAllChartData();
 
                 },
-                err => {console.log(err);}
+                err => {
+                    // Log the error
+                    console.log(err);
+                    this.chartInit();     
+                }
             )
+    }
+
+    /**
+     * Called to initalizae charts with no reading data. Resets today's readings to empty list.
+     */
+    chartInit(){
+        this.todaysReadings = [];
+        this.chartData = this.assembleAllChartData();
     }
 
     /**

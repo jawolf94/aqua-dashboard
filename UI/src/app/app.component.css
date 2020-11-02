@@ -1,11 +1,22 @@
-div.view-container {
-    padding: 15px;
-    margin: 0 auto;
-    max-width: 940px;
+.app-toolbar{
+    position: fixed; 
+    z-index: 10;
+}
+
+.container-fill{
+    height: 100vh;
 }
 
 .fill-remaining-space{
     flex: 1 1 auto;
+}
+
+.link-icon{
+    margin-right: .5rem;
+}
+
+.nav-options{
+    min-width: 300px;
 }
 
 .overview-card{
@@ -17,4 +28,12 @@ div.view-container {
     display: flex; 
     flex-direction: column; 
     justify-content: center;
+}
+
+.view-container {
+    padding: 15px;
+    padding-top: 100px;
+    margin: 0 auto;
+    max-width: 1080px;
+    z-index: 0;
 }
