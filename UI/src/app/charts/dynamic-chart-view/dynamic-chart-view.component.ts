@@ -1,4 +1,5 @@
 import { Component, OnInit} from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
     selector: 'dynamic-chart-view',
@@ -13,6 +14,34 @@ export class DynamicChartViewComponent implements OnInit{
     // Datetimes selected by the user     
     selectedToDate: Date;
     selectedFromDate:Date;
+
+    // Possible Data Display Options
+    displayOptionStates = {
+        "ammonia_ppm": {
+            "label": "Ammonia (NH3)",
+            "checked": false
+        },
+    
+        "nitrite_ppm": {
+            "label": "Nitrite (N02)",
+            "checked": false
+        },
+    
+        "nitrate_ppm": {
+            "label": "Nitrate (N03)",
+            "checked": false
+        }, 
+    
+        "ph": {
+            "label": "PH",
+            "checked": false
+        },
+    
+        "temperature": {
+            "label": "Temperature (F\xB0)",
+            "checked": false
+        },
+    }
 
     ngOnInit(){
         // Set tomorrow's date for default control set-up
@@ -37,5 +66,24 @@ export class DynamicChartViewComponent implements OnInit{
      */
     toDateSelected(selectedDate:Date){
         this.selectedFromDate = selectedDate;
+    }
+
+    /**
+     * Updates displayOptionsState with state of checkboxes (checked/unchecked)
+     * @param label - The label of the corresponding state option
+     * @param event - event emitted when checkbox is selected
+     */
+    updateCheckedValue(label: string, event: MatCheckboxChange){
+        this.displayOptionStates[label]["checked"] = event.checked;
+    }
+
+
+    // Getters for display
+
+    /**
+     * Gets keys from displayOptionStates object
+     */
+    get displayOptions(){
+        return Object.keys(this.displayOptionStates);
     }
 }

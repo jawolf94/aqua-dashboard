@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core'
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatGridListModule } from '@angular/material/grid-list';
 
 import { CommonComponentsModule } from '../common-components/common-components.module';
@@ -19,6 +20,7 @@ import { DynamicChartViewComponent } from './dynamic-chart-view/dynamic-chart-vi
         CommonModule,
         ChartsRoutingModule,
         MatCardModule,
+        MatCheckboxModule,
         MatGridListModule,
     ]
 })

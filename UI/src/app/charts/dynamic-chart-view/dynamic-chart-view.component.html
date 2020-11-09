@@ -10,17 +10,20 @@
 
     <!-- Grid list of chart selection options -->
     <mat-grid-list 
-        cols="3" 
-        rowHeight="250px">
+        cols="3"
+        rowHeight="300px">
 
         <!-- Start Date Options-->
         <mat-grid-tile>
-            <mat-card class="mat-elevation-z8">
+            <mat-card class="mat-elevation-z8 option-card">
             
+                <!-- Card Title -->
                 <h2 class="option-header">
                     <i class="material-icons option-icon">schedule</i>
                     Start Time
                 </h2>
+
+                <span class="option-spacing"></span>
     
                 <!-- Starting time range
                     Uses component defaults to select start of current day -->
@@ -33,12 +36,15 @@
         
         <!-- End Date Options -->
         <mat-grid-tile>
-            <mat-card class="mat-elevation-z8">
+            <mat-card class="mat-elevation-z8 option-card">
             
+                <!-- Card Title -->
                 <h2 class="option-header">
                     <i class="material-icons option-icon">schedule</i>
                     End Time
                 </h2>
+
+                <span class="option-spacing"></span>
     
                 <!-- Ending time range - sets default selection to start of next day 
                      Uses inputs and component defaults to select end of day -->
@@ -46,6 +52,28 @@
                     [selectedDate]="tomorrowDate"
                     (dateTimeEvent)="fromDateSelected($event)">
                 </datetime-picker>
+
+            </mat-card>
+        </mat-grid-tile>
+
+        <!-- Data Display Options -->
+        <mat-grid-tile >
+                <mat-card class="mat-elevation-z8 option-card">
+
+                <!-- Card Title -->
+                <h2 class="option-header">
+                    <i class="material-icons option-icon">addchart</i>
+                    Display Options
+                </h2>
+
+
+                <!-- Select Box Options -->
+                <div *ngFor="let option of displayOptions">
+                    <mat-checkbox                
+                        (change)="updateCheckedValue(option, $event)">
+                        {{displayOptionStates[option].label}}
+                    </mat-checkbox>
+                </div>
 
             </mat-card>
         </mat-grid-tile>

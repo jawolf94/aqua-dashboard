@@ -7,6 +7,17 @@
     height: 400px;
 }
 
+.option-card{
+    position: absolute; 
+    top: 40px; 
+    bottom: 40px; 
+    left: 15px; 
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
 .option-header{
     display: flex; 
     align-items: center;
@@ -14,4 +25,8 @@
 
 .option-icon{
     padding-right: .5rem
+}
+
+.option-spacing{
+    flex-grow: .2;
 }
