@@ -66,9 +66,9 @@ export class ChartCardLineComponent implements OnChanges {
      * @returns - True if labels and data set are available for display.
      */
     hasChartData(): boolean{
-        return this.displayChartData !== null || undefined
-            && this.displayChartData.chartDataSet !== null || undefined
-            && this.displayChartData.chartLabels !== null || undefined;
+        return this.chartData
+            && (this.chartData.chartDataSet && this.chartData.chartDataSet.length > 0)
+            && (this.chartData.chartLabels && this.chartData.chartLabels.length > 0);
     }
 
     /**

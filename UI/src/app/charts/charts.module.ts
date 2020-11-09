@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core'
-import { ChartsRoutingModule } from './charts.routing';
+import { MatCardModule } from '@angular/material/card';
+import { MatGridListModule } from '@angular/material/grid-list';
 
+import { CommonComponentsModule } from '../common-components/common-components.module';
+import { ChartsRoutingModule } from './charts.routing';
 import { DynamicChartViewComponent } from './dynamic-chart-view/dynamic-chart-view.component';
 
 /**
@@ -12,8 +15,11 @@ import { DynamicChartViewComponent } from './dynamic-chart-view/dynamic-chart-vi
         DynamicChartViewComponent
     ],
     imports:[
+        CommonComponentsModule,
         CommonModule,
-        ChartsRoutingModule
+        ChartsRoutingModule,
+        MatCardModule,
+        MatGridListModule,
     ]
 })
 export class ChartsModule{}

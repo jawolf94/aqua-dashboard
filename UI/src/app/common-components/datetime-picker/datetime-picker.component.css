@@ -1,0 +1,17 @@
+.date-field{
+    width: 8rem;
+    margin-right: 1rem;
+}
+
+.hour-field{
+    width: 3rem;
+    margin-right: .25rem;
+}
+
+.minute-field{
+    width: 3.5rem;
+}
+
+.time-seperator{
+    padding-right: .25rem
+}

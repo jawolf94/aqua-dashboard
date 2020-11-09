@@ -1,0 +1,17 @@
+.charts-container{
+    display: flex; 
+    flex-direction: column;
+}
+
+.chart{
+    height: 400px;
+}
+
+.option-header{
+    display: flex; 
+    align-items: center;
+}
+
+.option-icon{
+    padding-right: .5rem
+}

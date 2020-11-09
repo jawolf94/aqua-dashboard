@@ -1,0 +1,34 @@
+<!-- Date Input Field-->
+<mat-form-field class="date-field">
+    <mat-label>Date</mat-label>
+    <input matInput 
+        placeholder="MM/DD/YYYY" 
+        [matDatepicker]="date" 
+        [value]="selectedDate" 
+        (dateInput)="updateDate($event)"> 
+    <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+    <mat-datepicker #date></mat-datepicker>
+</mat-form-field>
+
+<!-- Hour Input Field-->
+<mat-form-field class="hour-field">
+    <mat-label>Hr</mat-label>
+    <mat-select [value]="selectedHour" (selectionChange)="updateHour($event)">
+        <mat-option *ngFor="let hour of hours" [value]="hour.value">
+            {{hour.option}}
+        </mat-option> 
+    </mat-select>
+</mat-form-field>
+
+<!-- Colon for display between hour and min selection-->
+<span class="time-seperator">:</span>
+
+<!-- Minute Input Field -->
+<mat-form-field class="minute-field">
+    <mat-label>Min</mat-label>
+    <mat-select matNativeControl [value]="selectedMinute" (selectionChange)="updateMinute($event)">
+        <mat-option *ngFor="let minute of minutes" [value]="minute.value">
+            {{minute.option}}
+        </mat-option> 
+    </mat-select>
+</mat-form-field>
