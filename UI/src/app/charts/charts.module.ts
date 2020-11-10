@@ -5,6 +5,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatGridListModule } from '@angular/material/grid-list';
 
 import { CommonComponentsModule } from '../common-components/common-components.module';
+import { ReadingApiService } from '../services/reading-api.service';
 import { ChartsRoutingModule } from './charts.routing';
 import { DynamicChartViewComponent } from './dynamic-chart-view/dynamic-chart-view.component';
 
@@ -22,6 +23,9 @@ import { DynamicChartViewComponent } from './dynamic-chart-view/dynamic-chart-vi
         MatCardModule,
         MatCheckboxModule,
         MatGridListModule,
+    ],
+    providers: [
+        ReadingApiService
     ]
 })
 export class ChartsModule{}

@@ -8,7 +8,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatToolbarModule} from '@angular/material/toolbar';
 
 import {CommonComponentsModule} from '../common-components/common-components.module';
-import {ReadingApiService} from './reading-api.service';
+import {ReadingApiService} from '../services/reading-api.service';
 import {ReadingRoutingModule} from './reading.routing';
 import {ReadingCardComponent} from './reading-card/reading-card.component';
 import {ReadingDashboardComponent} from './reading-dashboard/reading-dashboard.component';

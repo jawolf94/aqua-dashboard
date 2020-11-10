@@ -7,9 +7,9 @@ import { map } from 'rxjs/operators'
 import { ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 
-import { Reading } from '../models/reading.model';
-import { ParameterStatus } from '../models/parameter_status.model';
-import { ReadingApiService } from '../reading-api.service';
+import { Reading } from 'src/app/models/reading/reading.model';
+import { ParameterStatus } from 'src/app/models/reading/parameter_status.model';
+import { ReadingApiService } from '../../services/reading-api.service';
 import { CardChartData } from '../../common-components/card-chart-data.model';
 
 /**
