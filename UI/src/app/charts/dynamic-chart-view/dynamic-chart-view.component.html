@@ -4,58 +4,59 @@
 <!-- Parent div to enforce page layout direction-->
 <div class="charts-container">
 
-     <!-- Grid list of chart selection options -->
-     <mat-grid-list 
-        cols="2"
-        rowHeight="225px">
+   <!-- Grid list of chart selection options -->
+   <mat-grid-list 
+      cols="{{(layout | async)?.columns}}" 
+      rowHeight="225px">
 
-     <!-- Start Date Options-->
-     <mat-grid-tile>
+      <!-- Start Date Options-->
+      <mat-grid-tile>
          <mat-card class="mat-elevation-z8 option-card">
-         
-             <!-- Card Title -->
-             <h2 class="option-header">
-                <i class="material-icons option-icon">schedule</i>
-                Start Time
-             </h2>
 
-             <span class="option-spacing"></span>
- 
-             <!-- Starting time range
-                Uses component defaults to select start of current day -->
-             <datetime-picker style="align-self: center;"
-                (dateTimeEvent)="toDateSelected($event)">
-             </datetime-picker>
- 
+            <!-- Card Title -->
+            <h2 class="option-header">
+               <i class="material-icons option-icon">schedule</i>
+               Start Time
+            </h2>
+
+            <span class="option-spacing"></span>
+
+            <!-- Starting time range
+                     Uses component defaults to select start of current day -->
+            <datetime-picker style="align-self: center;" (dateTimeEvent)="toDateSelected($event)">
+            </datetime-picker>
+
          </mat-card>
-     </mat-grid-tile>
-     
-     <!-- End Date Options -->
-     <mat-grid-tile>
+      </mat-grid-tile>
+
+      <!-- End Date Options -->
+      <mat-grid-tile>
          <mat-card class="mat-elevation-z8 option-card">
-         
-             <!-- Card Title -->
-             <h2 class="option-header">
-                <i class="material-icons option-icon">schedule</i>
-                End Time
-             </h2>
 
-             <span class="option-spacing"></span>
- 
-             <!-- Ending time range - sets default selection to start of next day 
+            <!-- Card Title -->
+            <h2 class="option-header">
+               <i class="material-icons option-icon">schedule</i>
+               End Time
+            </h2>
+
+            <span class="option-spacing"></span>
+
+            <!-- Ending time range - sets default selection to start of next day 
                 Uses inputs and component defaults to select end of day -->
-             <datetime-picker style="align-self: center;"
-                [selectedDate]="tomorrowDate"
-                (dateTimeEvent)="fromDateSelected($event)">
-             </datetime-picker>
-            </mat-card>
-        </mat-grid-tile>
+            <datetime-picker style="align-self: center;" [selectedDate]="tomorrowDate"
+               (dateTimeEvent)="fromDateSelected($event)">
+            </datetime-picker>
+         </mat-card>
+      </mat-grid-tile>
 
-    </mat-grid-list>
+   </mat-grid-list>
 
-    <!-- Chart displaying selected data-->
-    <chart-card-line class="chart"
-        [chartData]="chartData">
-
-    </chart-card-line>
+   <!-- Chart displaying selected data-->
+   <chart-card-line 
+      class="chart" 
+      [chartData]="chartData" 
+      [sampling]="(layout | async)?.charts.sampling"
+      [pointRadius]="(layout | async)?.charts.pointSize" 
+      [pointHitRadius]="(layout | async)?.charts.pointHitRadius">
+   </chart-card-line>
 </div>

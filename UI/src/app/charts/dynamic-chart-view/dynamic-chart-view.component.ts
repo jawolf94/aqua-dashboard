@@ -1,6 +1,7 @@
+import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { Component, OnInit} from '@angular/core';
 import { formatDate } from '@angular/common';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { map } from 'rxjs/operators';
 
 import { ChartDataSets } from 'chart.js';
 
@@ -50,8 +51,36 @@ export class DynamicChartViewComponent implements OnInit{
         },
     }
 
+    // Breakpoint observer to change page layout for different screensizes.
+    layout = this.breakPointObserver.observe(Breakpoints.Handset).pipe(
+        map(
+            ({matches}) => {
+                if(matches){
+                    return {
+                        columns: 1,
+                        charts: {
+                            sampling: 4,
+                            pointSize: 4,
+                            pointRadius: 3
+                        }
+                    }
+                }
+                else{
+                    return {
+                        columns: 2,
+                        charts: {
+                            sampling: 1,
+                            pointSize: 4, 
+                            pointRadius: 3
+                        }
+                    }
+                }
+            }
+        )
+    );
+
     // Contructor and ng function implmentations
-    constructor(private readingApi:ReadingApiService){}
+    constructor(private breakPointObserver:BreakpointObserver, private readingApi:ReadingApiService){}
 
     ngOnInit(){
 
