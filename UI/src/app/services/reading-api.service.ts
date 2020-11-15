@@ -3,15 +3,17 @@ import { Injectable } from "@angular/core";
 import { Observable} from 'rxjs';
 import { catchError} from 'rxjs/operators';
 
-import {API_URL} from '../env';
-import {DateTimeModel} from './models/datetime.model'
-import {ParameterStatus} from './models/parameter_status.model';
-import {Reading} from './models/reading.model';
+import { API_URL } from '../env';
+import { DateTimeModel } from '../models/common/datetime.model'
+import { ParameterStatus } from 'src/app/models/reading/parameter_status.model';
+import { Reading } from 'src/app/models/reading/reading.model';
 
 /**
  * Service which performs GET and POST opperations to Tank Reading APIs
  */
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class ReadingApiService{
 
     constructor(private httpClient: HttpClient){}
@@ -55,7 +57,10 @@ export class ReadingApiService{
      * @returns
      */
     getReadingsBetween(start:Date, end?:Date): Observable<Reading[]>{
+
         // Create Datetime models for request
+        // All dates are serialized from local time to UTC time
+        // Flask API will deserialize a UTC datetime as expected. 
         var requestParams:HttpParams = new HttpParams()
             .set(
                 'start', 
@@ -78,14 +83,6 @@ export class ReadingApiService{
         // Request and return Observable
         return this.httpClient
             .get<Reading[]>(`${API_URL}/readings-between`, {params: requestParams})
-            .pipe(
-                catchError(
-                    err=>{
-                        console.log(err.message);
-                        return new Observable<Reading[]>();
-                    }
-                )
-            );
            
     }
 

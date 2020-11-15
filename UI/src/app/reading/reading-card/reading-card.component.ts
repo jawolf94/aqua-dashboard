@@ -1,4 +1,6 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+
+import { TIMEZONE } from 'src/app/env';
 
 /**
  * Displays data for a specific reading parameters
@@ -8,9 +10,10 @@ import {Component, Input} from '@angular/core';
     templateUrl: './reading-card.component.html',
     styleUrls: ['../../app.component.css', './reading-card.component.css']
 })
-export class ReadingCardComponent{
+export class ReadingCardComponent implements OnInit{
     // Reading parameter value 
     @Input() value: Number;
+    private date:String;
 
     // Reading parameter unit of measurement
     @Input() unit: string;
@@ -23,5 +26,16 @@ export class ReadingCardComponent{
 
     // Boolean which can be set to true if displaying DateTime object
     @Input() isDateTime: Boolean = false;
+
+
+    ngOnInit(){
+
+        // Check is user specified datetime prototype as input
+        if(this.isDateTime){
+
+            // Define UTC timestamp for proper conversion
+            this.date = this.value.toString() + "+00:00"
+        }
+    }
 
 }

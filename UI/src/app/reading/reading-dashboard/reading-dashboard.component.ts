@@ -7,9 +7,10 @@ import { map } from 'rxjs/operators'
 import { ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 
-import { Reading } from '../models/reading.model';
-import { ParameterStatus } from '../models/parameter_status.model';
-import { ReadingApiService } from '../reading-api.service';
+import { TIMEZONE } from 'src/app/env';
+import { Reading } from 'src/app/models/reading/reading.model';
+import { ParameterStatus } from 'src/app/models/reading/parameter_status.model';
+import { ReadingApiService } from '../../services/reading-api.service';
 import { CardChartData } from '../../common-components/card-chart-data.model';
 
 /**
@@ -97,7 +98,7 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
                             row_span: 1
                         },
                         charts: {
-                            sampling: 1,
+                            sampling: 4,
                             pointSize: 4,
                             pointRadius: 3
                         }
@@ -123,7 +124,8 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
 
     /**
      * Constructs ReadingDashboardComponent.
-     * @param readingAPI API Service which retruns tank reading data.
+     * @param readingAPI API Service which represents tank reading data.
+     * @param breakpointObserver Observer which represents the size of the screen
      */
     constructor(private readingAPI: ReadingApiService, private breakpointObserver: BreakpointObserver){}
 
@@ -132,6 +134,9 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
      * Subscribes to ReadingApiService and gets latest tank reading.
      */
     ngOnInit(){
+
+        // Assemble charts before netowork calls to make page appear more responsive
+        this.chartInit();
 
         // Subscribe to last reading enpoint
         this.lastReadingSub = this.readingAPI
@@ -166,12 +171,24 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
                     this.chartData = this.assembleAllChartData();
 
                 },
-                err => {console.log(err);}
+                err => {
+                    // Log the error
+                    console.log(err);
+                    this.chartInit();     
+                }
             )
     }
 
     /**
-     * Called when component is destroyed.
+     * Called to initalizae charts with no reading data. Resets today's readings to empty list.
+     */
+    chartInit(){
+        this.todaysReadings = [];
+        this.chartData = this.assembleAllChartData();
+    }
+
+    /**
+     * Called when this component is destroyed.
      * Unsubscribes from ReadingApiService
      */
     ngOnDestroy(){
@@ -230,10 +247,10 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
 
                 // Create label for x-axis
                 var time:string = formatDate(
-                    reading['timestamp'],
+                    reading['timestamp'].toString()+"+00:00",
                     "shortTime",
                     "en-US",
-                    "EST");
+                    TIMEZONE);
 
                     labels.push(time);
             }

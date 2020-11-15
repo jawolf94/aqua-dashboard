@@ -50,7 +50,7 @@ export class ChartCardLineComponent implements OnChanges {
     ngOnChanges(){
 
         // Create deep copy of chart data to preserve origional data set.
-        this.displayChartData = JSON.parse(JSON.stringify(this.chartData));
+        this.displayChartData = JSON.parse(JSON.stringify(this.chartData)); 
         
         // Sample data if passed in
         if(this.hasChartData()){
@@ -66,9 +66,9 @@ export class ChartCardLineComponent implements OnChanges {
      * @returns - True if labels and data set are available for display.
      */
     hasChartData(): boolean{
-        return this.displayChartData !== null || undefined
-            && this.displayChartData.chartDataSet !== null || undefined
-            && this.displayChartData.chartLabels !== null || undefined;
+        return this.chartData
+            && (this.chartData.chartDataSet && this.chartData.chartDataSet.length > 0)
+            && (this.chartData.chartLabels && this.chartData.chartLabels.length > 0);
     }
 
     /**

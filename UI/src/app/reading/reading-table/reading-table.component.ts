@@ -1,8 +1,8 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import {Reading} from '../models/reading.model'
-import {ReadingApiService} from '../reading-api.service';
+import {Reading} from 'src/app/models/reading/reading.model'
+import {ReadingApiService} from '../../services/reading-api.service';
 
 @Component({
     selector: 'reading-table',

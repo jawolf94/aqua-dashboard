@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {Reading} from '../models/reading.model';
-import {ReadingApiService} from '../reading-api.service';
+import {Reading} from 'src/app/models/reading/reading.model';
+import {ReadingApiService} from '../../services/reading-api.service';
 
 
 @Component({

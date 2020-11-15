@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from flask import Blueprint, current_app, jsonify, request
 import json
 from marshmallow import EXCLUDE, ValidationError
@@ -56,13 +56,13 @@ def readings_between():
             # Deserialize start data
             start = json.loads(start)
             start = DateSchema().load(start)
-            start = start["datetime"]
+            start = start["datetime"].replace(tzinfo=timezone.utc)
 
             if end is not None:
                 # Deserialize end date if passed
                 end = json.loads(end)
                 end = DateSchema().load(end)
-                end = end["datetime"]
+                end = end["datetime"].replace(tzinfo=timezone.utc)
 
             # Retreive readings
             readings = get_readings_between(start,end)
@@ -100,7 +100,7 @@ def save_manual_reading():
     completed_reading = complete_reading_schema(posted_reading)
 
     # Load Reading object from the request into SQL entity
-    reading = Reading(**completed_reading, manual=1, timestamp=datetime.now())
+    reading = Reading(**completed_reading, manual=1, timestamp=datetime.now(tz=timezone.utc))
 
     # Save reading to table
     save_reading(reading)

@@ -1,8 +1,42 @@
-<mat-toolbar color="primary" class="mat-elevation-z10">
-  <button mat-button>Tank Readings</button>
+<!-- Page Content-->
+<mat-sidenav-container>
 
-  <span class="fill-remaining-space"></span>
-</mat-toolbar>
-<div class="view-container">
-  <router-outlet></router-outlet>
-</div>
+  <!-- Side Nav Menu -->
+  <mat-sidenav #nav
+    [fixedInViewport]="true">
+
+    <mat-toolbar color="primary" class="fill-remaining-space">Aqua Pi</mat-toolbar>
+    <mat-nav-list class="nav-options">
+
+      <a mat-list-item href="/">
+        <i class="material-icons link-icon">dashboard</i>
+        Overview
+      </a>
+
+      <a mat-list-item href="/charts/dynamic">
+        <i class="material-icons link-icon">bar_chart</i>
+        Custom Charts
+      </a>
+
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- Primary page content-->
+  <mat-sidenav-content class="container-fill">
+
+      <!-- Toolbar for heading -->
+      <mat-toolbar color="primary" class="mat-elevation-z10 app-toolbar">
+        <button mat-button (click)="nav.open();">
+          <i class="material-icons">menu</i>
+          Aqua Pi
+        </button>
+        <span class="fill-remaining-space"></span>
+      </mat-toolbar>
+
+      <div class="view-container">
+        <router-outlet></router-outlet>
+      </div>
+
+  </mat-sidenav-content> 
+
+</mat-sidenav-container>
