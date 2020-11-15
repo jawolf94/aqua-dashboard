@@ -4,9 +4,10 @@ from flask_cors import CORS
 
 from .app_config import config
 from .database  import Base, Engine
+from .endpoints.cleaning import cleaning
 from .endpoints.reading import reading
 from .parameter_config import tank_parameters
-from .sensors.automatic_readings import create_reading 
+from .sensors.automatic_readings import create_reading
 
 
 def create_app():
@@ -29,6 +30,7 @@ def create_app():
 
     # Register Blueprints with application
     app.register_blueprint(reading)
+    app.register_blueprint(cleaning)
 
     # Schedule task to automatically generate tank readings
     if config["READINGS"]["AUTOMATIC"]:
