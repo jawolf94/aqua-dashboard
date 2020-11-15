@@ -3,9 +3,9 @@
     <mat-label>Date</mat-label>
     <input matInput 
         placeholder="MM/DD/YYYY" 
-        [matDatepicker]="date" 
-        [value]="selectedDate" 
-        (dateInput)="updateDate($event)"> 
+        [matDatepicker]="date"
+        [value]="initDate"  
+        (dateInput)="updateDate($event)">
     <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
     <mat-datepicker #date></mat-datepicker>
 </mat-form-field>

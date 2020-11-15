@@ -24,6 +24,9 @@ export class DateTimePickerComponent implements OnInit{
     @Input() selectedHour: number;
     @Input() selectedMinute: number;
     @Input() selectedDate: Date;
+    
+    // Field to represent inital date - prevents cirular updates with inital data binding
+    initDate:Date;
 
     // Output of full datetime selection
     @Output() dateTimeEvent: EventEmitter<Date>  = new EventEmitter<Date>();;
@@ -49,9 +52,17 @@ export class DateTimePickerComponent implements OnInit{
             this.selectedMinute = 0;
         }
 
-        // Check if user provided a defualt date - otherwise use today
+        // Check if user provided a defualt date
         if(!this.selectedDate){
-            this.selectedDate = new Date()
+
+            // Use today for intital values if none was provided
+            this.initDate = new Date()
+            this.selectedDate = this.initDate;
+        }
+        else{
+
+            // Set inital date to selectedDate if one was set
+            this.initDate = this.selectedDate;
         }
 
         // Set Output to match inital inputs
