@@ -83,13 +83,12 @@ export class DateTimePickerComponent implements OnInit{
      */
     emitDateOutput(){
 
-        // Assemble datetime info on date object
-        this.selectedDate.setHours(this.selectedHour);
-        this.selectedDate.setMinutes(this.selectedMinute);
-        
-        // Default seconds to 0 
-        // User can only select down to the minute
-        this.selectedDate.setSeconds(0);
+        // This code offsets the user's input to 
+        // Default seconds and microseconds to 0 - user cannot input these
+        this.selectedDate.setHours(
+            this.selectedHour,
+            this.selectedMinute,
+            0,0);
 
         // Emit event
         this.dateTimeEvent.emit(this.selectedDate);

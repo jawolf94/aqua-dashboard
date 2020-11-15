@@ -4,6 +4,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 
 import { ChartDataSets } from 'chart.js';
 
+import { TIMEZONE } from 'src/app/env';
 import { CardChartData } from 'src/app/common-components/card-chart-data.model'
 import { Reading } from 'src/app/models/reading/reading.model';
 import { ReadingApiService } from 'src/app/services/reading-api.service';
@@ -58,7 +59,7 @@ export class DynamicChartViewComponent implements OnInit{
         this.tomorrowDate = new Date();
         this.tomorrowDate.setDate(this.tomorrowDate.getDate() + 1)
 
-        // Reset time to 0 hours, minutes, seconds
+        // Reset time to 0 hours, minutes, seconds, miroseconds
         this.tomorrowDate.setHours(0,0,0,0);
 
         // Init chart data to null
@@ -103,10 +104,10 @@ export class DynamicChartViewComponent implements OnInit{
         //Generate Chart Labels
         data.chartLabels = this.rawReadings.map((obj) => {
             return formatDate(
-                obj['timestamp'],
-                'short',
+                obj['timestamp'].toString() + "+00:00",
+                'M/d/yy, HH:mm',
                 'en-US',
-                'EST')
+                TIMEZONE)
         });
 
         // Set chartData to pass as input to card-chart-line component
@@ -133,7 +134,7 @@ export class DynamicChartViewComponent implements OnInit{
     }
 
     /**
-     * Requests data from reading-api service between selected to/from datetime selections.
+     * Requests data from reading-api service between to/from datetime selections.
      */
     requestData(){
         this.readingApi
@@ -145,15 +146,5 @@ export class DynamicChartViewComponent implements OnInit{
                 },
                 err => {console.log(err)}
             );
-    }
-
-    /**
-     * Updates displayOptionsState with state of checkboxes (checked/unchecked)
-     * @param label - The label of the corresponding state option
-     * @param event - event emitted when checkbox is selected
-     */
-    updateCheckedValue(label: string, event: MatCheckboxChange){
-        this.displayOptionStates[label]["checked"] = event.checked;
-        this.formatChartData();
     }
 }

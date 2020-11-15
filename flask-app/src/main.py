@@ -1,5 +1,4 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-from datetime import datetime
 from flask import Flask, jsonify
 from flask_cors import CORS
 

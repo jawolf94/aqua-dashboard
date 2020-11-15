@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators'
 import { ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 
+import { TIMEZONE } from 'src/app/env';
 import { Reading } from 'src/app/models/reading/reading.model';
 import { ParameterStatus } from 'src/app/models/reading/parameter_status.model';
 import { ReadingApiService } from '../../services/reading-api.service';
@@ -246,10 +247,10 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
 
                 // Create label for x-axis
                 var time:string = formatDate(
-                    reading['timestamp'],
+                    reading['timestamp'].toString()+"+00:00",
                     "shortTime",
                     "en-US",
-                    "EST");
+                    TIMEZONE);
 
                     labels.push(time);
             }

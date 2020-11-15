@@ -59,6 +59,8 @@ export class ReadingApiService{
     getReadingsBetween(start:Date, end?:Date): Observable<Reading[]>{
 
         // Create Datetime models for request
+        // All dates are serialized from local time to UTC time
+        // Flask API will deserialize a UTC datetime as expected. 
         var requestParams:HttpParams = new HttpParams()
             .set(
                 'start', 

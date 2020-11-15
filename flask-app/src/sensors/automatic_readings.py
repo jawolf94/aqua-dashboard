@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from marshmallow import EXCLUDE
 
 from ..app_config import config
@@ -45,7 +45,7 @@ def create_reading():
     reading_schema = complete_reading_schema(reading)
 
     # Save reading to data base.
-    reading_entity = Reading(**reading_schema, manual=0, timestamp=datetime.now())
+    reading_entity = Reading(**reading_schema, manual=0, timestamp=datetime.now(tz=timezone.utc))
     save_reading(reading_entity)
 
     # Check paramater ranges
