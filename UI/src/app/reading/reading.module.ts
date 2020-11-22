@@ -10,20 +10,16 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {CommonComponentsModule} from '../common-components/common-components.module';
 import {ReadingApiService} from '../services/reading-api.service';
 import {ReadingRoutingModule} from './reading.routing';
-import {ReadingCardComponent} from './reading-card/reading-card.component';
 import {ReadingDashboardComponent} from './reading-dashboard/reading-dashboard.component';
 import {ReadingFormComponent} from './reading-form/reading-form.component';
-import {ReadingTableComponent} from './reading-table/reading-table.component';
 
 /**
  * Defines module which handles display and routing for all tank reading info.
  */
 @NgModule({
     declarations:[
-        ReadingCardComponent,
         ReadingDashboardComponent,
         ReadingFormComponent,
-        ReadingTableComponent
     ],
     imports:[
         CommonModule,
@@ -37,8 +33,7 @@ import {ReadingTableComponent} from './reading-table/reading-table.component';
         ReadingRoutingModule
     ],
     exports:[
-        ReadingFormComponent,
-        ReadingTableComponent
+        ReadingFormComponent
     ],
     providers: [ReadingApiService]
 })

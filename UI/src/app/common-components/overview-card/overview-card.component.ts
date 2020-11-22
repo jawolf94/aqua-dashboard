@@ -6,11 +6,11 @@ import { TIMEZONE } from 'src/app/env';
  * Displays data for a specific reading parameters
  */
 @Component({
-    selector: 'reading-card',
-    templateUrl: './reading-card.component.html',
-    styleUrls: ['../../app.component.css', './reading-card.component.css']
+    selector: 'overview-card',
+    templateUrl: './overview-card.component.html',
+    styleUrls: ['./overview-card.component.css']
 })
-export class ReadingCardComponent implements OnInit{
+export class OverviewCardComponent implements OnInit{
     // Reading parameter value 
     @Input() value: Number;
     private date:String;

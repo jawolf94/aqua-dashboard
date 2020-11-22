@@ -5,14 +5,25 @@
   <mat-sidenav #nav
     [fixedInViewport]="true">
 
+    <!-- Aqua Pi header at top of menu bar-->
     <mat-toolbar color="primary" class="fill-remaining-space">Aqua Pi</mat-toolbar>
+
+    <!-- Navigation Options -->
     <mat-nav-list class="nav-options">
 
+      <!-- Dashobard Link-->
       <a mat-list-item href="/">
         <i class="material-icons link-icon">dashboard</i>
         Overview
       </a>
 
+      <!-- Cleaning Overview Link-->
+      <a mat-list-item href="/cleaning">
+        <i class="material-icons link-icon">cleaning_services</i>
+        Cleaning Log
+      </a>
+
+      <!-- Custome Charts Link-->
       <a mat-list-item href="/charts/dynamic">
         <i class="material-icons link-icon">bar_chart</i>
         Custom Charts
@@ -24,8 +35,10 @@
   <!-- Primary page content-->
   <mat-sidenav-content class="container-fill">
 
-      <!-- Toolbar for heading -->
+      <!-- Toolbar for page heading -->
       <mat-toolbar color="primary" class="mat-elevation-z10 app-toolbar">
+
+        <!-- Menu button -->
         <button mat-button (click)="nav.open();">
           <i class="material-icons">menu</i>
           Aqua Pi
@@ -33,6 +46,7 @@
         <span class="fill-remaining-space"></span>
       </mat-toolbar>
 
+      <!-- Page content -->
       <div class="view-container">
         <router-outlet></router-outlet>
       </div>
