@@ -10,6 +10,7 @@
                 [rowspan]="(layout | async)?.overview.row_span"  
                 [icon]="cardLabels[param].icon" 
                 [value]="latestReading[param]" 
+                [valueType]="cardLabels[param].type"
                 [unit]="cardLabels[param].unit" 
                 [label]="cardLabels[param].label"
                 [isDateTime]="param === 'timestamp'">

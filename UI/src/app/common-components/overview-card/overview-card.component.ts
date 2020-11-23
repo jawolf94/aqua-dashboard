@@ -3,7 +3,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import { TIMEZONE } from 'src/app/env';
 
 /**
- * Displays data for a specific reading parameters
+ * Formats & displays data passed in by the parent
  */
 @Component({
     selector: 'overview-card',
@@ -11,31 +11,66 @@ import { TIMEZONE } from 'src/app/env';
     styleUrls: ['./overview-card.component.css']
 })
 export class OverviewCardComponent implements OnInit{
-    // Reading parameter value 
-    @Input() value: Number;
-    private date:String;
+    // Value of the data
+    @Input() value: any;
 
-    // Reading parameter unit of measurement
+    // Type of data displayed
+    @Input() valueType:string
+
+    // Unit of measurement for value
     @Input() unit: string;
 
-    // Name of reading parameter
+    // Name of value
     @Input() label: string;
 
-    // String for material icon name
+    // String for materials-icon. String is name of icon.
     @Input() icon: string; 
-
-    // Boolean which can be set to true if displaying DateTime object
-    @Input() isDateTime: Boolean = false;
-
 
     ngOnInit(){
 
-        // Check is user specified datetime prototype as input
-        if(this.isDateTime){
+        // Check if input exists and is a known type
+        if(this.value === null || this.value === undefined || !this.isKnownType()){
+            // If not set or unknown then set to null
+            this.value = null;
+            this.valueType = "unknown"
 
-            // Define UTC timestamp for proper conversion
-            this.date = this.value.toString() + "+00:00"
+            // Stop processing further formatting
+            return;
         }
+
+        // Specify UTC timestamp
+        if(this.isDate()){
+            this.value = this.value.toString() + "+00:00";
+        }
+    }
+
+    /**
+     * @returns True - if type of input passed in is a boolean.
+     */
+    isBool(): Boolean{
+        return this.valueType.toLowerCase() === 'boolean';
+    }
+
+    /**
+     * @returns True - if type of input passed in is a date
+     */
+    isDate(): Boolean{
+        return this.valueType.toLowerCase() === 'date';
+    }
+
+    /**
+     * @returns True - if type of input passed in is a number
+     */
+    isNumber():Boolean{
+        return this.valueType.toLowerCase() === "number"
+    }
+
+    /**
+     * @returns True - if type if boolean, date, or number were specifed as the type.
+     */
+    isKnownType():Boolean{
+        return (this.isBool() || this.isDate() || this.isNumber())
+            && this.valueType !== 'unknown';
     }
 
 }

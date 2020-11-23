@@ -38,36 +38,42 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
         "ammonia_ppm": {
             "label": "Ammonia(NH3)",
             "unit": "ppm",
-            "icon": "cached"
+            "icon": "cached",
+            "type": "number"
         },
     
         "nitrite_ppm": {
             "label": "Nitrite(N02)",
             "unit": "ppm",
-            "icon": "cached"
+            "icon": "cached",
+            "type": "number"
         },
     
         "nitrate_ppm": {
             "label": "Nitrate(N03)",
             "unit": "ppm",
-            "icon": "cached"
+            "icon": "cached",
+            "type": "number"
         }, 
     
         "ph": {
             "label": "PH",
             "unit": "",
-            "icon": "cached"
+            "icon": "cached",
+            "type": "number"
         },
     
         "temperature": {
             "label": "Temperature",
             "unit": "F\xB0",
-            "icon": "cached"
+            "icon": "cached",
+            "type": "number"
         },
         "timestamp":{
             "label": "",
             "unit": "",
-            "icon": "access_time"
+            "icon": "access_time",
+            "type": "date"
         }
     }
 

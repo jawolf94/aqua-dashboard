@@ -9,13 +9,14 @@
 
         <!-- Parameter Value-->
         <mat-card-title class="no-margin">
-            <h1 *ngIf="!isDateTime" class="no-margin">{{value | number: '.1-2'}} {{unit}}</h1>
-            <h1 *ngIf="isDateTime" class="no-margin">{{ date | date: 'shortTime': TIMEZONE}}</h1>
+            <h1 *ngIf="isNumber()" class="no-margin">{{value | number: '.1-2'}} {{unit}}</h1>
+            <h1 *ngIf="isDate()" class="no-margin">{{ value | date: 'shortTime': TIMEZONE}}</h1>
+            <h1 *ngIf="isBool()" class="no-margin">{{value ? 'Yes' : 'No'}}</h1>
+            <h1 *ngIf="!isKnownType()" class="no-margin">?</h1>
         </mat-card-title>
     </mat-card-header>
 
     <!-- Parameter Label -->
-    <h3 *ngIf="!isDateTime" class="card-label">{{label}}</h3>
-    <h3 *ngIf="isDateTime" class="card-label">{{ date | date:'fullDate':TIMEZONE}}</h3>
-    
+    <h3 *ngIf="isNumber() || isBool()" class="card-label">{{label}}</h3>
+    <h3 *ngIf="isDate()" class="card-label">{{ value | date:'fullDate':TIMEZONE}}</h3>
 </mat-card>

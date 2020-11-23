@@ -2,24 +2,24 @@
 <div class="mat-elevation-z8">
 
     <!-- Table -->
-    <table mat-table [dataSource]="cleaningLog" class="table-width">
+    <table mat-table [dataSource]="displayData" class="table-width">
 
         <!-- Time Column Template -->
         <ng-container matColumnDef="timestamp">
             <th mat-header-cell *matHeaderCellDef>Time</th>
-            <td mat-cell *matCellDef="let cleaning">{{cleaning.timestamp}}</td>
+            <td mat-cell *matCellDef="let cleaning">{{cleaning.timestamp | date:'short':TIMEZONE}}</td>
         </ng-container>
     
         <!-- Percent Change Column Template -->
         <ng-container matColumnDef="pct_change">
             <th mat-header-cell *matHeaderCellDef>% Change</th>
-            <td mat-cell *matCellDef="let cleaning">{{cleaning.pct_change}}</td>
+            <td mat-cell *matCellDef="let cleaning">{{cleaning.pct_change * 100}}%</td>
         </ng-container>
     
         <!-- Filter Change Column Template -->
         <ng-container matColumnDef="filter_change">
             <th mat-header-cell *matHeaderCellDef>Filter Change</th>
-            <td mat-cell *matCellDef="let cleaning">{{cleaning.filter_change}}</td>
+            <td mat-cell *matCellDef="let cleaning">{{cleaning.filter_change ? "Yes" : "No"}}</td>
         </ng-container>
     
         <!-- Row Template-->
