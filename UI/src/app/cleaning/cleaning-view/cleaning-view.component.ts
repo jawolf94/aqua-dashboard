@@ -1,4 +1,6 @@
+import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
+import { map } from 'rxjs/operators';
 
 import { Cleaning } from 'src/app/models/cleaning/cleaning.model';
 import { CleaningApiService } from 'src/app/services/cleaning-api.service';
@@ -32,6 +34,28 @@ export class CleaningViewComponent implements OnInit{
         }
     }
 
+    // Defines page layout based on the breakpoint size
+    layout = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+        map(
+            ({matches}) => {
+                if(matches){
+                    return {
+                        columns: 1,
+                        col_span: 1,
+                        row_span: 1
+                    }
+                }
+                else{
+                    return {
+                        columns: 3,
+                        col_span: 1,
+                        row_span: 1,
+                    }
+                }
+            }
+        )
+    );
+
     // Cleaning log data
     allCleaningLogs:Cleaning[];
     latestCleaning:Cleaning;
@@ -39,7 +63,7 @@ export class CleaningViewComponent implements OnInit{
 
     // Constructor and ng method implmentations
 
-    constructor(private cleaningApi:CleaningApiService){}
+    constructor(private breakpointObserver:BreakpointObserver, private cleaningApi:CleaningApiService){}
 
     ngOnInit(){
         // Initalize cleaning data

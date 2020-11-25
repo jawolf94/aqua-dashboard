@@ -1,3 +1,4 @@
 .table-width{
     width: 100%;
+    min-width: 340px;
 }
