@@ -5,15 +5,16 @@
         <mat-grid-tile *ngFor="let param of displayedOverviewCards;">
 
             <!--Overview Card with tankparamter data-->
-            <reading-card
+            <overview-card
                 [colspan]="(layout | async)?.overview.col_span"
                 [rowspan]="(layout | async)?.overview.row_span"  
                 [icon]="cardLabels[param].icon" 
                 [value]="latestReading[param]" 
+                [valueType]="cardLabels[param].type"
                 [unit]="cardLabels[param].unit" 
                 [label]="cardLabels[param].label"
                 [isDateTime]="param === 'timestamp'">
-            </reading-card>
+            </overview-card>
 
         </mat-grid-tile>
     </mat-grid-list>

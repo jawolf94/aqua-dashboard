@@ -9,6 +9,7 @@ import { ChartsModule } from 'ng2-charts';
 
 import { ChartCardLineComponent } from './chart-card-line/chart-card-line.component';
 import { DateTimePickerComponent } from './datetime-picker/datetime-picker.component';
+import { OverviewCardComponent } from './overview-card/overview-card.component';
 
 /**
  * Defined module for all common UI elements used in other views.
@@ -17,7 +18,8 @@ import { DateTimePickerComponent } from './datetime-picker/datetime-picker.compo
  @NgModule({
     declarations: [
         ChartCardLineComponent,
-        DateTimePickerComponent
+        DateTimePickerComponent,
+        OverviewCardComponent
     ],
     imports: [
         CommonModule,
@@ -29,7 +31,8 @@ import { DateTimePickerComponent } from './datetime-picker/datetime-picker.compo
     ],
     exports: [
         ChartCardLineComponent,
-        DateTimePickerComponent
+        DateTimePickerComponent,
+        OverviewCardComponent
     ]
  })
  export class CommonComponentsModule{}

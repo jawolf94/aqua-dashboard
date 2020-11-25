@@ -19,17 +19,6 @@
     min-width: 300px;
 }
 
-.overview-card{
-    position: absolute; 
-    top: 40px; 
-    bottom: 40px; 
-    left: 15px; 
-    right: 15px; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center;
-}
-
 .view-container {
     padding: 15px;
     padding-top: 100px;

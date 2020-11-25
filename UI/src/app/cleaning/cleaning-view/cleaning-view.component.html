@@ -1,0 +1,35 @@
+<!-- Overview Cards showing stats from the latest cleaning -->
+<h2>Last Cleaning</h2>
+
+<!-- Mat Grid used to arrange cards-->
+<mat-grid-list cols="{{ (layout | async)?.columns }} " rowHeight="200px">
+
+    <!-- Overview Card -->
+    <mat-grid-tile *ngFor="let card of allCardLabels">
+        <overview-card
+            [colspan]= "(layout | async)?.col_span"
+            [rowspan]="(layout | async)?.row_span"
+            [value]="getValueFromLatest(card)"
+            [valueType]="cardLabels[card].type"
+            [unit]="cardLabels[card].unit"
+            [label]="cardLabels[card].label"
+            [icon]="cardLabels[card].icon"
+            >
+        </overview-card>
+    </mat-grid-tile>
+</mat-grid-list>
+
+<!-- New Cleaning Button -->
+<div class="button-wrapper">
+    <a mat-raised-button color="primary" routerLink='add-cleaning' class="button">
+        Add Cleaning
+    </a>
+</div>
+
+<!-- Table displaying all tank cleanings-->
+<h2>All Cleanings</h2>
+<div class="table-wrapper">
+    <cleaning-log
+        [cleaningData]="allCleaningLogs">
+    </cleaning-log>
+</div> 

@@ -1,0 +1,70 @@
+<h2>Add Cleaning</h2>
+
+<!-- Cleaning Form -->
+<mat-card class="mat-elevation-z8 form-card">
+
+
+    <!-- Slider Input for Percent Change-->
+    <div class="slider-input-container">
+        <h3 class="input-header"> % Water Changed </h3>
+        <mat-slider class="slider"
+            thumbLabel
+            [displayWith]="formatLabel"
+            step="5"
+            min="{{sliderMin}}"
+            max="{{sliderMax}}"
+            value="{{sliderInitalValue}}"
+            (change)="updateSliderInput($event)">
+        </mat-slider>
+    </div>
+
+    <div class="date-filter-container">
+
+        <!-- Date Time Picker -->
+        <span class="margin-bottom">
+            <h3 class="input-header text-center">Cleaning Date</h3>
+            <datetime-picker
+                (dateTimeEvent)="updateTimeInput($event)"
+                [selectedDate]="datetimeInitalValue"
+                [selectedHour]="datetimeInitalValue.getHours()"
+                [selectedMinute]="datetimeInitalValue.getMinutes()">
+            </datetime-picker>         
+        </span>
+          
+
+        <!-- Filter Changed Input -->
+        <span class="margin-bottom">
+            <h3 class="input-header text-center">Filter Change?</h3>
+            <mat-slide-toggle class="slider-toggle"
+                [checked]="toggleInitalValue"
+                (change)="updateToggleInput($event)">
+                {{toggleLabel}}
+            </mat-slide-toggle>
+        </span>
+        
+    </div>
+
+    <!-- Container for Buttons -->
+    <div class="button-wrapper">
+
+        <!-- Cancel Button -->
+        <button
+            mat-stroked-button
+            color="accent"
+            class="form-button"
+            routerLink="/cleaning">
+            Cancel    
+        </button>
+    
+        <!-- Add cleaning button -->
+        <button 
+            mat-raised-button
+            color="primary" 
+            class="form-button"
+            (click)="saveCleaning()">
+            Add Cleaning
+        </button>
+
+    </div>
+
+</mat-card>
