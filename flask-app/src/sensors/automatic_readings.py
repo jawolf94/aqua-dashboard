@@ -1,13 +1,13 @@
 from datetime import datetime, timezone
-from marshmallow import EXCLUDE
 
+from ..alerts.alert import send_param_alert
 from ..app_config import config
 from ..parameter_config import tank_parameters
 from ..entities.reading import Reading
 from ..proceedures.parameter_status import store_parameter_status
 from ..proceedures.tank_readings import save_reading
 from ..schema.reading import ReadingSchema, complete_reading_schema
-from ..validators.reading_validators import check_parameters
+from ..common.reading_validators import validate_parameters
 from .temp_io import TempIO
 
 sensor_config = config["READINGS"]["SENSORS"]
@@ -49,5 +49,9 @@ def create_reading():
     save_reading(reading_entity)
 
     # Check paramater ranges
-    results = check_parameters(reading, tank_parameters)
+    results = validate_parameters(reading, tank_parameters)
     store_parameter_status(reading_entity.id, results["invalid_parameters"])
+
+    # Alert on any paramaters out of range
+    if not results["valid"] and config["ALERTS"]["ENABLED"]:
+        send_param_alert(results["invalid_parameters"], reading)

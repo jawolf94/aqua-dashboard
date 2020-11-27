@@ -19,7 +19,7 @@ def add_cleaning_log_entry(cleaning):
     # Close session before exiting
     session.close()
 
-def get_cleaning_logs():
+def get_cleaning_logs(num_cleanings=None):
     """ Retrieves all rows from cleaning_log table.
     
         Returns ([entities.cleaning.Cleaning]) - Cleaning entieis. Each one representing a row
@@ -30,8 +30,14 @@ def get_cleaning_logs():
 
     # Get all rows sorted in desc order
     cleaning_objs= session.query(Cleaning).\
-        order_by(Cleaning.timestamp.desc()).\
-        all()
+        order_by(Cleaning.timestamp.desc())
+    
+    # Limit query if specified.
+    if num_cleanings is not None:
+        cleaning_objs = cleaning_objs.limit(num_cleanings)
+
+    
+    cleaning_objs = cleaning_objs.all()
 
 
     # Close connection before returning

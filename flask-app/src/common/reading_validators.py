@@ -1,11 +1,12 @@
-# Defines functions to verify tank reading data
+""" Defines functions to verify tank reading data """
 
-
-def check_parameters(reading, expected_vals):
+def validate_parameters(reading, expected_vals):
     """ Validates if a reading's paramaters fall within an expected range
 
         reading (schema.Reading) - The reading to be verified
         expected_vals - Dictionary of min/max values for parameters
+        save (bool) - Saves the validation to the DB when True
+        alert (bool) - Alerts on invalid values when True. App config must also be true.
 
         returns - Dictionary with two keys describing outcome of verification
             "valid" - True if all parameters fall within the expected range
