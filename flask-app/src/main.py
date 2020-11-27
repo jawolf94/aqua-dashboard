@@ -1,9 +1,11 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-from flask import Flask, jsonify
+from flask import Flask
 from flask_cors import CORS
+import pytz
 
 from .app_config import config
 from .database  import Base, Engine
+from .common.cleaning_common import alert_last_cleaning
 from .endpoints.cleaning import cleaning
 from .endpoints.reading import reading
 from .parameter_config import tank_parameters
@@ -32,10 +34,18 @@ def create_app():
     app.register_blueprint(reading)
     app.register_blueprint(cleaning)
 
+    # Create scheduler for the app
+    scheduler = BackgroundScheduler()
+
     # Schedule task to automatically generate tank readings
     if config["READINGS"]["AUTOMATIC"]:
-        scheduler = BackgroundScheduler()
         scheduler.add_job(func=create_reading, trigger='interval', minutes=config["READINGS"]["INTERVAL"])
-        scheduler.start()
 
+    # Schedule regular cleaning alerts if config is enabled
+    if config["ALERTS"]["ENABLED"]:
+        scheduler.add_job(func=alert_last_cleaning, trigger='cron', hour=12, minute=0, timezone=pytz.utc)
+        
+    # Start app scheduler
+    scheduler.start()
+        
     return app

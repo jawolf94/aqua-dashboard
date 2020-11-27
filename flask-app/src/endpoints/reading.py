@@ -3,14 +3,15 @@ from flask import Blueprint, current_app, jsonify, request
 import json
 from marshmallow import EXCLUDE, ValidationError
 
-from ..entities.temperature import Temperature
+from ..app_config import config
+from ..alerts.alert import send_param_alert
 from ..entities.reading import Reading
 from ..proceedures.parameter_status import read_parameter_status, store_parameter_status
 from ..proceedures.tank_readings import get_latest_readings, get_readings_between, save_reading
 from ..schema.date import DateSchema
 from ..schema.parameter_status import ParameterStatusSchema
 from ..schema.reading import complete_reading_schema, ReadingSchema
-from ..validators.reading_validators import check_parameters
+from ..common.reading_validators import validate_parameters
 
 reading = Blueprint('reading', __name__, url_prefix="/")
 
@@ -105,9 +106,13 @@ def save_manual_reading():
     # Save reading to table
     save_reading(reading)
 
-    # Check if parameters from reading are in expected ranges and store
-    results = check_parameters(completed_reading, current_app.config["tank_parameters"])
+    # Check if parameters from reading are in expected ranges, store, & alert
+    results = validate_parameters(completed_reading, current_app.config["tank_parameters"])
     store_parameter_status(reading.id, results["invalid_parameters"])
+
+    # Alert on any paramaters if specified by callers
+    if not results["valid"] and config["ALERTS"]["ENABLED"]:
+        send_param_alert(results["invalid_parameters"], completed_reading)
 
     # Return new reading
     return jsonify(completed_reading)

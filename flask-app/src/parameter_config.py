@@ -23,6 +23,9 @@ tank_parameters = {
     "TEMPERATURE": {
         "MIN": 72,
         "MAX": 77
-    }
+    },
+
+    # Number of days to elapse before cleaning is needed
+    "CLEANING_TIME": 7
 
 }
