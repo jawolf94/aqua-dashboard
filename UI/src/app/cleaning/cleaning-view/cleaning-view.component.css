@@ -1,18 +1,3 @@
-.button{
-    min-width: 116px; 
-    width: 25%;
-}
-
-.button-wrapper{
-    display: flex; 
-    flex-direction: row;
-    align-items: center; 
-    justify-content: flex-start;  
-    
-    padding-left: 15px; 
-    margin-bottom: 1.5rem;
-}
-
 .table-wrapper{
     padding-left: 15px; 
     padding-right:15px

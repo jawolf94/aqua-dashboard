@@ -1,73 +1,54 @@
-import {Component} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup} from '@angular/forms';
+import { Router } from '@angular/router';
 
-import {Reading} from 'src/app/models/reading/reading.model';
+import { Reading } from 'src/app/models/reading/reading.model';
 import { MessageService } from 'src/app/services/message.service';
-import {ReadingApiService} from '../../services/reading-api.service';
+import { ReadingApiService } from '../../services/reading-api.service';
 
 
 @Component({
     selector: 'reading-form',
-    templateUrl: './reading-form.component.html'
+    templateUrl: './reading-form.component.html',
+    styleUrls: ['./reading-form.component.css']
 })
 /**
  * ReadingFormComponent supports a form for users to enter manual tank readings.
  */
-export class ReadingFormComponent{
+export class ReadingFormComponent implements OnInit{
     
-    // Reading entered by the user
-    reading: Reading;
+    // Reading form model to capture input from the user
+    readingForm:FormGroup;
     
-    constructor(private readingApi : ReadingApiService, private messages:MessageService, private router: Router){
-        this.reading = new Reading();
-    }
+    // ng function definitions
+    constructor(private readingApi : ReadingApiService, private messages:MessageService, private router: Router){}
 
-    /**
-     * Updates this form's ammonia value with the user's input.
-     * @param event - UI driven event triggered by keyup
-     */
-    updateAmmonia(event:any){
-        this.reading.ammonia_ppm = this.strpNonNum(event.target.value);
-    }
-
-    /**
-     * Updates this form's nitrate value with the user's input.
-     * @param event - UI driven event triggered by keyup
-     */
-    updateNitrite(event:any){
-        this.reading.nitrite_ppm = this.strpNonNum(event.target.value);
-    }
-
-     /**
-     * Updates this form's nitrate value with the user's input.
-     * @param event - UI driven event triggered by keyup
-     */
-    updateNitrate(event:any){
-        this.reading.nitrate_ppm = this.strpNonNum(event.target.value);
-    }
-
-     /**
-     * Updates this form's ph value with the user's input.
-     * @param event - UI driven event triggered by keyup
-     */
-    updatePH(event: any){
-        this.reading.ph = this.strpNonNum(event.target.value);
-    }
-
-     /**
-     * Updates this form's temperature value with the user's input.
-     * @param event - UI driven event triggered by keyup
-     */
-    updateTemperature(event : any){
-        this.reading.temperature = this.strpNonNum(event.target.value);
+    ngOnInit(){
+        this.readingForm = new FormGroup({
+            ammonia: new FormControl(),
+            nitrite: new FormControl(),
+            nitrate: new FormControl(),
+            ph: new FormControl(),
+            temperature:  new FormControl()
+        })
     }
 
     /**
      * Uses ReadingAPIService to send this form's reading to be saved. 
      */
     saveReading(){
+        // Create a new reading model to send from form model
+        const reading:Reading = {
+            "ammonia_ppm": this.sanitizeNullValues(this.readingForm.value.ammonia),
+            "nitrite_ppm": this.sanitizeNullValues(this.readingForm.value.nitrite),
+            "nitrate_ppm": this.sanitizeNullValues(this.readingForm.value.nitrate),
+            "ph": this.sanitizeNullValues(this.readingForm.value.ph),
+            "temperature": this.sanitizeNullValues(this.readingForm.value.temperature)
+        }
+
+        // Send reading to backend and subscribe to the result
         this.readingApi
-            .saveManualReading(this.reading)
+            .saveManualReading(reading)
             .subscribe(
                 () => this.router.navigate(['/']),
                 err => {
@@ -78,11 +59,11 @@ export class ReadingFormComponent{
     }
 
     /**
-     * Checks if the value passed is a valid number.
+     * Sanitizes null form input value as undefined.
      * @param input - any input entered by the user
-     * @returns Unaltered input parameter if input is a valid number. Returns undefined otherwise.
+     * @returns Unaltered input parameter if input was provided. Returns undefined otherwise.
      */
-    private strpNonNum(input:any): Number{
-        return isNaN(input) || input ==='' ? undefined : input;
+    private sanitizeNullValues(input:any): Number{
+        return input === null || input === undefined ? undefined : input;
     }
 }

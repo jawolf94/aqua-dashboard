@@ -8,6 +8,29 @@ button.new-reading{
     top: 15px;
 }
 
-  .full-width {
-    width: 100%;
-  }
+.form-button{
+    width: 30%; 
+    min-width: 145px !important; 
+}
+
+.form-button-wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.overview-button{
+    min-width: 132px; 
+    width: 25%;
+}
+
+.overview-button-wrapper{
+    display: flex; 
+    flex-direction: row;
+    align-items: center; 
+    justify-content: flex-start;  
+    
+    padding-left: 15px; 
+    margin-bottom: 1.5rem;
+}
