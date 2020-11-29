@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 
 import { Cleaning } from "src/app/models/cleaning/cleaning.model";
 import { CleaningApiService } from "src/app/services/cleaning-api.service";
+import { MessageService } from "src/app/services/message.service";
 
 @Component({
     selector: 'add-cleaning',
@@ -32,7 +33,7 @@ export class AddCleaningComponent implements OnInit{
         changed: "Filter Changed"
     }
 
-    constructor(private cleaningApi:CleaningApiService, private router:Router){}
+    constructor(private cleaningApi:CleaningApiService, private messages:MessageService, private router:Router){}
 
 
     ngOnInit(){
@@ -75,7 +76,7 @@ export class AddCleaningComponent implements OnInit{
             .addCleaning(this.cleaning)
             .subscribe(
                 res => {this.router.navigate(['/cleaning'])},
-                err => {alert(err);}
+                err => {this.messages.setMessage(err)}
             );
     }
 

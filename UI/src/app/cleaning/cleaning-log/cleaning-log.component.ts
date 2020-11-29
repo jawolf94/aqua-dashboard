@@ -31,19 +31,26 @@ export class CleaningLogComponent implements OnInit, OnChanges{
 
     ngOnInit(){
         // Associate paginator with data
+        if(!this.cleaningData){
+            this.cleaningData = [];
+        }
+
         this.displayData = new MatTableDataSource<Cleaning>(this.cleaningData);
         this.displayData.paginator = this.paginator;
         
     }
 
     ngOnChanges(){
-        // Create deep copy of chart data
-        this.displayData.data = JSON.parse(JSON.stringify(this.cleaningData));
 
-        // Set timezone for cleaning log dates
-        this.displayData.data.forEach(entry => {
-            var date = entry.timestamp.toString() + "+00:00";
-            entry.timestamp = new Date(date);
-        });
+        if(this.cleaningData && this.displayData){
+             // Create deep copy of chart data
+            this.displayData.data = JSON.parse(JSON.stringify(this.cleaningData));
+
+            // Set timezone for cleaning log dates
+            this.displayData.data.forEach(entry => {
+                var date = entry.timestamp.toString() + "+00:00";
+                entry.timestamp = new Date(date);
+            });
+        }
     }
 }

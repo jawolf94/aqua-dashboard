@@ -1,0 +1,6 @@
+<div *ngIf="message" class="mat-elevation-z10 banner-container">
+    <span class="alert-text">{{message}}</span>
+    <button mat-icon-button>
+        <i class="material-icons" (click)="close()">clear</i>
+    </button>
+</div>

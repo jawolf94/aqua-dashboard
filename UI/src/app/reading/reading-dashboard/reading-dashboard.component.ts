@@ -9,6 +9,7 @@ import { Color, Label } from 'ng2-charts';
 
 import { TIMEZONE } from 'src/app/env';
 import { Reading } from 'src/app/models/reading/reading.model';
+import { MessageService } from 'src/app/services/message.service';
 import { ParameterStatus } from 'src/app/models/reading/parameter_status.model';
 import { ReadingApiService } from '../../services/reading-api.service';
 import { CardChartData } from '../../common-components/card-chart-data.model';
@@ -133,7 +134,7 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
      * @param readingAPI API Service which represents tank reading data.
      * @param breakpointObserver Observer which represents the size of the screen
      */
-    constructor(private readingAPI: ReadingApiService, private breakpointObserver: BreakpointObserver){}
+    constructor(private readingAPI: ReadingApiService, private messages:MessageService, private breakpointObserver: BreakpointObserver){}
 
     /**
      * Initalizes this component. 
@@ -153,7 +154,9 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
                     this.latestReading = res;
                     this.updateIcons();
                 },
-                err => {console.log(err);}
+                err => {
+                    this.messages.setMessage(err);
+                }
             );
 
         // Set up params to request today's readings
@@ -178,8 +181,10 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
 
                 },
                 err => {
-                    // Log the error
-                    console.log(err);
+                    // Report the error to the user
+                    this.messages.setMessage(err);
+
+                    // Initalize the chart with no data
                     this.chartInit();     
                 }
             )
@@ -292,7 +297,11 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
                         });
                         
                     },
-                    err => {console.log(err); }
+                    err => {
+                      // Report error to the user
+                      this.messages.setMessage(err);
+                      
+                    }
                 )
         }
     }

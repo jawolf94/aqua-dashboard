@@ -10,6 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module'
+import { CommonComponentsModule } from './common-components/common-components.module'
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { AppRoutingModule } from './app-routing.module'
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
+    CommonComponentsModule,
     HttpClientModule,
     MatButtonModule,
     MatNativeDateModule,
