@@ -29,12 +29,12 @@ def add_cleaning():
 
     except ValidationError as va:
         # Catch Validation Errors when request object is mal-formatted
-        message = "Error while saveing cleaning data. Please reformat & try again"
+        message = "Error: Your entry is formatted incorrectly. Please re-enter & try again."
         return handle_error(va, code = 400, message=message)
 
     except Exception as ex:
         # Catch generic exceptions
-        return handle_error(ex)
+        return handle_error(ex, message="Error: An unknown issue occured while saving your cleaning data. Please try again.")
 
 @cleaning.route('/get-cleanings')
 def get_cleanings():
@@ -45,7 +45,6 @@ def get_cleanings():
         # Call stored proceedure to get cleaning logs
         cleaning_objs = get_cleaning_logs()
 
-        dsad = 
         # Convert Cleaning entites into schemas
         schema = CleaningSchema(many=True)
         cleanings = schema.dump(cleaning_objs)
@@ -55,4 +54,4 @@ def get_cleanings():
 
     except Exception as ex:
         # Catch generic exceptions 
-        return handle_error(ex)
+        return handle_error(ex, message="Error: Could not fetch the tank's cleaning logs. Please try again later.")

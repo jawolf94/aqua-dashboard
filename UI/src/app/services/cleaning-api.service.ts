@@ -1,16 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { API_URL } from '../env';
 import { Cleaning } from '../models/cleaning/cleaning.model';
+import { ServiceUtil } from './service-util.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CleaningApiService{
 
-    constructor(private httpClient:HttpClient){}
+    constructor(private httpClient:HttpClient, private utils:ServiceUtil){}
 
     /**
      * Posts a new cleaning log entry to the Flask API
@@ -19,7 +21,10 @@ export class CleaningApiService{
      */
     addCleaning(cleaningLog:Cleaning): Observable<any>{
         return this.httpClient
-        .post(`${API_URL}/cleaning/add-cleaning`, cleaningLog);
+        .post(`${API_URL}/cleaning/add-cleaning`, cleaningLog)
+        .pipe(
+          catchError(this.utils.handleError)
+        );
     }
 
     /**
@@ -29,6 +34,9 @@ export class CleaningApiService{
      */
     getCleanings(): Observable<Cleaning[]>{
         return this.httpClient
-        .get<Cleaning[]>(`${API_URL}/cleaning/get-cleanings`);
+        .get<Cleaning[]>(`${API_URL}/cleaning/get-cleanings`)
+        .pipe(
+            catchError(this.utils.handleError)
+        );
     }
 }

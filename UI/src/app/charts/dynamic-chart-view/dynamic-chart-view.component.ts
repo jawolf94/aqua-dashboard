@@ -9,6 +9,7 @@ import { TIMEZONE } from 'src/app/env';
 import { CardChartData } from 'src/app/common-components/card-chart-data.model'
 import { Reading } from 'src/app/models/reading/reading.model';
 import { ReadingApiService } from 'src/app/services/reading-api.service';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
     selector: 'dynamic-chart-view',
@@ -80,7 +81,7 @@ export class DynamicChartViewComponent implements OnInit{
     );
 
     // Contructor and ng function implmentations
-    constructor(private breakPointObserver:BreakpointObserver, private readingApi:ReadingApiService){}
+    constructor(private breakPointObserver:BreakpointObserver, private messages:MessageService, private readingApi:ReadingApiService){}
 
     ngOnInit(){
 
@@ -173,7 +174,10 @@ export class DynamicChartViewComponent implements OnInit{
                     this.rawReadings = res;
                     this.formatChartData();
                 },
-                err => {console.log(err)}
+                err => {
+                    // Report Error to the user
+                    this.messages.setMessage(err);
+                }
             );
     }
 }

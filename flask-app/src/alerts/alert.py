@@ -43,7 +43,7 @@ def send_param_alert(alert_params, param_values):
     thread.start()
 
 
-def send_alert_message(message, recipient):
+def send_alert_message(message, recipients):
     """ Sends an email to the list of recipients.
         message (string) - message to send
         recipients ([string]) - list of recipient email addresses

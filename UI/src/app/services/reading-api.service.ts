@@ -7,6 +7,7 @@ import { API_URL } from '../env';
 import { DateTimeModel } from '../models/common/datetime.model'
 import { ParameterStatus } from 'src/app/models/reading/parameter_status.model';
 import { Reading } from 'src/app/models/reading/reading.model';
+import { ServiceUtil } from './service-util.service';
 
 /**
  * Service which performs GET and POST opperations to Tank Reading APIs
@@ -16,7 +17,7 @@ import { Reading } from 'src/app/models/reading/reading.model';
 })
 export class ReadingApiService{
 
-    constructor(private httpClient: HttpClient){}
+    constructor(private httpClient: HttpClient, private utils:ServiceUtil){}
 
     /**
      * @returns Observable<Reading> which represents latest reading from tank.
@@ -25,12 +26,7 @@ export class ReadingApiService{
         return this.httpClient
             .get<Reading>(`${API_URL}/latest-reading`)
             .pipe(
-                catchError(
-                    err => {
-                        console.log(err.message);
-                        return new Observable<Reading>();
-                    }
-                )
+                catchError(this.utils.handleError)
             )
     }
 
@@ -41,12 +37,7 @@ export class ReadingApiService{
         return this.httpClient
             .get<Reading[]>(`${API_URL}/all-readings`)
             .pipe(
-                catchError(
-                    err => {
-                        console.log(err.message);
-                        return new Observable<Reading[]>();
-                    }
-                )
+                catchError(this.utils.handleError)
             );
     }
 
@@ -83,6 +74,9 @@ export class ReadingApiService{
         // Request and return Observable
         return this.httpClient
             .get<Reading[]>(`${API_URL}/readings-between`, {params: requestParams})
+            .pipe(
+                catchError(this.utils.handleError)
+            );
            
     }
 
@@ -94,12 +88,7 @@ export class ReadingApiService{
         return this.httpClient
             .post<ParameterStatus>(`${API_URL}/check-parameter-status`, reading)
             .pipe(
-                catchError(
-                    err=> {
-                        console.log(err.message);
-                        return new Observable<ParameterStatus>();
-                    }
-                )
+                catchError(this.utils.handleError)
             );
     }
 
@@ -109,6 +98,9 @@ export class ReadingApiService{
      */
     saveManualReading(reading: Reading): Observable<any>{
         return this.httpClient
-            .post(`${API_URL}/save-manual-reading`, reading);
+            .post(`${API_URL}/save-manual-reading`, reading)
+            .pipe(
+                catchError(this.utils.handleError)
+            );
     }
 }

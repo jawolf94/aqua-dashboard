@@ -2,7 +2,7 @@ from flask import jsonify
 
 from ..schema.error import ErrorSchema
 
-def handle_error(error, code = 500, message="Your request could not be completed. Please try again later."):
+def handle_error(error, code = 500, message="Error: An unknown error occurred. Please retry your request."):
     """ Generates a response for endpoints when an error occurs
 
         error (Exception) - Exception caught by caller.
@@ -15,7 +15,7 @@ def handle_error(error, code = 500, message="Your request could not be completed
     # Convert error into string
     error_string = str(error)
 
-    # Create objext to load into schema
+    # Create object to load into schema
     error_obj = {
         "exception": error_string,
         "message": message

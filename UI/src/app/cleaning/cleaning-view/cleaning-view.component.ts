@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 
 import { Cleaning } from 'src/app/models/cleaning/cleaning.model';
 import { CleaningApiService } from 'src/app/services/cleaning-api.service';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
     selector: 'cleaning-view',
@@ -63,7 +64,7 @@ export class CleaningViewComponent implements OnInit{
 
     // Constructor and ng method implmentations
 
-    constructor(private breakpointObserver:BreakpointObserver, private cleaningApi:CleaningApiService){}
+    constructor(private breakpointObserver:BreakpointObserver, private cleaningApi:CleaningApiService, private messages:MessageService){}
 
     ngOnInit(){
         // Initalize cleaning data
@@ -78,7 +79,13 @@ export class CleaningViewComponent implements OnInit{
                     this.allCleaningLogs = res;
                     this.setLatestCleaning();
                 },
-                err => { console.log(err); }
+                err => { 
+                    // Display error message to the user
+                    this.messages.setMessage(err) 
+
+                    // Ensure cleaning log is set to empty set of data
+                    this.allCleaningLogs = [];
+                }
             );
     }
 

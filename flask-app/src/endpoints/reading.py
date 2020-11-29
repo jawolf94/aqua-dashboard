@@ -32,7 +32,7 @@ def all_readings():
 
     except Exception as ex:
         # Handle generic errors
-        return handle_error(ex)
+        return handle_error(ex, message="Error: An unknown issue occured while fetching your tank's readings. Please try again.")
 
 @reading.route('/latest-reading')
 def latest_reading():
@@ -54,12 +54,14 @@ def latest_reading():
 
     except Exception as ex:
         # Handle generic errors
-        return handle_error(ex)
+        return handle_error(ex, message="Error: An unknown issue occured while fetching the latest tank reading. Please try again.")
 
 @reading.route('/readings-between')
 def readings_between():
     """Returns serialized list of readings between given timestamps"""
 
+    # Define error message for except blocks.
+    error_message = "Error: Could not fetch readings between the dates provided."
     try:
         # Parse request data from the query string
         start = request.args.get('start')
@@ -82,7 +84,7 @@ def readings_between():
             readings = get_readings_between(start,end)
             
         else:
-            raise ValueError("Please specify a starting timestamp.")
+            raise ValueError(error_message + " Please indicate a starting timestamp for your query.")
 
         # Serialize and return readings
         reading_schema = ReadingSchema(many=True)
@@ -92,7 +94,7 @@ def readings_between():
 
     except ValidationError as err:
         # Return 400 error if request is mal-formed
-        return handle_error(err,code=400)
+        return handle_error(err,code=400, message=error_message)
 
     except ValueError as err:
         # Return 400 error if timestamp is missing
@@ -101,7 +103,7 @@ def readings_between():
         
     except Exception as e:
         # Catch any exceptions thrown and return error code
-        return handle_error(e)
+        return handle_error(e, message=error_message)
 
 
 @reading.route('/save-manual-reading', methods=['POST'])
@@ -134,20 +136,23 @@ def save_manual_reading():
     
     except ValidationError as err:
         # Return 400 error if request is mal-formed
-        return handle_error(err,code=400)
+        return handle_error(err,code=400, message="Error: Your entry is formatted incorrectly. Please re-enter & try again.")
 
     except Exception as err:
         # Handle generic error
-        return handle_error(err)
+        return handle_error(err, message="Error: Your reading could not be saved. Please try again.")
 
 
 @reading.route('/check-parameter-status', methods=['POST'])
 def check_parameter_status():
-    # Deserialize request data
-    posted_data = ParameterStatusSchema(unknown=EXCLUDE).load(request.get_json())
-
-    # Pass reading_id to proceedure
+    
+    # Define error message for except blocks
+    error_message = "Error: Could not fetch parameter stats."
     try:
+
+        # Deserialize request data
+        posted_data = ParameterStatusSchema(unknown=EXCLUDE).load(request.get_json())
+
         # Get status from database
         status_obj = read_parameter_status(posted_data["reading_id"])
 
@@ -164,12 +169,16 @@ def check_parameter_status():
 
     except ValidationError as err:
         # Return 400 error if request is mal-formed
-        return handle_error(err,code=400)
+        return handle_error(err,code=400, message= error_message + " Unexpected request format.")
 
     except KeyError as err:
         # Return 400 Error if reading_id was not specified.
-        return handle_error(err, code=400)
+        return handle_error(err, code=400, message= error_message + " Reading ID not specifed.")
 
     except LookupError as err:
         # Return 409 if multiple keys were found
-        return handle_error(err,code = 409)
+        return handle_error(err,code = 409, message= error_message + " Multiple readings were found for this ID.")
+
+    except Exception as err:
+        # Handle generic error
+        return handle_error(err, message=error_message)

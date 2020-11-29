@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
@@ -9,6 +10,7 @@ import { ChartsModule } from 'ng2-charts';
 
 import { ChartCardLineComponent } from './chart-card-line/chart-card-line.component';
 import { DateTimePickerComponent } from './datetime-picker/datetime-picker.component';
+import { MessageComponent } from './message-banner/message-banner.component';
 import { OverviewCardComponent } from './overview-card/overview-card.component';
 
 /**
@@ -19,11 +21,13 @@ import { OverviewCardComponent } from './overview-card/overview-card.component';
     declarations: [
         ChartCardLineComponent,
         DateTimePickerComponent,
+        MessageComponent,
         OverviewCardComponent
     ],
     imports: [
         CommonModule,
         ChartsModule,
+        MatButtonModule,
         MatCardModule,
         MatDatepickerModule,
         MatInputModule,
@@ -32,6 +36,7 @@ import { OverviewCardComponent } from './overview-card/overview-card.component';
     exports: [
         ChartCardLineComponent,
         DateTimePickerComponent,
+        MessageComponent,
         OverviewCardComponent
     ]
  })

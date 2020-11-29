@@ -1,0 +1,20 @@
+.alert-text{
+    font-size: medium; 
+    font-weight: 300;
+}
+
+.banner-container{
+    display: flex; 
+    flex-direction: row; 
+    align-items: center; 
+    justify-content: space-between;
+
+    border-radius: 10px;
+    height: fit-content;
+    background-color: #f44336; 
+    color: white;
+
+    margin-bottom: 1.5rem;  
+    padding: 10px;
+   
+}

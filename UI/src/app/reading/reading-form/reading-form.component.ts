@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {Reading} from 'src/app/models/reading/reading.model';
+import { MessageService } from 'src/app/services/message.service';
 import {ReadingApiService} from '../../services/reading-api.service';
 
 
@@ -17,7 +18,7 @@ export class ReadingFormComponent{
     // Reading entered by the user
     reading: Reading;
     
-    constructor(private readingApi : ReadingApiService, private router: Router){
+    constructor(private readingApi : ReadingApiService, private messages:MessageService, private router: Router){
         this.reading = new Reading();
     }
 
@@ -69,7 +70,10 @@ export class ReadingFormComponent{
             .saveManualReading(this.reading)
             .subscribe(
                 () => this.router.navigate(['/']),
-                err => alert(err.message)
+                err => {
+                    // Display error to the user
+                    this.messages.setMessage(err)
+                }            
             )
     }
 
