@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatSelectChange } from '@angular/material/select';
 
@@ -20,73 +21,96 @@ interface TimeSelectOption{
 })
 export class DateTimePickerComponent implements OnInit{
 
-    // Default Values for hour and minutes
-    @Input() selectedHour: number;
-    @Input() selectedMinute: number;
-    @Input() selectedDate: Date;
-    
-    // Field to represent inital date - prevents cirular updates with inital data binding
-    initDate:Date;
+    // Inital values for date, hour and, minutes
+    @Input() initalHour: number;
+    @Input() initalMinute: number;
+    @Input() initalDate: Date;
+
+    // Parent FormGroup - passed in when used with ngForms
+    @Input() parentForm:FormGroup = null;
 
     // Output of full datetime selection
-    @Output() dateTimeEvent: EventEmitter<Date>  = new EventEmitter<Date>();;
+    @Output() dateTimeEvent: EventEmitter<Date>  = new EventEmitter<Date>();
 
-    // Arrays used to populate hour and minute selects
+    // Arrays used to populate hour and minute select options
     hours:TimeSelectOption[];
     minutes:TimeSelectOption[];
+
+    // ngForm for user inputs
+    dateForm:FormGroup;
+
+    // Interal represenation of the ngModel as a Date object
+    dateSelection:Date;
+
 
     /**
      * Initalizes time selections with hour and minute values
      */
     ngOnInit(){
 
-        // Set values for hours, minutes and timePeriod
-        this.hours = this.setTimeOptions(0,23);
-        this.minutes = this.setTimeOptions(0,59);
+         // Set values for hours, minutes and timePeriod
+         this.hours = this.setTimeOptions(0,23);
+         this.minutes = this.setTimeOptions(0,59);
 
-        // Make sure user inputs are in range - default to 12hr 00min otherwise
+        // Make sure default inputs are in range - default to 12hr 00min otherwise
         if(this.invalidHours()){
-            this.selectedHour = 0;
+            this.initalHour = 0;
         }
         if(this.invalidMinutes()){
-            this.selectedMinute = 0;
+            this.initalMinute = 0;
         }
 
         // Check if user provided a defualt date
-        if(!this.selectedDate){
-
+        if(!this.initalDate){
             // Use today for intital values if none was provided
-            this.initDate = new Date()
-            this.selectedDate = this.initDate;
+            this.initalDate = new Date();
         }
-        else{
+       
 
-            // Set inital date to selectedDate if one was set
-            this.initDate = this.selectedDate;
+        //Create form for datetime inputs
+        this.dateForm = new FormGroup({
+            date: new FormControl(this.initalDate),
+            hour: new FormControl(this.initalHour),
+            minute: new FormControl(this.initalMinute)
+        })
+
+        // Add timestamp input field to parentComponent if specified
+        if(this.parentForm){
+            this.parentForm.addControl('timestamp',new FormControl(this.dateSelection))
         }
 
-        // Set Output to match inital inputs
+        // Set internal model to match inital inputs
+        this.modelChange();
+
+        
+        // Subscribe to future model changes
+        this.dateForm.valueChanges.subscribe(
+           () => this.modelChange()
+        )  
+
+    }
+
+    modelChange(){
+
+        // Create a new date object with the user's input
+        this.dateSelection = new Date(this.dateForm.value.date);
+
+        // Set date object's hours and minutes to the user's input
+        // Default seconds and microseconds to 0 - user cannot input these
+        this.dateSelection.setHours(
+            this.dateForm.value.hour,
+            this.dateForm.value.minute,
+            0,0);
+
+        // Update field value if used in a FormGroup
+        if(this.parentForm){
+            this.parentForm.patchValue({
+                'timestamp': this.dateSelection
+            })
+        }
+
+        // Emit output for non FormGroup use cases
         this.emitDateOutput();
-
-    }
-
-
-    /**
-     * @returns True if defaultHours is a valid number between 1 & 12
-     */
-    invalidHours(): boolean{
-        return !this.selectedHour
-            || this.selectedHour < 0
-            || this.selectedHour > 23;
-    }
-
-    /**
-     * @returns True if defaultMinutes is a valid number between 0 & 59
-     */
-    invalidMinutes(): boolean{
-        return !this.selectedMinute
-            || this.selectedMinute < 0
-            || this.selectedMinute > 59
     }
 
     /**
@@ -94,15 +118,8 @@ export class DateTimePickerComponent implements OnInit{
      */
     emitDateOutput(){
 
-        // This code offsets the user's input to 
-        // Default seconds and microseconds to 0 - user cannot input these
-        this.selectedDate.setHours(
-            this.selectedHour,
-            this.selectedMinute,
-            0,0);
-
-        // Emit event
-        this.dateTimeEvent.emit(this.selectedDate);
+        // Emit new date value
+        this.dateTimeEvent.emit(this.dateSelection);
     }
 
     /**
@@ -134,32 +151,21 @@ export class DateTimePickerComponent implements OnInit{
         return options;
     }
 
-
-    /**
-     * Updates component's private date value
-     * @param event - Event emitted when the user updates the date input
+        /**
+     * @returns True if defaultHours is a valid number between 1 & 12
      */
-    updateDate(event: MatDatepickerInputEvent<Date>){
-        this.selectedDate = event.value;
-        this.emitDateOutput();
+    invalidHours(): boolean{
+        return !this.initalHour
+            || this.initalHour < 0
+            || this.initalHour > 23;
     }
 
     /**
-     * Updates component's private hour value with the user's selection
-     * @param event - Event emitted when the user updates the hour input
+     * @returns True if defaultMinutes is a valid number between 0 & 59
      */
-    updateHour(event: MatSelectChange){
-        this.selectedHour = event.value;
-        this.emitDateOutput();
+    invalidMinutes(): boolean{
+        return !this.initalMinute
+            || this.initalMinute < 0
+            || this.initalMinute > 59
     }
-
-    /**
-     * Updates component's private minute value with the user's selection
-     * @param event - Event emitted when the user updates the minute input
-     */
-    updateMinute(event: MatSelectChange){
-        this.selectedMinute = event.value;
-        this.emitDateOutput();
-    }
-
 }
