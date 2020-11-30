@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule} from '@angular/forms'; 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -31,7 +32,8 @@ import { OverviewCardComponent } from './overview-card/overview-card.component';
         MatCardModule,
         MatDatepickerModule,
         MatInputModule,
-        MatSelectModule
+        MatSelectModule,
+        ReactiveFormsModule
     ],
     exports: [
         ChartCardLineComponent,

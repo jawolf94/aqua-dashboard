@@ -1,37 +1,63 @@
-<mat-card>
+<mat-card class="form-wrapper">
     <h2>New Reading</h2>
 
-    <!-- Ammonia Input Feild-->
-    <mat-form-field class="full-width">
-        <mat-label>Ammonia</mat-label>
-        <input matInput placeholder="0.0" (keyup)="updateAmmonia($event)"/>
-    </mat-form-field>
+    <!-- Reading input field-->
+    <form [formGroup]="readingForm" (ngSubmit)="saveReading()" class="form-layout">
 
-    <!-- Nitrite Input Feild-->
-    <mat-form-field class="full-width">
-        <mat-label>Nitrite</mat-label>
-        <input matInput placeholder="0.0" (keyup)="updateNitrite($event)"/>
-    </mat-form-field>
+        <!-- Ammonia Input Feild-->
+        <mat-form-field>
+            <mat-label>Ammonia</mat-label>
+            <input matInput formControlName="ammonia" placeholder="0.0" type="number">
+        </mat-form-field>
 
-    <!-- Nitrate Input Feild-->
-    <mat-form-field class="full-width">
-        <mat-label>Nitrate</mat-label>
-        <input matInput placeholder="0.0" (keyup)="updateNitrate($event)"/>
-    </mat-form-field>
+        <!-- Nitrite Input Feild-->
+        <mat-form-field>
+            <mat-label>Nitrite</mat-label>
+            <input matInput formControlName="nitrite" placeholder="0.0" type="number"/>
+        </mat-form-field>
 
-    <!-- PH Input Feild-->
-    <mat-form-field class="full-width">
-        <mat-label>PH</mat-label>
-        <input matInput placeholder="0.0" (keyup)="updatePH($event)"/>
-    </mat-form-field>
+        <!-- Nitrate Input Feild-->
+        <mat-form-field>
+            <mat-label>Nitrate</mat-label>
+            <input matInput formControlName="nitrate" placeholder="0.0" type="number"/>
+        </mat-form-field>
 
-    <!-- Temperature Input Feild-->
-    <mat-form-field class="full-width">
-        <mat-label>Temperature</mat-label>
-        <input matInput placeholder="00.0" (keyup)="updateTemperature($event)"/>
-    </mat-form-field>
+        <!-- PH Input Feild-->
+        <mat-form-field>
+            <mat-label>PH</mat-label>
+            <input matInput formControlName="ph" placeholder="0.0" type="number"/>
+        </mat-form-field>
 
-    <!-- Save Reading Button-->
-    <button mat-raised-button color="primary" (click)="saveReading()">Save Reading</button>
+        <!-- Temperature Input Feild-->
+        <mat-form-field>
+            <mat-label>Temperature</mat-label>
+            <input matInput formControlName="temperature" placeholder="00.0" type="number"/>
+        </mat-form-field>
+
+        <!-- Container for Buttons -->
+        <div class="form-button-wrapper button-spacing">
+
+            <!-- Cancel Button -->
+            <button
+                mat-stroked-button
+                color="accent"
+                class="form-button"
+                routerLink="/reading">
+                Cancel    
+            </button>
+        
+            <!-- Add cleaning button -->
+            <button 
+                mat-raised-button 
+                color="primary"
+                class="form-button"
+                type="submit">
+                Save Reading
+            </button>
+
+        </div>
+        
+
+    </form>
 
 </mat-card>

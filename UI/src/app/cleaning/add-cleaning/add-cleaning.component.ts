@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { MatSliderChange } from '@angular/material/slider';
+import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Cleaning } from "src/app/models/cleaning/cleaning.model";
@@ -14,19 +13,17 @@ import { MessageService } from "src/app/services/message.service";
 })
 export class AddCleaningComponent implements OnInit{
 
-    // Values for form inputs in the component
-    cleaning:Cleaning;
+    // Cleaning FormGroup to capture user inputs
+    cleaningForm:FormGroup;
 
     // Slider inital values
     sliderMin:number;
     sliderMax:number;
-    sliderInitalValue:number;
 
     // Date inital value
     datetimeInitalValue:Date;
 
     // Slide Toggle Labels & Inital Value
-    toggleInitalValue:Boolean;
     toggleLabel:string;
     toggleStrings = {
         notChanged: "No Filter Change",
@@ -38,24 +35,27 @@ export class AddCleaningComponent implements OnInit{
 
     ngOnInit(){
 
-        // Create new cleaning
-        this.cleaning = new Cleaning()
+        // Create Reactive ngForm
+        this.cleaningForm = new FormGroup({
+            pct_change: new FormControl(15),
+            filter_change: new FormControl(false),
+        });
 
         // Set slider starting values
         this.sliderMin = 0;
         this.sliderMax = 100;
-        this.sliderInitalValue = 15
-        this.cleaning.pct_change = this.sliderInitalValue / (this.sliderMax - this.sliderMin);
 
         // Set Date starting values
         // timestamp will be updated when datetime emits intal value
         this.datetimeInitalValue = new Date();
-        this.datetimeInitalValue.setHours(0,0,0,0);
 
         // Set slide toggle intial values
-        this.toggleInitalValue = false;
-        this.cleaning.filter_change = this.toggleInitalValue;
         this.setToggleLabel();
+
+        // Subscribe to model changes for label updates
+        this.cleaningForm.valueChanges.subscribe(
+            () => this.setToggleLabel()
+        );
     }
 
     /**
@@ -71,9 +71,16 @@ export class AddCleaningComponent implements OnInit{
      * Calls CleaningApiSerivce to save latest cleaning data in DB.
      */
     saveCleaning(){
-        console.log("Clicked")
+        // Format cleaning model
+        const cleaning:Cleaning = {
+            pct_change : this.cleaningForm.value.pct_change / (this.sliderMax - this.sliderMin),
+            filter_change: this.cleaningForm.value.filter_change,
+            timestamp: this.cleaningForm.value.timestamp
+        }
+
+        // Send to backend
         this.cleaningApi
-            .addCleaning(this.cleaning)
+            .addCleaning(cleaning)
             .subscribe(
                 res => {this.router.navigate(['/cleaning'])},
                 err => {this.messages.setMessage(err)}
@@ -85,34 +92,8 @@ export class AddCleaningComponent implements OnInit{
      */
     setToggleLabel(){
         // Update label to reflect toggle state
-        this.toggleLabel = this.cleaning.filter_change
+        this.toggleLabel = this.cleaningForm.value.filter_change
             ? this.toggleStrings.changed
             : this.toggleStrings.notChanged
-    }
-
-    /**
-     * Stores slider input value as a percentage.
-     * @param event - Event emitted when slider value was changed.
-     */
-    updateSliderInput(event:MatSliderChange){
-        this.cleaning.pct_change = event.value/(this.sliderMax - this.sliderMin);
-    }
-
-    /**
-     * Stores datetime input value.
-     * @param event - Event emitted when datetime was changed.
-     */
-    updateTimeInput(event:Date){
-        this.cleaning.timestamp = event;
-    }
-
-    /**
-     * Updates the value of filter_changed when slide-toggle is changed. Updates label.
-     * @param event - Event emitted when slide-toggle is changed.
-     */
-    updateToggleInput(event:MatSlideToggleChange){
-        // Store new value
-        this.cleaning.filter_change = event.checked;
-        this.setToggleLabel();
     }
 }

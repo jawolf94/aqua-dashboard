@@ -19,6 +19,11 @@
         </mat-grid-tile>
     </mat-grid-list>
 
+    <!-- Add Reading Button-->
+    <div class="overview-button-wrapper">
+        <a mat-raised-button color="primary" class="overview-button" routerLink="add-reading">Add Reading</a>
+    </div>
+
     <!-- Today Overview Graphs -->
     <h1>Today's Trends</h1>
     <chart-card-line *ngFor="let chart of chartData" class="trends-charts"
