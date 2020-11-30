@@ -5,8 +5,8 @@
   <mat-sidenav #nav
     [fixedInViewport]="true">
 
-    <!-- Aqua Pi header at top of menu bar-->
-    <mat-toolbar color="primary" class="fill-remaining-space">Aqua Pi</mat-toolbar>
+    <!-- Menu header at top of side nav-->
+    <mat-toolbar color="primary" class="fill-remaining-space">Menu</mat-toolbar>
 
     <!-- Navigation Options -->
     <mat-nav-list class="nav-options">
@@ -41,8 +41,16 @@
         <!-- Menu button -->
         <button mat-button (click)="nav.open();">
           <i class="material-icons">menu</i>
-          Aqua Pi
+          Menu
         </button>
+
+        <!-- Spacing between elements -->
+        <span class="fill-remaining-space"></span>
+
+        <!-- App header -->
+        <div class="header-position"><i class="material-icons header-icon">opacity</i>AquaPi</div>
+
+         <!-- Spacing between elements -->
         <span class="fill-remaining-space"></span>
       </mat-toolbar>
 

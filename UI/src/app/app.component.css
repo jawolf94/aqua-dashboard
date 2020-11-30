@@ -11,6 +11,14 @@
     flex: 1 1 auto;
 }
 
+.header-icon{
+    position: relative; 
+    top: 5px
+}
+.header-position{
+    transform: translateX(-50%);
+}
+
 .link-icon{
     margin-right: .5rem;
 }
