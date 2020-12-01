@@ -17,16 +17,16 @@ import { CommonComponentsModule } from '@app/common-components/common-components
     AppComponent,
   ],
   imports: [
-    AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
-    CommonComponentsModule,
     HttpClientModule,
+    CommonComponentsModule,
     MatButtonModule,
     MatNativeDateModule,
     MatListModule,
     MatSidenavModule,
-    MatToolbarModule
+    MatToolbarModule,
+    AppRoutingModule,
   ],
   bootstrap: [AppComponent]
 })
