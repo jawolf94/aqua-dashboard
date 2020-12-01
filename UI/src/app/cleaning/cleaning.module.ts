@@ -10,12 +10,11 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 
-import { CommonComponentsModule } from 'src/app/common-components/common-components.module';
-
-import { AddCleaningComponent } from './add-cleaning/add-cleaning.component';
-import { CleaningLogComponent } from './cleaning-log/cleaning-log.component';
-import { CleaningRoutingModule } from './cleaning.routing';
-import { CleaningViewComponent } from './cleaning-view/cleaning-view.component';
+import { AddCleaningComponent } from '@app/cleaning/add-cleaning/add-cleaning.component';
+import { CleaningLogComponent } from '@app/cleaning/cleaning-log/cleaning-log.component';
+import { CleaningRoutingModule } from '@app/cleaning/cleaning.routing';
+import { CleaningViewComponent } from '@app/cleaning/cleaning-view/cleaning-view.component';
+import { CommonComponentsModule } from '@app/common-components/common-components.module';
 
 @NgModule({
     declarations: [

@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { API_URL } from '../env';
-import { Cleaning } from '../models/cleaning/cleaning.model';
-import { ServiceUtil } from './service-util.service';
+import { API_URL } from '@app/env';
+import { Cleaning } from '@app/models/cleaning/cleaning.model';
+import { ServiceUtil } from '@app/services/service-util.service';
 
 @Injectable({
     providedIn: 'root'

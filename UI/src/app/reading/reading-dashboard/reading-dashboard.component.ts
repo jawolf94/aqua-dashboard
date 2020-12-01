@@ -7,12 +7,13 @@ import { map } from 'rxjs/operators'
 import { ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 
-import { TIMEZONE } from 'src/app/env';
-import { Reading } from 'src/app/models/reading/reading.model';
-import { MessageService } from 'src/app/services/message.service';
-import { ParameterStatus } from 'src/app/models/reading/parameter_status.model';
-import { ReadingApiService } from '../../services/reading-api.service';
-import { CardChartData } from '../../common-components/card-chart-data.model';
+import { CardChartData } from '@app/common-components/card-chart-data.model';
+import { TIMEZONE } from '@app/env';
+import { ParameterStatus } from '@app/models/reading/parameter_status.model';
+import { Reading } from '@app/models/reading/reading.model';
+import { MessageService } from '@app/services/message.service';
+import { ReadingApiService } from '@app/services/reading-api.service';
+
 
 /**
  * Component which defines the reading overview.

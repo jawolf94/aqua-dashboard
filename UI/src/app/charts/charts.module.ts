@@ -4,10 +4,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatGridListModule } from '@angular/material/grid-list';
 
-import { CommonComponentsModule } from '../common-components/common-components.module';
-import { ReadingApiService } from '../services/reading-api.service';
-import { ChartsRoutingModule } from './charts.routing';
-import { DynamicChartViewComponent } from './dynamic-chart-view/dynamic-chart-view.component';
+import { ChartsRoutingModule } from '@app/charts/charts.routing';
+import { DynamicChartViewComponent } from '@app/charts/dynamic-chart-view/dynamic-chart-view.component';
+import { CommonComponentsModule } from '@app/common-components/common-components.module';
+import { ReadingApiService } from '@app/services/reading-api.service';
 
 /**
  * Module which defines additional views for data visualization

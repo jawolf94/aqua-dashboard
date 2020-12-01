@@ -1,10 +1,11 @@
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
+
 import { map } from 'rxjs/operators';
 
-import { Cleaning } from 'src/app/models/cleaning/cleaning.model';
-import { CleaningApiService } from 'src/app/services/cleaning-api.service';
-import { MessageService } from 'src/app/services/message.service';
+import { Cleaning } from '@app/models/cleaning/cleaning.model';
+import { CleaningApiService } from '@app/services/cleaning-api.service';
+import { MessageService } from '@app/services/message.service';
 
 @Component({
     selector: 'cleaning-view',

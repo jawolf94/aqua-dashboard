@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { DynamicChartViewComponent } from './dynamic-chart-view/dynamic-chart-view.component';
+import { DynamicChartViewComponent } from '@app/charts/dynamic-chart-view/dynamic-chart-view.component';
 
 const routes: Routes = [
     {path: '', pathMatch:'full', redirectTo:'dynamic'},

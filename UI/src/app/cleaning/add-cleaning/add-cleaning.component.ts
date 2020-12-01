@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Cleaning } from "src/app/models/cleaning/cleaning.model";
-import { CleaningApiService } from "src/app/services/cleaning-api.service";
-import { MessageService } from "src/app/services/message.service";
+import { Cleaning } from "@app/models/cleaning/cleaning.model";
+import { CleaningApiService } from "@app/services/cleaning-api.service";
+import { MessageService } from "@app/services/message.service";
 
 @Component({
     selector: 'add-cleaning',

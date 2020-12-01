@@ -12,19 +12,19 @@
     <mat-nav-list class="nav-options">
 
       <!-- Dashobard Link-->
-      <a mat-list-item href="/">
+      <a mat-list-item routerLink="/" (click)="nav.close()">
         <i class="material-icons link-icon">dashboard</i>
         Overview
       </a>
 
       <!-- Cleaning Overview Link-->
-      <a mat-list-item href="/cleaning">
+      <a mat-list-item routerLink="/cleaning" (click)="nav.close()">
         <i class="material-icons link-icon">cleaning_services</i>
         Cleaning Log
       </a>
 
       <!-- Custome Charts Link-->
-      <a mat-list-item href="/charts/dynamic">
+      <a mat-list-item routerLink="/charts/dynamic" (click)="nav.close()">
         <i class="material-icons link-icon">bar_chart</i>
         Custom Charts
       </a>

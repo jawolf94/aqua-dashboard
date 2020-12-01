@@ -1,13 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from "@angular/core";
+
 import { Observable} from 'rxjs';
 import { catchError} from 'rxjs/operators';
 
-import { API_URL } from '../env';
-import { DateTimeModel } from '../models/common/datetime.model'
-import { ParameterStatus } from 'src/app/models/reading/parameter_status.model';
-import { Reading } from 'src/app/models/reading/reading.model';
-import { ServiceUtil } from './service-util.service';
+import { API_URL } from '@app/env';
+import { DateTimeModel } from '@app/models/common/datetime.model'
+import { ParameterStatus } from '@app/models/reading/parameter_status.model';
+import { Reading } from '@app/models/reading/reading.model';
+import { ServiceUtil } from '@app/services/service-util.service';
 
 /**
  * Service which performs GET and POST opperations to Tank Reading APIs

@@ -1,15 +1,15 @@
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { Component, OnInit} from '@angular/core';
 import { formatDate } from '@angular/common';
-import { map } from 'rxjs/operators';
+import { Component, OnInit} from '@angular/core';
 
 import { ChartDataSets } from 'chart.js';
+import { map } from 'rxjs/operators';
 
-import { TIMEZONE } from 'src/app/env';
-import { CardChartData } from 'src/app/common-components/card-chart-data.model'
-import { Reading } from 'src/app/models/reading/reading.model';
-import { ReadingApiService } from 'src/app/services/reading-api.service';
-import { MessageService } from 'src/app/services/message.service';
+import { TIMEZONE } from '@app/env';
+import { CardChartData } from '@app/common-components/card-chart-data.model'
+import { Reading } from '@app/models/reading/reading.model';
+import { ReadingApiService } from '@app/services/reading-api.service';
+import { MessageService } from '@app/services/message.service';
 
 @Component({
     selector: 'dynamic-chart-view',

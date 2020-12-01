@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 
-import { TIMEZONE } from 'src/app/env';
+import { TIMEZONE } from '@app/env';
 
 /**
  * Formats & displays data passed in by the parent

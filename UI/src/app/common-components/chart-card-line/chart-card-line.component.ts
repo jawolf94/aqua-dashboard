@@ -1,7 +1,9 @@
 import { Component, Input, OnChanges, ViewChild} from '@angular/core';
+
 import { ChartOptions, ChartType } from 'chart.js';
 import { BaseChartDirective, Color, Label } from 'ng2-charts';
-import { CardChartData } from '../card-chart-data.model';
+
+import { CardChartData } from '@app/common-components/card-chart-data.model';
 
 /**
  * A component used to generate line charts for display in other views.

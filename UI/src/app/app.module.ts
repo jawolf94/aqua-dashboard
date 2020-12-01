@@ -8,9 +8,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module'
-import { CommonComponentsModule } from './common-components/common-components.module'
+import { AppComponent } from '@app/app.component';
+import { AppRoutingModule } from '@app/app-routing.module'
+import { CommonComponentsModule } from '@app/common-components/common-components.module';
 
 @NgModule({
   declarations: [
