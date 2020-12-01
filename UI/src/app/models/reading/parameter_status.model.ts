@@ -3,7 +3,7 @@
  */
 export class ParameterStatus{
     // ID Number of the related reading
-    reading_id?: Number;
+    reading_id?: number;
 
     // Status of parameter. True if in expected range.
     ammonia_ppm?: Boolean;

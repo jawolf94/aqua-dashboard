@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from "@angular/core";
 
 import { Observable} from 'rxjs';
@@ -85,9 +85,15 @@ export class ReadingApiService{
      * @param reading ParamaterStatus object with ID set to desired reading to check. 
      * @returns Observable<ParameterStatus> which represents the status of an invdivdual reading. 
      */
-    checkParameterStatus(reading: ParameterStatus): Observable<ParameterStatus>{
+    checkParameterStatus(readingID:number): Observable<ParameterStatus>{
+
+        // Format request header
+        var header:HttpHeaders = new HttpHeaders()
+        header = header.append('reading_id', readingID.toString())
+
+        // Send the request
         return this.httpClient
-            .post<ParameterStatus>(`${API_URL}/check-parameter-status`, reading)
+            .get<ParameterStatus>(`${API_URL}/check-parameter-status`, {headers: header})
             .pipe(
                 catchError(this.utils.handleError)
             );

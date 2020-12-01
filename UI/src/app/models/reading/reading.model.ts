@@ -3,13 +3,13 @@
  */
 export class Reading{
     constructor(
-        public id?: Number,
+        public id?: number,
         public timestamp?: Date,
-        public ammonia_ppm?: Number,
-        public nitrite_ppm?: Number,
-        public nitrate_ppm?: Number,
-        public ph?: Number,
-        public temperature?: Number,
+        public ammonia_ppm?: number,
+        public nitrite_ppm?: number,
+        public nitrate_ppm?: number,
+        public ph?: number,
+        public temperature?: number,
         public manual?: boolean
     ){}
 }

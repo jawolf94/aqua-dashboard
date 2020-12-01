@@ -63,7 +63,7 @@ export class ReadingFormComponent implements OnInit{
      * @param input - any input entered by the user
      * @returns Unaltered input parameter if input was provided. Returns undefined otherwise.
      */
-    private sanitizeNullValues(input:any): Number{
+    private sanitizeNullValues(input:any): number{
         return input === null || input === undefined ? undefined : input;
     }
 }

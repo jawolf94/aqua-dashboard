@@ -20,7 +20,7 @@ export class ServiceUtil{
         var message:string = "Error: An unknown error occurred. Please retry your request."
 
         // Check if backend failed without returning a code
-        if(error.status === 0){
+        if(error.status === 0 || error.error.exception === undefined || error.error.message === undefined){
             // If backend did not provide a stack trace log the error
             console.error(error.error);
         }

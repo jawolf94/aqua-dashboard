@@ -284,7 +284,7 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
 
             // Request status and subscribe.
             this.lastReadingStatusSub = this.readingAPI
-                .checkParameterStatus(paramStatus)
+                .checkParameterStatus(paramStatus.reading_id)
                 .subscribe(
                     res=> {
                         // On success update the icons of each card

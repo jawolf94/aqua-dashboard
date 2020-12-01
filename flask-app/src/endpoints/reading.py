@@ -143,7 +143,7 @@ def save_manual_reading():
         return handle_error(err, message="Error: Your reading could not be saved. Please try again.")
 
 
-@reading.route('/check-parameter-status', methods=['POST'])
+@reading.route('/check-parameter-status')
 def check_parameter_status():
     
     # Define error message for except blocks
@@ -151,10 +151,10 @@ def check_parameter_status():
     try:
 
         # Deserialize request data
-        posted_data = ParameterStatusSchema(unknown=EXCLUDE).load(request.get_json())
+        reading_id = int(request.headers.get('reading_id'))
 
         # Get status from database
-        status_obj = read_parameter_status(posted_data["reading_id"])
+        status_obj = read_parameter_status(reading_id)
 
         if status_obj is not None:
             # Create respnse schema and return
@@ -167,9 +167,9 @@ def check_parameter_status():
             # Return 404 if reading cannot be found
             return jsonify("{}"), 404
 
-    except ValidationError as err:
+    except (TypeError, ValueError) as err:
         # Return 400 error if request is mal-formed
-        return handle_error(err,code=400, message= error_message + " Unexpected request format.")
+        return handle_error(err,code=400, message= error_message)
 
     except KeyError as err:
         # Return 400 Error if reading_id was not specified.
