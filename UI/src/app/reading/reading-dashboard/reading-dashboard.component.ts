@@ -1,16 +1,15 @@
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { formatDate } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators'
 
-import { ChartDataSets } from 'chart.js';
-import { Color, Label } from 'ng2-charts';
+import { Color } from 'ng2-charts';
 
 import { CardChartData } from '@app/common-components/card-chart-data.model';
-import { TIMEZONE } from '@app/env';
+import { StringMap } from '@app/models/common/string-map.model';
 import { ParameterStatus } from '@app/models/reading/parameter_status.model';
 import { Reading } from '@app/models/reading/reading.model';
+import { ChartUtilService } from '@app/services/chart-util.service';
 import { MessageService } from '@app/services/message.service';
 import { ReadingApiService } from '@app/services/reading-api.service';
 
@@ -135,7 +134,12 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
      * @param readingAPI API Service which represents tank reading data.
      * @param breakpointObserver Observer which represents the size of the screen
      */
-    constructor(private readingAPI: ReadingApiService, private messages:MessageService, private breakpointObserver: BreakpointObserver){}
+    constructor(
+        private readingAPI: ReadingApiService, 
+        private messages:MessageService, 
+        private breakpointObserver: BreakpointObserver,
+        private chartUtil:ChartUtilService
+    ){}
 
     /**
      * Initalizes this component. 
@@ -215,63 +219,18 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
         var charts:CardChartData[]= [];
         this.displayedGraphs.forEach(param => 
             {
-                // Generate Data series 
-                var chart:CardChartData = this.formatChartData(param);
+                // Create StringMap for ChartUtil
+                var label:StringMap<string> = {}
+                label[param] = this.cardLabels[param]["label"]
+
+                // Generate Data series & push to array
+                var chart:CardChartData = this.chartUtil.generateChartDataFromReading(this.todaysReadings, label);
                 charts.push(chart);
             }
         )
 
         return charts;
     }
-
-    /**
-     * Formats reading data into CardChartData for a line charts.
-     * @param key - String specifying data to display. Should be key in readings.
-     * @returns - Data series representing that paramater
-     */
-    formatChartData(key: string):CardChartData{
-
-        // Check if today's data is available
-        if(!Object.keys(this.cardLabels).includes(key)
-            || !this.todaysReadings
-            || this.todaysReadings.length <= 1){
-
-            // Return empty series data if key was not present.
-            return null;
-        }
-
-        // Create Series Data
-        var series:ChartDataSets = {
-            label: this.cardLabels[key]["label"],
-            data: []
-        };
-      
-
-        // Create Label Array
-        var labels:Label[] = []
-
-        // Format each reading into a DataPoint
-        this.todaysReadings.forEach(reading => {
-            if(Object.keys(reading).includes(key)){
-                
-                // Add data to series
-                series.data.push(reading[key]);
-
-                // Create label for x-axis
-                var time:string = formatDate(
-                    reading['timestamp'].toString()+"+00:00",
-                    "shortTime",
-                    "en-US",
-                    TIMEZONE);
-
-                    labels.push(time);
-            }
-            
-        });
-
-        return {chartDataSet: [series], chartLabels: labels};
-    }
-
 
     /**
      * Updates the icons on the overview cards depending on their parameter's status.
