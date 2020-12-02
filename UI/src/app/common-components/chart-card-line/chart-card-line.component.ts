@@ -92,10 +92,10 @@ export class ChartCardLineComponent implements OnChanges {
             set.pointRadius = this.pointRadius;
             set.pointHitRadius = this.pointHitRadius;
 
-            // Set dataset visibility to previous state - true if state is not specifed.
+            // Set dataset visibility to previous state - display if state is not specifed.
             set.hidden =  Object.keys(statuses).includes(set?.label) ?
                statuses[set.label]
-               : true;
+               : false;
         });
     }
 
