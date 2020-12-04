@@ -1,7 +1,7 @@
 <div>
     <h1>Overview</h1>
     <!--Grid List to display overview Cards for latest tank reading data-->
-    <mat-grid-list cols="{{ layout?.overviewCards.columns }}" rowHeight="200px">
+    <mat-grid-list cols="{{ layout?.overviewCards.columns }}" rowHeight="{{layout?.overviewCards.rowHeight}}">
         <mat-grid-tile *ngFor="let param of displayedOverviewCards;">
 
             <!--Overview Card with tankparamter data-->

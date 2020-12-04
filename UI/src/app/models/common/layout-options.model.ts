@@ -29,6 +29,7 @@ export interface ChartCardOptions{
  */
 export interface OverviewCardOptions{
         columns: number,
+        rowHeight: string,
         col_span?: number,
         row_span?: number,
 }
