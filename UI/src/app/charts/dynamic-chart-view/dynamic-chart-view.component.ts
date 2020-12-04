@@ -1,21 +1,24 @@
-import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { Component, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 
-import { map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 import { CardChartData } from '@app/common-components/card-chart-data.model';
+import { LayoutOptions } from '@app/models/common/layout-options.model';
 import { StringMap } from '@app/models/common/string-map.model';
 import { Reading } from '@app/models/reading/reading.model';
+import { BreakpointService } from '@app/services/breakpoint.service';
 import { ChartUtilService } from '@app/services/chart-util.service';
 import { ReadingApiService } from '@app/services/reading-api.service';
 import { MessageService } from '@app/services/message.service';
+
+
 
 @Component({
     selector: 'dynamic-chart-view',
     templateUrl: './dynamic-chart-view.component.html',
     styleUrls: ['./dynamic-chart-view.component.css']
 })
-export class DynamicChartViewComponent implements OnInit{
+export class DynamicChartViewComponent implements OnInit, OnDestroy{
 
     // Default control options
     tomorrowDate:Date;
@@ -37,43 +40,33 @@ export class DynamicChartViewComponent implements OnInit{
         "temperature": "Temperature (F\xB0)",
     }
 
-    // Breakpoint observer to change page layout for different screensizes.
-    layout = this.breakPointObserver.observe(Breakpoints.Handset).pipe(
-        map(
-            ({matches}) => {
-                if(matches){
-                    return {
-                        columns: 1,
-                        charts: {
-                            sampling: 4,
-                            pointSize: 4,
-                            pointRadius: 3
-                        }
-                    }
-                }
-                else{
-                    return {
-                        columns: 2,
-                        charts: {
-                            sampling: 1,
-                            pointSize: 4, 
-                            pointRadius: 3
-                        }
-                    }
-                }
-            }
-        )
-    );
+    // Subscription to BreakpointService and the latest value
+    layout:LayoutOptions;
+    breakpointSubscription:Subscription;
 
     // Contructor and ng function implmentations
     constructor(
-        private breakPointObserver:BreakpointObserver, 
+        private breakpointService:BreakpointService,
         private messages:MessageService, 
         private readingApi:ReadingApiService,
         private chartUtil:ChartUtilService
     ){}
 
     ngOnInit(){
+
+        // Subscribe to breakpoint service
+        this.breakpointSubscription = this.breakpointService
+            .getLayoutOptions()
+            .subscribe(
+                res => {
+                    // Set layout on resolution of promise
+                    this.layout = res;
+                },
+                err => {
+                    // Report any errors to the console
+                    console.error(err);
+                }
+            );
 
         // Set tomorrow's date for default control set-up
         this.tomorrowDate = new Date();
@@ -85,6 +78,10 @@ export class DynamicChartViewComponent implements OnInit{
         // Init chart data to null
         this.chartData = null;
         this.rawReadings = null;
+    }
+
+    ngOnDestroy(){
+        this.breakpointSubscription.unsubscribe();
     }
 
     /**

@@ -6,7 +6,7 @@
 
    <!-- Grid list of chart selection options -->
    <mat-grid-list 
-      cols="{{(layout | async)?.columns}}" 
+      cols="{{layout?.datepickerCards.columns}}" 
       rowHeight="225px">
 
       <!-- Start Date Options-->
@@ -55,8 +55,8 @@
    <chart-card-line 
       class="chart" 
       [chartData]="chartData" 
-      [sampling]="(layout | async)?.charts.sampling"
-      [pointRadius]="(layout | async)?.charts.pointSize" 
-      [pointHitRadius]="(layout | async)?.charts.pointRadius">
+      [sampling]="layout?.chartCards.sampling"
+      [pointRadius]="layout?.chartCards.pointSize" 
+      [pointHitRadius]="layout?.chartCards.pointRadius">
    </chart-card-line>
 </div>
