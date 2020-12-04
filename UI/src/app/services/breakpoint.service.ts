@@ -32,7 +32,7 @@ export class BreakpointService{
 
             datepickerCards: {
                 columns: 2,
-                rowHeight: '225px',
+                rowHeight: '245px',
             }
         },
 
