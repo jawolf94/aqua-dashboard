@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+
 import { Subscription } from 'rxjs';
 
-import { MessageService } from 'src/app/services/message.service';
+import { MessageService } from '@app/services/message.service';
 
 @Component({
     selector:"message-banner",

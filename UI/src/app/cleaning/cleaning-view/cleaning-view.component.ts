@@ -1,17 +1,21 @@
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+
 import { map } from 'rxjs/operators';
 
-import { Cleaning } from 'src/app/models/cleaning/cleaning.model';
-import { CleaningApiService } from 'src/app/services/cleaning-api.service';
-import { MessageService } from 'src/app/services/message.service';
+import { LayoutOptions } from '@app/models/common/layout-options.model';
+import { Cleaning } from '@app/models/cleaning/cleaning.model';
+import { BreakpointService } from '@app/services/breakpoint.service';
+import { CleaningApiService } from '@app/services/cleaning-api.service';
+import { MessageService } from '@app/services/message.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'cleaning-view',
     templateUrl: './cleaning-view.component.html',
     styleUrls: ['./cleaning-view.component.css']
 })
-export class CleaningViewComponent implements OnInit{
+export class CleaningViewComponent implements OnInit, OnDestroy{
 
     // overview-card labels for each cleaning value
     cardLabels = {
@@ -35,27 +39,9 @@ export class CleaningViewComponent implements OnInit{
         }
     }
 
-    // Defines page layout based on the breakpoint size
-    layout = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-        map(
-            ({matches}) => {
-                if(matches){
-                    return {
-                        columns: 1,
-                        col_span: 1,
-                        row_span: 1
-                    }
-                }
-                else{
-                    return {
-                        columns: 3,
-                        col_span: 1,
-                        row_span: 1,
-                    }
-                }
-            }
-        )
-    );
+    // BreakpointService subscription and latest layout options
+    breakpointSubscription:Subscription;
+    layout:LayoutOptions;
 
     // Cleaning log data
     allCleaningLogs:Cleaning[];
@@ -64,9 +50,26 @@ export class CleaningViewComponent implements OnInit{
 
     // Constructor and ng method implmentations
 
-    constructor(private breakpointObserver:BreakpointObserver, private cleaningApi:CleaningApiService, private messages:MessageService){}
+    constructor(
+        private breakpointService:BreakpointService, 
+        private cleaningApi:CleaningApiService, 
+        private messages:MessageService){}
 
     ngOnInit(){
+        // Subscribe to breakpoint service
+        this.breakpointSubscription = this.breakpointService
+            .getLayoutOptions()
+            .subscribe(
+                res => {
+                    // Set latest layout on success
+                    this.layout = res;
+                },
+                err => {
+                    // Log error to console on failure
+                    console.error(err);
+                }
+            );
+            
         // Initalize cleaning data
         this.allCleaningLogs = [];
         this.latestCleaning = null;
@@ -87,6 +90,10 @@ export class CleaningViewComponent implements OnInit{
                     this.allCleaningLogs = [];
                 }
             );
+    }
+
+    ngOnDestroy(){
+        this.breakpointSubscription.unsubscribe();
     }
 
     /**

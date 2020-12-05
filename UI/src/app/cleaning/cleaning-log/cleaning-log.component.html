@@ -5,14 +5,14 @@
     <table mat-table [dataSource]="displayData" class="table-width">
 
         <!-- Time Column Template -->
-        <ng-container matColumnDef="timestamp">
-            <th mat-header-cell *matHeaderCellDef>Time</th>
+        <ng-container matColumnDef="timestamp" >
+            <th mat-header-cell *matHeaderCellDef class="column-spacing">Time</th>
             <td mat-cell *matCellDef="let cleaning">{{cleaning.timestamp | date:'short':TIMEZONE}}</td>
         </ng-container>
     
         <!-- Percent Change Column Template -->
         <ng-container matColumnDef="pct_change">
-            <th mat-header-cell *matHeaderCellDef>% Change</th>
+            <th mat-header-cell *matHeaderCellDef class="column-spacing" >% Change</th>
             <td mat-cell *matCellDef="let cleaning">{{cleaning.pct_change * 100}}%</td>
         </ng-container>
     

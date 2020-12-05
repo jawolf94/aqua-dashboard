@@ -2,8 +2,8 @@ import { Component, Input, OnInit, OnChanges, ViewChild} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { Cleaning } from 'src/app/models/cleaning/cleaning.model';
-import { TIMEZONE } from 'src/app/env'; 
+import { TIMEZONE } from '@app/env'; 
+import { Cleaning } from '@app/models/cleaning/cleaning.model';
 
 
 @Component({

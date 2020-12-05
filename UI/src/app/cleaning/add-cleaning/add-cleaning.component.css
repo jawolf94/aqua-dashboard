@@ -10,7 +10,6 @@
 .form-card{
     display: flex; 
     flex-direction: column;
-    min-width: 315px;
 }
 
 .input-header{

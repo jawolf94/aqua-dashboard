@@ -1,13 +1,14 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from "@angular/core";
+
 import { Observable} from 'rxjs';
 import { catchError} from 'rxjs/operators';
 
-import { API_URL } from '../env';
-import { DateTimeModel } from '../models/common/datetime.model'
-import { ParameterStatus } from 'src/app/models/reading/parameter_status.model';
-import { Reading } from 'src/app/models/reading/reading.model';
-import { ServiceUtil } from './service-util.service';
+import { API_URL } from '@app/env';
+import { DateTimeModel } from '@app/models/common/datetime.model'
+import { ParameterStatus } from '@app/models/reading/parameter_status.model';
+import { Reading } from '@app/models/reading/reading.model';
+import { ServiceUtil } from '@app/services/service-util.service';
 
 /**
  * Service which performs GET and POST opperations to Tank Reading APIs
@@ -84,9 +85,15 @@ export class ReadingApiService{
      * @param reading ParamaterStatus object with ID set to desired reading to check. 
      * @returns Observable<ParameterStatus> which represents the status of an invdivdual reading. 
      */
-    checkParameterStatus(reading: ParameterStatus): Observable<ParameterStatus>{
+    checkParameterStatus(readingID:number): Observable<ParameterStatus>{
+
+        // Format request header
+        var header:HttpHeaders = new HttpHeaders()
+        header = header.append('reading_id', readingID.toString())
+
+        // Send the request
         return this.httpClient
-            .post<ParameterStatus>(`${API_URL}/check-parameter-status`, reading)
+            .get<ParameterStatus>(`${API_URL}/check-parameter-status`, {headers: header})
             .pipe(
                 catchError(this.utils.handleError)
             );

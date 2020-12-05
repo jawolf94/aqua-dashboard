@@ -1,7 +1,10 @@
 import { Component, Input, OnChanges, ViewChild} from '@angular/core';
+
 import { ChartOptions, ChartType } from 'chart.js';
 import { BaseChartDirective, Color, Label } from 'ng2-charts';
-import { CardChartData } from '../card-chart-data.model';
+
+import { CardChartData } from '@app/common-components/card-chart-data.model';
+import { StringMap } from '@app/models/common/string-map.model';
 
 /**
  * A component used to generate line charts for display in other views.
@@ -44,37 +47,31 @@ export class ChartCardLineComponent implements OnChanges {
     }
 
     // Directive used to sepcify canvas element which renders the chart
-    @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
+    @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
 
     ngOnChanges(){
 
+        // Get hidden status of all current sets
+        var hidden:StringMap<boolean> = this.getHiddenStatuses();
+
         // Create deep copy of chart data to preserve origional data set.
         this.displayChartData = JSON.parse(JSON.stringify(this.chartData)); 
         
-        // Sample data if passed in
-        if(this.hasChartData()){
+        // Sample & Set new data if passed in
+        if(this.hasInputData()){
 
             // Reduce data set size
-           this.sampleChartData();
+           this.sampleChartData(hidden);
            this.sampleChartLabels();
         }
-    }
 
-    /**
-     * Checks if a data set and labels have been set in displayChartData.
-     * @returns - True if labels and data set are available for display.
-     */
-    hasChartData(): boolean{
-        return this.chartData
-            && (this.chartData.chartDataSet && this.chartData.chartDataSet.length > 0)
-            && (this.chartData.chartLabels && this.chartData.chartLabels.length > 0);
     }
 
     /**
      * Samples chart data to create a reduced data set size based on specified sampling
      */
-    sampleChartData(){
+    sampleChartData(statuses:StringMap<boolean>){
 
          // Reduce the size of each data set in chartData
          this.displayChartData.chartDataSet.forEach(set => {
@@ -94,6 +91,11 @@ export class ChartCardLineComponent implements OnChanges {
             // Set point display options
             set.pointRadius = this.pointRadius;
             set.pointHitRadius = this.pointHitRadius;
+
+            // Set dataset visibility to previous state - display if state is not specifed.
+            set.hidden =  Object.keys(statuses).includes(set?.label) ?
+               statuses[set.label]
+               : false;
         });
     }
 
@@ -116,4 +118,45 @@ export class ChartCardLineComponent implements OnChanges {
         this.displayChartData.chartLabels = reducedLabels;
     }
 
+    /**
+     * Checks if a data set and labels have been set in displayChartData.
+     * @returns - True if labels and data set are available for display.
+     */
+    hasInputData(): Boolean{
+        return this.chartData
+            && (this.chartData.chartDataSet && this.chartData.chartDataSet.length > 0)
+            && (this.chartData.chartLabels && this.chartData.chartLabels.length > 0);
+    }
+
+
+    /**
+     * Creates a mapping of set labels to their hidden state (T/F or Null)
+     * @returns StringMap of label to hidden state mappings
+     */
+    getHiddenStatuses():StringMap<boolean>{
+
+        // Create empty array of type LooseObject
+        var sets:StringMap<boolean> = {};
+
+        // If the chart has data sets
+        if(this.chart && this.chart.datasets){
+            
+            // Map all the dataset labels to create an array of labels
+            const labels = this.chart.datasets.map(set => set?.label );
+
+            // Loop through each label to create label/hidden mappings
+            labels.forEach((label, index) => {
+
+                // Set each objects label to current hidden status
+                // Index in mapped array is same index in dataset array
+                sets[label] = this.chart.isDatasetHidden(index) !== null ? 
+                    this.chart.isDatasetHidden(index)
+                    : this.chart.datasets[index].hidden;
+
+            });
+        }
+
+        // StringMap object
+        return sets;
+    }
 }

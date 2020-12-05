@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup} from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Reading } from 'src/app/models/reading/reading.model';
-import { MessageService } from 'src/app/services/message.service';
-import { ReadingApiService } from '../../services/reading-api.service';
+import { Reading } from '@app/models/reading/reading.model';
+import { MessageService } from '@app/services/message.service';
+import { ReadingApiService } from '@app/services/reading-api.service';
 
 
 @Component({
@@ -63,7 +63,7 @@ export class ReadingFormComponent implements OnInit{
      * @param input - any input entered by the user
      * @returns Unaltered input parameter if input was provided. Returns undefined otherwise.
      */
-    private sanitizeNullValues(input:any): Number{
+    private sanitizeNullValues(input:any): number{
         return input === null || input === undefined ? undefined : input;
     }
 }

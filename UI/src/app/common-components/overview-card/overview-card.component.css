@@ -22,8 +22,8 @@
 
 .overview-card{
     position: absolute; 
-    top: 40px; 
-    bottom: 40px; 
+    top: 30px; 
+    bottom: 30px; 
     left: 15px; 
     right: 15px; 
     display: flex; 

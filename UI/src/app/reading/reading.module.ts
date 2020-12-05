@@ -9,11 +9,11 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 
-import { CommonComponentsModule } from '../common-components/common-components.module';
-import { ReadingApiService } from '../services/reading-api.service';
-import { ReadingRoutingModule } from './reading.routing';
-import { ReadingDashboardComponent } from './reading-dashboard/reading-dashboard.component';
-import { ReadingFormComponent } from './reading-form/reading-form.component';
+import { CommonComponentsModule } from '@app/common-components/common-components.module';
+import { ReadingDashboardComponent } from '@app/reading/reading-dashboard/reading-dashboard.component';
+import { ReadingFormComponent } from '@app/reading/reading-form/reading-form.component';
+import { ReadingRoutingModule } from '@app/reading/reading.routing';
+import { ReadingApiService } from '@app/services/reading-api.service';
 
 /**
  * Defines module which handles display and routing for all tank reading info.

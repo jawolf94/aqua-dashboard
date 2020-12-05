@@ -1,22 +1,24 @@
-import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { Component, OnInit} from '@angular/core';
-import { formatDate } from '@angular/common';
-import { map } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 
-import { ChartDataSets } from 'chart.js';
+import { Subscription } from 'rxjs';
 
-import { TIMEZONE } from 'src/app/env';
-import { CardChartData } from 'src/app/common-components/card-chart-data.model'
-import { Reading } from 'src/app/models/reading/reading.model';
-import { ReadingApiService } from 'src/app/services/reading-api.service';
-import { MessageService } from 'src/app/services/message.service';
+import { CardChartData } from '@app/common-components/card-chart-data.model';
+import { LayoutOptions } from '@app/models/common/layout-options.model';
+import { StringMap } from '@app/models/common/string-map.model';
+import { Reading } from '@app/models/reading/reading.model';
+import { BreakpointService } from '@app/services/breakpoint.service';
+import { ChartUtilService } from '@app/services/chart-util.service';
+import { ReadingApiService } from '@app/services/reading-api.service';
+import { MessageService } from '@app/services/message.service';
+
+
 
 @Component({
     selector: 'dynamic-chart-view',
     templateUrl: './dynamic-chart-view.component.html',
     styleUrls: ['./dynamic-chart-view.component.css']
 })
-export class DynamicChartViewComponent implements OnInit{
+export class DynamicChartViewComponent implements OnInit, OnDestroy{
 
     // Default control options
     tomorrowDate:Date;
@@ -30,60 +32,41 @@ export class DynamicChartViewComponent implements OnInit{
     rawReadings:Reading[];
 
     // Possible Data Display Options
-    displayOptionStates = {
-        "ammonia_ppm": {
-            "label": "Ammonia (NH3)",
-        },
-    
-        "nitrite_ppm": {
-            "label": "Nitrite (N02)",
-        },
-    
-        "nitrate_ppm": {
-            "label": "Nitrate (N03)",
-        }, 
-    
-        "ph": {
-            "label": "PH",
-        },
-    
-        "temperature": {
-            "label": "Temperature (F\xB0)",
-        },
+    chartSeriesLabels:StringMap<string> = {
+        "ammonia_ppm": "Ammonia (NH3)",
+        "nitrite_ppm": "Nitrite (N02)",
+        "nitrate_ppm": "Nitrate (N03)",    
+        "ph": "PH",
+        "temperature": "Temperature (F\xB0)",
     }
 
-    // Breakpoint observer to change page layout for different screensizes.
-    layout = this.breakPointObserver.observe(Breakpoints.Handset).pipe(
-        map(
-            ({matches}) => {
-                if(matches){
-                    return {
-                        columns: 1,
-                        charts: {
-                            sampling: 4,
-                            pointSize: 4,
-                            pointRadius: 3
-                        }
-                    }
-                }
-                else{
-                    return {
-                        columns: 2,
-                        charts: {
-                            sampling: 1,
-                            pointSize: 4, 
-                            pointRadius: 3
-                        }
-                    }
-                }
-            }
-        )
-    );
+    // Subscription to BreakpointService and the latest value
+    layout:LayoutOptions;
+    breakpointSubscription:Subscription;
 
     // Contructor and ng function implmentations
-    constructor(private breakPointObserver:BreakpointObserver, private messages:MessageService, private readingApi:ReadingApiService){}
+    constructor(
+        private breakpointService:BreakpointService,
+        private messages:MessageService, 
+        private readingApi:ReadingApiService,
+        private chartUtil:ChartUtilService
+    ){}
 
     ngOnInit(){
+
+        // Subscribe to breakpoint service
+        this.breakpointSubscription = this.breakpointService
+            .getLayoutOptions()
+            .subscribe(
+                res => {
+                    // Set layout on resolution of promise
+                    this.layout = res;
+                },
+                err => {
+                    // Report any errors to the console
+                    console.error(err);
+                }
+            );
 
         // Set tomorrow's date for default control set-up
         this.tomorrowDate = new Date();
@@ -97,53 +80,9 @@ export class DynamicChartViewComponent implements OnInit{
         this.rawReadings = null;
     }
 
-    /**
-     * Formats reading data into data for display in chart-card-line component
-     */
-    formatChartData():CardChartData{
-        // Generate Chart Data
-        var data:CardChartData = {
-            chartDataSet:[],
-            chartLabels:[]
-        }
-
-        // Return empty data set if no readings are available.
-        if(!this.rawReadings){
-            return data;
-        }
-       
-
-        // Generate Data Series
-        Object.keys(this.displayOptionStates).forEach(key =>
-            {   
-                // Create a new series for the display option
-                var series:ChartDataSets = {
-                    label:this.displayOptionStates[key]["label"],
-                    data:[]
-                }
-               
-                // Add data points from Reading matching display option
-                this.rawReadings.forEach(reading => {
-                    series.data.push(reading[key]);
-                });
-
-                // Push completed series into data
-                data.chartDataSet.push(series);
-            });
-
-        //Generate Chart Labels
-        data.chartLabels = this.rawReadings.map((obj) => {
-            return formatDate(
-                obj['timestamp'].toString() + "+00:00",
-                'M/d/yy, HH:mm',
-                'en-US',
-                TIMEZONE)
-        });
-
-        // Set chartData to pass as input to card-chart-line component
-        this.chartData = data;
+    ngOnDestroy(){
+        this.breakpointSubscription.unsubscribe();
     }
-
 
     /**
      * Updates selectedFromDate with the user's input
@@ -172,7 +111,7 @@ export class DynamicChartViewComponent implements OnInit{
             .subscribe(
                 res => {
                     this.rawReadings = res;
-                    this.formatChartData();
+                    this.chartData = this.chartUtil.generateChartDataFromReading(this.rawReadings, this.chartSeriesLabels)
                 },
                 err => {
                     // Report Error to the user

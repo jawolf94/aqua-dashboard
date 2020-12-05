@@ -1,18 +1,20 @@
-import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { formatDate } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { map } from 'rxjs/operators'
 
-import { ChartDataSets } from 'chart.js';
-import { Color, Label } from 'ng2-charts';
+import { Color } from 'ng2-charts';
 
-import { TIMEZONE } from 'src/app/env';
-import { Reading } from 'src/app/models/reading/reading.model';
-import { MessageService } from 'src/app/services/message.service';
-import { ParameterStatus } from 'src/app/models/reading/parameter_status.model';
-import { ReadingApiService } from '../../services/reading-api.service';
-import { CardChartData } from '../../common-components/card-chart-data.model';
+import { CardChartData } from '@app/common-components/card-chart-data.model';
+import { LayoutOptions } from '@app/models/common/layout-options.model';
+import { StringMap } from '@app/models/common/string-map.model';
+import { ParameterStatus } from '@app/models/reading/parameter_status.model';
+import { Reading } from '@app/models/reading/reading.model';
+import { BreakpointService } from '@app/services/breakpoint.service';
+import { ChartUtilService } from '@app/services/chart-util.service';
+import { MessageService } from '@app/services/message.service';
+import { ReadingApiService } from '@app/services/reading-api.service';
+
+
+
 
 /**
  * Component which defines the reading overview.
@@ -29,6 +31,10 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
     lastReadingStatusSub: Subscription;
     lastReadingSub: Subscription;
     todaysReadingsSub: Subscription;
+
+    // Subscription to breakpoint service & latest value
+    breakpointSubscription:Subscription;
+    layout:LayoutOptions;
 
     // Class intance vars for recent reading data
     latestReading: Reading;
@@ -80,7 +86,6 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
 
     // Chart display data & options
     chartData:CardChartData[];
-
     chartLineColor:Color[]= [
         {
             backgroundColor: 'rgba(128,164,179, 0.2)',
@@ -92,55 +97,38 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
         }
     ]
 
-
-    // Parameters dynamically set based on window size
-    layout = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-        map(
-            ({matches}) => {
-                if(matches){
-                    return {
-                        columns: 1,
-                        overview: {
-                            col_span: 1,
-                            row_span: 1
-                        },
-                        charts: {
-                            sampling: 4,
-                            pointSize: 4,
-                            pointRadius: 3
-                        }
-                    }
-                }
-                else{
-                    return {
-                        columns: 3,
-                        overview: {
-                            col_span: 1,
-                            row_span: 1,
-                        },
-                        charts: {
-                            sampling: 1,
-                            pointSize: 4,
-                            pointRadius: 3
-                        }
-                    }
-                }
-            }
-        )
-    );
-
     /**
      * Constructs ReadingDashboardComponent.
      * @param readingAPI API Service which represents tank reading data.
      * @param breakpointObserver Observer which represents the size of the screen
      */
-    constructor(private readingAPI: ReadingApiService, private messages:MessageService, private breakpointObserver: BreakpointObserver){}
+    constructor(
+        private readingAPI: ReadingApiService, 
+        private messages:MessageService, 
+        private breakpointService:BreakpointService,
+        private chartUtil:ChartUtilService
+    ){}
 
     /**
      * Initalizes this component. 
      * Subscribes to ReadingApiService and gets latest tank reading.
      */
     ngOnInit(){
+
+        // Subscribe to breakpoint service for layout formatting
+        this.breakpointSubscription = this.breakpointService
+        .getLayoutOptions()
+        .subscribe(
+            res => {
+                // Set layout on success
+                this.layout = res;
+            },
+
+            err => {
+                // Log error on failure
+                console.error(err);
+            }
+        )
 
         // Assemble charts before netowork calls to make page appear more responsive
         this.chartInit();
@@ -168,7 +156,7 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
             0,0,0
         );
 
-        // Subscribe to readingsBetween endpoint with readings
+        // Subscribe to readingsBetween endpoint for today's readings
         this.todaysReadingsSub = this.readingAPI
             .getReadingsBetween(startOfDay)
             .subscribe(
@@ -204,6 +192,7 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
      */
     ngOnDestroy(){
         this.lastReadingSub.unsubscribe();
+        this.breakpointSubscription.unsubscribe();
     }
 
     /**
@@ -214,63 +203,18 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
         var charts:CardChartData[]= [];
         this.displayedGraphs.forEach(param => 
             {
-                // Generate Data series 
-                var chart:CardChartData = this.formatChartData(param);
+                // Create StringMap for ChartUtil
+                var label:StringMap<string> = {}
+                label[param] = this.cardLabels[param]["label"]
+
+                // Generate Data series & push to array
+                var chart:CardChartData = this.chartUtil.generateChartDataFromReading(this.todaysReadings, label);
                 charts.push(chart);
             }
         )
 
         return charts;
     }
-
-    /**
-     * Formats reading data into CardChartData for a line charts.
-     * @param key - String specifying data to display. Should be key in readings.
-     * @returns - Data series representing that paramater
-     */
-    formatChartData(key: string):CardChartData{
-
-        // Check if today's data is available
-        if(!Object.keys(this.cardLabels).includes(key)
-            || !this.todaysReadings
-            || this.todaysReadings.length <= 1){
-
-            // Return empty series data if key was not present.
-            return null;
-        }
-
-        // Create Series Data
-        var series:ChartDataSets = {
-            label: this.cardLabels[key]["label"],
-            data: []
-        };
-      
-
-        // Create Label Array
-        var labels:Label[] = []
-
-        // Format each reading into a DataPoint
-        this.todaysReadings.forEach(reading => {
-            if(Object.keys(reading).includes(key)){
-                
-                // Add data to series
-                series.data.push(reading[key]);
-
-                // Create label for x-axis
-                var time:string = formatDate(
-                    reading['timestamp'].toString()+"+00:00",
-                    "shortTime",
-                    "en-US",
-                    TIMEZONE);
-
-                    labels.push(time);
-            }
-            
-        });
-
-        return {chartDataSet: [series], chartLabels: labels};
-    }
-
 
     /**
      * Updates the icons on the overview cards depending on their parameter's status.
@@ -283,7 +227,7 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
 
             // Request status and subscribe.
             this.lastReadingStatusSub = this.readingAPI
-                .checkParameterStatus(paramStatus)
+                .checkParameterStatus(paramStatus.reading_id)
                 .subscribe(
                     res=> {
                         // On success update the icons of each card

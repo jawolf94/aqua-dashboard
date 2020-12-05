@@ -2,13 +2,13 @@
 <h2>Last Cleaning</h2>
 
 <!-- Mat Grid used to arrange cards-->
-<mat-grid-list cols="{{ (layout | async)?.columns }} " rowHeight="200px">
+<mat-grid-list cols="{{ layout?.overviewCards.columns }} " rowHeight="{{ layout?.overviewCards.rowHeight }}">
 
     <!-- Overview Card -->
     <mat-grid-tile *ngFor="let card of allCardLabels">
         <overview-card
-            [colspan]= "(layout | async)?.col_span"
-            [rowspan]="(layout | async)?.row_span"
+            [colspan]= "layout?.overviewCards.col_span"
+            [rowspan]="layout?.overviewCards.row_span"
             [value]="getValueFromLatest(card)"
             [valueType]="cardLabels[card].type"
             [unit]="cardLabels[card].unit"
