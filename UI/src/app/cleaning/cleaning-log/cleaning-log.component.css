@@ -1,4 +1,7 @@
 .table-width{
     width: 100%;
-    min-width: 340px;
+}
+
+th.column-spacing{
+    padding-right: .25rem
 }

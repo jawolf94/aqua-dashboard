@@ -19,8 +19,7 @@ export class BreakpointService{
             overviewCards: {
                 columns: 3,
                 col_span: 1,
-
-                rowHeight: '200px',
+                rowHeight: '215px',
                 row_span: 1,
             },
 
@@ -32,14 +31,14 @@ export class BreakpointService{
 
             datepickerCards: {
                 columns: 2,
-                rowHeight: '245px',
+                rowHeight: '225px',
             }
         },
 
         mobile: {
             overviewCards: {
                 columns: 1,
-                rowHeight: '200px',
+                rowHeight: '215px',
                 col_span: 1,
                 row_span: 1
             },

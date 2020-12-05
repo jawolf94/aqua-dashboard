@@ -23,7 +23,7 @@
 
             <!-- Starting time range
                      Uses component defaults to select start of current day -->
-            <datetime-picker class="align-center" (dateTimeEvent)="toDateSelected($event)">
+            <datetime-picker (dateTimeEvent)="toDateSelected($event)">
             </datetime-picker>
 
          </mat-card>
@@ -43,7 +43,7 @@
 
             <!-- Ending time range - sets default selection to start of next day 
                 Uses inputs and component defaults to select end of day -->
-            <datetime-picker class="align-center" [initalDate]="tomorrowDate"
+            <datetime-picker [initalDate]="tomorrowDate"
                (dateTimeEvent)="fromDateSelected($event)">
             </datetime-picker>
          </mat-card>
