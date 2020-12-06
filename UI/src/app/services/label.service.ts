@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import {Label, ParamLabels} from '@app/models/common/label.model';
+import {ParamLabels} from '@app/models/common/label.model';
 
 /**
  * A service which provides lables for all parameters
@@ -11,7 +11,7 @@ import {Label, ParamLabels} from '@app/models/common/label.model';
 export class LabelService{
 
     // Object mapping tank parameters to labels, units, icons and display types. 
-    labels:ParamLabels = {
+    private labels:ParamLabels = {
 
         ammonia_ppm: {
             label: "Ammonia (NH3)",
@@ -72,9 +72,33 @@ export class LabelService{
     }
 
     /**
-     * @returns Labels for all tank paramters
+     * @returns Labels for all tank information
      */
     getAllLabels():ParamLabels{
-        return this.labels;
+        // Return deep copy to prevent the caller from making changes
+        return JSON.parse(JSON.stringify(this.labels));
+    }
+
+    /**
+     * @returns Labels for all Reading properties
+     */
+    getLabelSubset(desiredLabels:string[]):ParamLabels{
+
+        // Set inital ParamLabel object to empty
+        let readingLabels:ParamLabels = {};
+        
+        // Add reading labels to return value
+        desiredLabels.forEach(label => {
+
+            // Only add label is label was defined for the service
+            // Assign copy to prevent caller from updating label
+            if(label in this.labels){
+                readingLabels[label] = Object.assign({}, this.labels[label])
+            }
+           
+        })
+
+        // Return reading only labels
+        return readingLabels;
     }
 }

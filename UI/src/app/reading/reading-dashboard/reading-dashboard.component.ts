@@ -6,7 +6,6 @@ import { Color } from 'ng2-charts';
 import { CardChartData } from '@app/common-components/card-chart-data.model';
 import { LayoutOptions } from '@app/models/common/layout-options.model';
 import { StringMap } from '@app/models/common/string-map.model';
-import { ParameterStatus } from '@app/models/reading/parameter_status.model';
 import { Reading } from '@app/models/reading/reading.model';
 import { BreakpointService } from '@app/services/breakpoint.service';
 import { ChartUtilService } from '@app/services/chart-util.service';
@@ -42,7 +41,9 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
     latestReading: Reading;
     todaysReadings: Reading[];
 
-    cardLabels:ParamLabels;
+    // Card display options
+    labels:ParamLabels;
+    displayedOverviewCards:string[] = ["ammonia_ppm", "nitrite_ppm", "nitrate_ppm", "ph", "temperature", "timestamp"];
 
     // Chart display data & options
     chartData:CardChartData[];
@@ -91,13 +92,14 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
             }
         )
 
-        // Get Labels for overview cards
-        this.cardLabels = this.labelService.getAllLabels()
+        // Get Labels and Label keys for overview cards
+        this.labels = this.labelService.getLabelSubset(this.displayedOverviewCards);
 
         // Assemble charts before netowork calls to make page appear more responsive
         this.chartInit();
 
         // Subscribe to last reading enpoint
+        this.latestReading = null;
         this.lastReadingSub = this.readingAPI
             .getLatestReading()
             .subscribe(
@@ -108,6 +110,7 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
                 },
                 err => {
                     this.messages.setMessage(err);
+                    this.latestReading = null;
                 }
             );
 
@@ -143,14 +146,6 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
     }
 
     /**
-     * Called to initalizae charts with no reading data. Resets today's readings to empty list.
-     */
-    chartInit(){
-        this.todaysReadings = [];
-        this.chartData = this.assembleAllChartData();
-    }
-
-    /**
      * Called when this component is destroyed.
      * Unsubscribes from ReadingApiService
      */
@@ -160,16 +155,25 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
     }
 
     /**
+     * Called to initalizae charts with no reading data. Resets today's readings to empty list.
+     */
+    chartInit(){
+        this.todaysReadings = [];
+        this.chartData = this.assembleAllChartData();
+    }
+
+    /**
      * Processes chart data for display on overview graphs for all desired parameters.
-     * @returns CardChartData[] - Array of Chart Data. Each for use in sepreate chart-card-line components
+     * @returns CardChartData[] - Array of Chart Data. Each for use in separate chart-card-line components
      */
     assembleAllChartData():CardChartData[]{
         var charts:CardChartData[]= [];
-        this.displayedGraphs.forEach(param => 
+        let displayedGraphs = this.displayedOverviewCards.filter(key => key !== 'timestamp');
+        displayedGraphs.forEach(param => 
             {
                 // Create StringMap for ChartUtil
                 var label:StringMap<string> = {}
-                label[param] = this.cardLabels[param]["label"]
+                label[param] = this.labels[param]?.["label"]
 
                 // Generate Data series & push to array
                 var chart:CardChartData = this.chartUtil.generateChartDataFromReading(this.todaysReadings, label);
@@ -184,23 +188,21 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
      * Updates the icons on the overview cards depending on their parameter's status.
      */
     updateIcons(){
-        if(this.latestReading.id != null){
-            // Create ParamaterStatus object for service to check parameters
-            var paramStatus:ParameterStatus = new ParameterStatus();
-            paramStatus.reading_id = this.latestReading.id;
+        if(this.latestReading.id){
 
             // Request status and subscribe.
             this.lastReadingStatusSub = this.readingAPI
-                .checkParameterStatus(paramStatus.reading_id)
+                .checkParameterStatus(this.latestReading.id)
                 .subscribe(
                     res=> {
+
                         // On success update the icons of each card
                         Object.keys(res).forEach(key => {
                             // If key exists in card list, update it
-                            if( Object.keys(this.cardLabels).includes(key) ){
+                            if( Object.keys(this.labels).includes(key) ){
 
                                 // Display check if valid, wanring otherwise
-                                this.cardLabels[key]["icon"] = res[key] ? "check" : "report_problem";
+                                this.labels[key]["icon"] = res[key] ? "check" : "report_problem";
                             }
                         });
                         
@@ -213,31 +215,4 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
                 )
         }
     }
-
-
-    /**
-     * Generates a list of fields to display on the dashboard.
-     * @returns List fields to display as keys for Reading Model properties.
-     * List will be empty if no reading is available. 
-     */
-    get displayedOverviewCards(){
-        // Check if latest reading was obtained and return keys for display
-        if(this.latestReading != null){
-            return Object.keys(this.cardLabels)
-                .filter(key => Object.keys(this.latestReading).includes(key));
-        }
-
-        // Return empty list if no reading is available.
-        return [];
-    }
-
-    /**
-     * Generates an array of fields to display/generate graphs.
-     * @returns Array of strings representing keys in a Reading.
-     */
-    get displayedGraphs(){
-        return Object.keys(this.cardLabels)
-            .filter(key => key !== 'timestamp');
-    }
-
 }

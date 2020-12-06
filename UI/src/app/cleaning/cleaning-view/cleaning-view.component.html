@@ -5,17 +5,32 @@
 <mat-grid-list cols="{{ layout?.overviewCards.columns }} " rowHeight="{{ layout?.overviewCards.rowHeight }}">
 
     <!-- Overview Card -->
-    <mat-grid-tile *ngFor="let card of allCardLabels">
-        <overview-card
+    <mat-grid-tile *ngFor="let card of displayedCards">
+
+        <!-- Display latest cleaning log if returned -->
+        <overview-card *ngIf="latestCleaning"
             [colspan]= "layout?.overviewCards.col_span"
             [rowspan]="layout?.overviewCards.row_span"
-            [value]="getValueFromLatest(card)"
+            [value]="latestCleaning[card]"
             [valueType]="cardLabels[card].type"
             [unit]="cardLabels[card].unit"
             [label]="cardLabels[card].label"
             [icon]="cardLabels[card].icon"
             >
         </overview-card>
+
+         <!-- Display placeholder card if not returned -->
+         <overview-card *ngIf="!latestCleaning"
+            [colspan]= "layout?.overviewCards.col_span"
+            [rowspan]="layout?.overviewCards.row_span"
+            [value]="null"
+            [valueType]="cardLabels[card].type"
+            [unit]="cardLabels[card].unit"
+            [label]="cardLabels[card].label"
+            [icon]="'cached'"
+         >
+     </overview-card>
+
     </mat-grid-tile>
 </mat-grid-list>
 

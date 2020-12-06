@@ -66,12 +66,9 @@ export class DynamicChartViewComponent implements OnInit, OnDestroy{
 
         // Create StringMap from labels
         this.chartSeriesLabels = {};
-        const labels:ParamLabels = this.labelService.getAllLabels()
+        const labels:ParamLabels = this.labelService.getLabelSubset(this.displayedParams)
         Object.keys(labels).forEach( param => {
-
-            if(this.displayedParams.includes(param)){
                 this.chartSeriesLabels[param] = labels[param].label;
-            }
         })
 
         // Set tomorrow's date for default control set-up

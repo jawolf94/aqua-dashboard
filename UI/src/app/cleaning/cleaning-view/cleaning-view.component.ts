@@ -18,6 +18,7 @@ import { MessageService } from '@app/services/message.service';
 export class CleaningViewComponent implements OnInit, OnDestroy{
 
     // overview-card labels for each cleaning value
+    displayedCards:string[] = ["pct_change", "filter_change", "timestamp"];
     cardLabels:ParamLabels;
 
     // BreakpointService subscription and latest layout options
@@ -37,6 +38,7 @@ export class CleaningViewComponent implements OnInit, OnDestroy{
         private messages:MessageService){}
 
     ngOnInit(){
+
         // Subscribe to breakpoint service
         this.breakpointSubscription = this.breakpointService
             .getLayoutOptions()
@@ -52,13 +54,14 @@ export class CleaningViewComponent implements OnInit, OnDestroy{
             );
 
         // Get labels for overview cards
-        this.cardLabels = this.labelService.getAllLabels()
-            
+        this.cardLabels = this.labelService.getLabelSubset(this.displayedCards);
+
         // Initalize cleaning data
         this.allCleaningLogs = [];
         this.latestCleaning = null;
 
         // Retrieve latest cleaning logs
+        this.latestCleaning = null;
         this.cleaningApi.getCleanings()
             .subscribe(
                 res => {
@@ -81,52 +84,14 @@ export class CleaningViewComponent implements OnInit, OnDestroy{
     }
 
     /**
-     * Gets the value of a specifed key from the latest cleaning
-     * @param key - Key to retieve from cleaning
-     */
-    getValueFromLatest(key:string):any{
-        // Check if latest cleaning exists and includes specifed key
-        if(this.latestCleaning && Object.keys(this.latestCleaning).includes(key)){
-
-            // Return value of specifed key
-            return key === "pct_change" ?
-                this.latestCleaning[key] * 100
-                :this.latestCleaning[key];
-        }
-
-        // Return null if cleaning does not exists or key is invalid
-        return null
-    }
-
-    /**
      * Sets latestCleaning from allCleaningLogs
      */
     setLatestCleaning(){
-        // Check if allCleaningLog has data
+        // Check if allCleaningLogs has data
         if(this.allCleaningLogs && this.allCleaningLogs.length > 0){
             // Set latest cleaning. Data is guaranteed in desc timestamp order.
             this.latestCleaning = this.allCleaningLogs[0];
         }
-    }
-
-    // Getters for the template
-
-    /**
-     * Returns keys in cardLabels for use in the template
-     */
-    get allCardLabels(){
-
-        // Check if latest cleaning was obtained
-        if(this.latestCleaning){
-
-            // Return array of keys to display which exists in the latest cleaning
-            return Object.keys(this.cardLabels).filter(
-                key => Object.keys(this.latestCleaning).includes(key)
-            );
-        }
-        
-        // Return empty list if no cleaning data is available
-        return [];
     }
 
 }

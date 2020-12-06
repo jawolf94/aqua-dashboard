@@ -4,16 +4,26 @@
     <mat-grid-list cols="{{ layout?.overviewCards.columns }}" rowHeight="{{layout?.overviewCards.rowHeight}}">
         <mat-grid-tile *ngFor="let param of displayedOverviewCards;">
 
-            <!--Overview Card with tankparamter data-->
-            <overview-card
+            <!-- Overview Card with tank paramter data-->
+            <overview-card *ngIf="latestReading"
                 [colspan]="layout?.overviewCards.col_span"
                 [rowspan]="layout?.overviewCards.row_span"  
-                [icon]="cardLabels[param].icon" 
+                [icon]="labels[param].icon" 
                 [value]="latestReading[param]" 
-                [valueType]="cardLabels[param].type"
-                [unit]="cardLabels[param].unit" 
-                [label]="cardLabels[param].label"
-                [isDateTime]="param === 'timestamp'">
+                [valueType]="labels[param].type"
+                [unit]="labels[param].unit" 
+                [label]="labels[param].label">
+            </overview-card>
+
+            <!-- Overcard with no data if the reading has not been retrieved-->
+            <overview-card *ngIf="!latestReading"
+                [colspan]="layout?.overviewCards.col_span"
+                [rowspan]="layout?.overviewCards.row_span"  
+                [icon]="'cached'" 
+                [value]="null" 
+                [valueType]="labels[param].type"
+                [unit]="labels[param].unit" 
+                [label]="labels[param].label">
             </overview-card>
 
         </mat-grid-tile>
