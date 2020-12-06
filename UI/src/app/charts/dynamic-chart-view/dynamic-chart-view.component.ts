@@ -5,11 +5,13 @@ import { Subscription } from 'rxjs';
 import { CardChartData } from '@app/common-components/card-chart-data.model';
 import { LayoutOptions } from '@app/models/common/layout-options.model';
 import { StringMap } from '@app/models/common/string-map.model';
+import { ParamLabels } from '@app/models/common/label.model';
 import { Reading } from '@app/models/reading/reading.model';
 import { BreakpointService } from '@app/services/breakpoint.service';
 import { ChartUtilService } from '@app/services/chart-util.service';
-import { ReadingApiService } from '@app/services/reading-api.service';
+import { LabelService } from '@app/services/label.service';
 import { MessageService } from '@app/services/message.service';
+import { ReadingApiService } from '@app/services/reading-api.service';
 
 
 
@@ -29,16 +31,9 @@ export class DynamicChartViewComponent implements OnInit, OnDestroy{
 
     // Chart Data
     chartData:CardChartData;
+    displayedParams = ["ammonia_ppm", "nitrite_ppm", "nitrate_ppm", "ph", "temperature"]
+    chartSeriesLabels:StringMap<string>;
     rawReadings:Reading[];
-
-    // Possible Data Display Options
-    chartSeriesLabels:StringMap<string> = {
-        "ammonia_ppm": "Ammonia (NH3)",
-        "nitrite_ppm": "Nitrite (N02)",
-        "nitrate_ppm": "Nitrate (N03)",    
-        "ph": "PH",
-        "temperature": "Temperature (F\xB0)",
-    }
 
     // Subscription to BreakpointService and the latest value
     layout:LayoutOptions;
@@ -47,9 +42,10 @@ export class DynamicChartViewComponent implements OnInit, OnDestroy{
     // Contructor and ng function implmentations
     constructor(
         private breakpointService:BreakpointService,
+        private chartUtil:ChartUtilService,
+        private labelService:LabelService,
         private messages:MessageService, 
         private readingApi:ReadingApiService,
-        private chartUtil:ChartUtilService
     ){}
 
     ngOnInit(){
@@ -66,7 +62,17 @@ export class DynamicChartViewComponent implements OnInit, OnDestroy{
                     // Report any errors to the console
                     console.error(err);
                 }
-            );
+            );   
+
+        // Create StringMap from labels
+        this.chartSeriesLabels = {};
+        const labels:ParamLabels = this.labelService.getAllLabels()
+        Object.keys(labels).forEach( param => {
+
+            if(this.displayedParams.includes(param)){
+                this.chartSeriesLabels[param] = labels[param].label;
+            }
+        })
 
         // Set tomorrow's date for default control set-up
         this.tomorrowDate = new Date();

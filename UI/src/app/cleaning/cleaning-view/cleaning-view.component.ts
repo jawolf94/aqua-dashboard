@@ -1,14 +1,14 @@
-import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
-import { LayoutOptions } from '@app/models/common/layout-options.model';
 import { Cleaning } from '@app/models/cleaning/cleaning.model';
+import { ParamLabels } from '@app/models/common/label.model';
+import { LayoutOptions } from '@app/models/common/layout-options.model';
 import { BreakpointService } from '@app/services/breakpoint.service';
 import { CleaningApiService } from '@app/services/cleaning-api.service';
+import { LabelService } from '@app/services/label.service';
 import { MessageService } from '@app/services/message.service';
-import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'cleaning-view',
@@ -18,26 +18,7 @@ import { Subscription } from 'rxjs';
 export class CleaningViewComponent implements OnInit, OnDestroy{
 
     // overview-card labels for each cleaning value
-    cardLabels = {
-        "pct_change":{
-            "label": "Changed",
-            "unit": "%",
-            "icon": "waves",
-            "type": "number"
-        },
-        "filter_change":{
-            "label": "Filter Change",
-            "unit": "",
-            "icon": "eco",
-            "type": "boolean"
-        },
-        "timestamp":{
-            "label": "",
-            "type": "date",
-            "unit": "",
-            "icon": "access_time"
-        }
-    }
+    cardLabels:ParamLabels;
 
     // BreakpointService subscription and latest layout options
     breakpointSubscription:Subscription;
@@ -47,12 +28,12 @@ export class CleaningViewComponent implements OnInit, OnDestroy{
     allCleaningLogs:Cleaning[];
     latestCleaning:Cleaning;
 
-
     // Constructor and ng method implmentations
 
     constructor(
         private breakpointService:BreakpointService, 
-        private cleaningApi:CleaningApiService, 
+        private cleaningApi:CleaningApiService,
+        private labelService:LabelService, 
         private messages:MessageService){}
 
     ngOnInit(){
@@ -69,6 +50,9 @@ export class CleaningViewComponent implements OnInit, OnDestroy{
                     console.error(err);
                 }
             );
+
+        // Get labels for overview cards
+        this.cardLabels = this.labelService.getAllLabels()
             
         // Initalize cleaning data
         this.allCleaningLogs = [];

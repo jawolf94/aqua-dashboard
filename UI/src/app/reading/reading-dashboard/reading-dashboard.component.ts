@@ -12,6 +12,8 @@ import { BreakpointService } from '@app/services/breakpoint.service';
 import { ChartUtilService } from '@app/services/chart-util.service';
 import { MessageService } from '@app/services/message.service';
 import { ReadingApiService } from '@app/services/reading-api.service';
+import { ParamLabels } from '@app/models/common/label.model';
+import { LabelService } from '@app/services/label.service';
 
 
 
@@ -40,49 +42,7 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
     latestReading: Reading;
     todaysReadings: Reading[];
 
-    // Mapping of labels/units used to display overview card data.
-    cardLabels = {
-        "ammonia_ppm": {
-            "label": "Ammonia(NH3)",
-            "unit": "ppm",
-            "icon": "cached",
-            "type": "number"
-        },
-    
-        "nitrite_ppm": {
-            "label": "Nitrite(N02)",
-            "unit": "ppm",
-            "icon": "cached",
-            "type": "number"
-        },
-    
-        "nitrate_ppm": {
-            "label": "Nitrate(N03)",
-            "unit": "ppm",
-            "icon": "cached",
-            "type": "number"
-        }, 
-    
-        "ph": {
-            "label": "PH",
-            "unit": "",
-            "icon": "cached",
-            "type": "number"
-        },
-    
-        "temperature": {
-            "label": "Temperature",
-            "unit": "F\xB0",
-            "icon": "cached",
-            "type": "number"
-        },
-        "timestamp":{
-            "label": "",
-            "unit": "",
-            "icon": "access_time",
-            "type": "date"
-        }
-    }
+    cardLabels:ParamLabels;
 
     // Chart display data & options
     chartData:CardChartData[];
@@ -103,10 +63,11 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
      * @param breakpointObserver Observer which represents the size of the screen
      */
     constructor(
-        private readingAPI: ReadingApiService, 
-        private messages:MessageService, 
         private breakpointService:BreakpointService,
-        private chartUtil:ChartUtilService
+        private chartUtil:ChartUtilService,
+        private labelService:LabelService,
+        private messages:MessageService, 
+        private readingAPI: ReadingApiService
     ){}
 
     /**
@@ -129,6 +90,9 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
                 console.error(err);
             }
         )
+
+        // Get Labels for overview cards
+        this.cardLabels = this.labelService.getAllLabels()
 
         // Assemble charts before netowork calls to make page appear more responsive
         this.chartInit();

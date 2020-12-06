@@ -8,7 +8,7 @@ button.new-reading{
     top: 15px;
 }
 
-a.form-button{
+button.form-button{
     width: 30%; 
     min-width: min-content; 
 }
