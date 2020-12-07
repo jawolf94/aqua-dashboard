@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit} from '@angular/core';
 
 import { Subscription } from 'rxjs';
 
-import { CardChartData } from '@app/common-components/card-chart-data.model';
+import { CardChartData } from '@app/models/common/card-chart-data.model';
 import { LayoutOptions } from '@app/models/common/layout-options.model';
 import { StringMap } from '@app/models/common/string-map.model';
 import { ParamLabels } from '@app/models/common/label.model';

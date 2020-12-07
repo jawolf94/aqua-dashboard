@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 
 import { ChartDataSets } from 'chart.js';
 
-import { CardChartData } from '@app/common-components/card-chart-data.model';
 import { TIMEZONE } from '@app/env';
+import { CardChartData } from '@app/models/common/card-chart-data.model';
 import { StringMap } from '@app/models/common/string-map.model';
 import { Reading } from '@app/models/reading/reading.model';
 

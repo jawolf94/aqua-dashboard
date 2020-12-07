@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 
 import { Color } from 'ng2-charts';
 
-import { CardChartData } from '@app/common-components/card-chart-data.model';
+import { CardChartData } from '@app/models/common/card-chart-data.model';
 import { LayoutOptions } from '@app/models/common/layout-options.model';
 import { StringMap } from '@app/models/common/string-map.model';
 import { Reading } from '@app/models/reading/reading.model';

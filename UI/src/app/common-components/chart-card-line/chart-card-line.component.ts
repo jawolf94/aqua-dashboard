@@ -3,7 +3,7 @@ import { Component, Input, OnChanges, ViewChild} from '@angular/core';
 import { ChartOptions, ChartType } from 'chart.js';
 import { BaseChartDirective, Color, Label } from 'ng2-charts';
 
-import { CardChartData } from '@app/common-components/card-chart-data.model';
+import { CardChartData } from '@app/models/common/card-chart-data.model';
 import { StringMap } from '@app/models/common/string-map.model';
 
 /**
