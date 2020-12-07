@@ -2,7 +2,7 @@ import { Component, Input, OnInit, OnChanges, ViewChild} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { TIMEZONE } from '@app/env'; 
+import { TIMEZONE } from '@app/env';
 import { Cleaning } from '@app/models/cleaning/cleaning.model';
 
 
@@ -48,7 +48,7 @@ export class CleaningLogComponent implements OnInit, OnChanges{
 
             // Set timezone for cleaning log dates
             this.displayData.data.forEach(entry => {
-                var date = entry.timestamp.toString() + "+00:00";
+                var date = entry.timestamp.toString() + TIMEZONE;
                 entry.timestamp = new Date(date);
             });
         }

@@ -1,4 +1,4 @@
 export const API_URL = 'http://192.168.0.28:5000';
 
-// String representing preferred timezone for the app
-export const TIMEZONE:string = 'DST';
+// String representing timezone of all timestamps from the DB
+export const TIMEZONE:string = '+00:00';

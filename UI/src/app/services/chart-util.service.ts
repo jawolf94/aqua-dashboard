@@ -54,10 +54,9 @@ export class ChartUtilService{
         //Generate Chart Labels
         data.chartLabels = readings.map((obj) => {
             return formatDate(
-                obj['timestamp'].toString() + "+00:00",
+                obj['timestamp'].toString() + TIMEZONE,
                 'M/d/yy, HH:mm',
-                'en-US',
-                TIMEZONE)
+                'en-US')
         });
 
         // Return completed CardShartData with series and labels

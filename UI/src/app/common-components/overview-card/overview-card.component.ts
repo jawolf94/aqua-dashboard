@@ -40,7 +40,7 @@ export class OverviewCardComponent implements OnInit{
 
         // Specify UTC timestamp
         if(this.isDate()){
-            this.value = this.value.toString() + "+00:00";
+            this.value = this.value.toString() + TIMEZONE;
         }
     }
 
