@@ -5,7 +5,6 @@ import { Color } from 'ng2-charts';
 
 import { CardChartData } from '@app/models/common/card-chart-data.model';
 import { LayoutOptions } from '@app/models/common/layout-options.model';
-import { StringMap } from '@app/models/common/string-map.model';
 import { Reading } from '@app/models/reading/reading.model';
 import { BreakpointService } from '@app/services/breakpoint.service';
 import { ChartUtilService } from '@app/services/chart-util.service';
@@ -171,9 +170,9 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
         let displayedGraphs = this.displayedOverviewCards.filter(key => key !== 'timestamp');
         displayedGraphs.forEach(param => 
             {
-                // Create StringMap for ChartUtil
-                var label:StringMap<string> = {}
-                label[param] = this.labels[param]?.["label"]
+                // Create parameter/label Map for ChartUtil
+                var label:Map<string, string> = new Map<string, string>();
+                label.set(param, this.labels[param]?.["label"]);
 
                 // Generate Data series & push to array
                 var chart:CardChartData = this.chartUtil.generateChartDataFromReading(this.todaysReadings, label);

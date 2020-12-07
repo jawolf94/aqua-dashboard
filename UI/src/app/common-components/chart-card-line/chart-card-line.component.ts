@@ -4,7 +4,6 @@ import { ChartOptions, ChartType } from 'chart.js';
 import { BaseChartDirective, Color, Label } from 'ng2-charts';
 
 import { CardChartData } from '@app/models/common/card-chart-data.model';
-import { StringMap } from '@app/models/common/string-map.model';
 
 /**
  * A component used to generate line charts for display in other views.
@@ -53,7 +52,7 @@ export class ChartCardLineComponent implements OnChanges {
     ngOnChanges(){
 
         // Get hidden status of all current sets
-        var hidden:StringMap<boolean> = this.getHiddenStatuses();
+        var hidden:Map<string, boolean> = this.getHiddenStatuses();
 
         // Create deep copy of chart data to preserve origional data set.
         this.displayChartData = JSON.parse(JSON.stringify(this.chartData)); 
@@ -71,7 +70,7 @@ export class ChartCardLineComponent implements OnChanges {
     /**
      * Samples chart data to create a reduced data set size based on specified sampling
      */
-    sampleChartData(statuses:StringMap<boolean>){
+    sampleChartData(statuses:Map<string, boolean>){
 
          // Reduce the size of each data set in chartData
          this.displayChartData.chartDataSet.forEach(set => {
@@ -93,8 +92,8 @@ export class ChartCardLineComponent implements OnChanges {
             set.pointHitRadius = this.pointHitRadius;
 
             // Set dataset visibility to previous state - display if state is not specifed.
-            set.hidden =  Object.keys(statuses).includes(set?.label) ?
-               statuses[set.label]
+            set.hidden =  statuses.has(set?.label) ?
+               statuses.get(set.label)
                : false;
         });
     }
@@ -131,12 +130,12 @@ export class ChartCardLineComponent implements OnChanges {
 
     /**
      * Creates a mapping of set labels to their hidden state (T/F or Null)
-     * @returns StringMap of label to hidden state mappings
+     * @returns Map of label to current hidden state 
      */
-    getHiddenStatuses():StringMap<boolean>{
+    getHiddenStatuses():Map<string, boolean>{
 
         // Create empty array of type LooseObject
-        var sets:StringMap<boolean> = {};
+        var sets:Map<string, boolean> = new Map();
 
         // If the chart has data sets
         if(this.chart && this.chart.datasets){
@@ -149,14 +148,15 @@ export class ChartCardLineComponent implements OnChanges {
 
                 // Set each objects label to current hidden status
                 // Index in mapped array is same index in dataset array
-                sets[label] = this.chart.isDatasetHidden(index) !== null ? 
+                 let hidden = this.chart.isDatasetHidden(index) !== null ? 
                     this.chart.isDatasetHidden(index)
                     : this.chart.datasets[index].hidden;
+
+                sets.set(label, hidden);
 
             });
         }
 
-        // StringMap object
         return sets;
     }
 }

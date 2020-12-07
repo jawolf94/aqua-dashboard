@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 
 import { CardChartData } from '@app/models/common/card-chart-data.model';
 import { LayoutOptions } from '@app/models/common/layout-options.model';
-import { StringMap } from '@app/models/common/string-map.model';
 import { ParamLabels } from '@app/models/common/label.model';
 import { Reading } from '@app/models/reading/reading.model';
 import { BreakpointService } from '@app/services/breakpoint.service';
@@ -32,7 +31,7 @@ export class DynamicChartViewComponent implements OnInit, OnDestroy{
     // Chart Data
     chartData:CardChartData;
     displayedParams = ["ammonia_ppm", "nitrite_ppm", "nitrate_ppm", "ph", "temperature"]
-    chartSeriesLabels:StringMap<string>;
+    chartSeriesLabels:Map<string, string>;
     rawReadings:Reading[];
 
     // Subscription to BreakpointService and the latest value
@@ -64,11 +63,11 @@ export class DynamicChartViewComponent implements OnInit, OnDestroy{
                 }
             );   
 
-        // Create StringMap from labels
-        this.chartSeriesLabels = {};
+        // Create Map of parameters & labels for chart rendering
+        this.chartSeriesLabels = new Map<string, string>();
         const labels:ParamLabels = this.labelService.getLabelSubset(this.displayedParams)
         Object.keys(labels).forEach( param => {
-                this.chartSeriesLabels[param] = labels[param].label;
+                this.chartSeriesLabels.set(param, labels[param].label)
         })
 
         // Set tomorrow's date for default control set-up
