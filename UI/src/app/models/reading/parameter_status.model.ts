@@ -1,7 +1,7 @@
 /**
  * ParamaterStatus class represents a status for each paramater in a given reading
  */
-export class ParameterStatus{
+export interface ParameterStatus{
     // ID Number of the related reading
     reading_id?: number;
 

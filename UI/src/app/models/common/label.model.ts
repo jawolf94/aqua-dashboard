@@ -1,7 +1,7 @@
 /** 
  * Represents all paramaters and their corresponding labels.
 */
-export class ParamLabels{
+export interface ParamLabels{
     ammonia_ppm?:Label
     nitrite_ppm?:Label 
     nitrate_ppm?:Label
@@ -15,7 +15,7 @@ export class ParamLabels{
 /**
  * Represents icons, units, labels, and display type for a param.
  */
-export class Label{
+export interface Label{
     label?:string
     unit?:string
     icon?:string
