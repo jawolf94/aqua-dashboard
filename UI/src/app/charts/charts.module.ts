@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core'
+import { NgModule } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -16,7 +16,7 @@ import { ReadingApiService } from '@app/services/reading-api.service';
     declarations: [
         DynamicChartViewComponent
     ],
-    imports:[
+    imports: [
         CommonComponentsModule,
         CommonModule,
         ChartsRoutingModule,

@@ -22,32 +22,33 @@ import { ReadingApiService } from '@app/services/reading-api.service';
 export class DynamicChartViewComponent implements OnInit, OnDestroy{
 
     // Default control options
-    tomorrowDate:Date;
+    tomorrowDate: Date;
 
-    // Datetimes selected by the user     
-    selectedToDate:Date;
-    selectedFromDate:Date;
+    // Datetimes selected by the user
+    selectedToDate: Date;
+    selectedFromDate: Date;
 
     // Chart Data
-    chartData:CardChartData;
-    displayedParams = ["ammonia_ppm", "nitrite_ppm", "nitrate_ppm", "ph", "temperature"]
-    chartSeriesLabels:Map<string, string>;
-    rawReadings:Reading[];
+    chartData: CardChartData;
+    displayedParams = ['ammonia_ppm', 'nitrite_ppm', 'nitrate_ppm', 'ph', 'temperature'];
+    chartSeriesLabels: Map<string, string>;
+    rawReadings: Reading[];
 
     // Subscription to BreakpointService and the latest value
-    layout:LayoutOptions;
-    breakpointSubscription:Subscription;
+    layout: LayoutOptions;
+    breakpointSubscription: Subscription;
 
     // Contructor and ng function implmentations
     constructor(
-        private breakpointService:BreakpointService,
-        private chartUtil:ChartUtilService,
-        private labelService:LabelService,
-        private messages:MessageService, 
-        private readingApi:ReadingApiService,
+        private breakpointService: BreakpointService,
+        private chartUtil: ChartUtilService,
+        private labelService: LabelService,
+        private messages: MessageService,
+        private readingApi: ReadingApiService,
     ){}
 
-    ngOnInit(){
+
+    ngOnInit(): void{
 
         // Subscribe to breakpoint service
         this.breakpointSubscription = this.breakpointService
@@ -61,28 +62,28 @@ export class DynamicChartViewComponent implements OnInit, OnDestroy{
                     // Report any errors to the console
                     console.error(err);
                 }
-            );   
+            );
 
         // Create Map of parameters & labels for chart rendering
         this.chartSeriesLabels = new Map<string, string>();
-        const labels:ParamLabels = this.labelService.getLabelSubset(this.displayedParams)
+        const labels: ParamLabels = this.labelService.getLabelSubset(this.displayedParams);
         Object.keys(labels).forEach( param => {
-                this.chartSeriesLabels.set(param, labels[param].label)
-        })
+                this.chartSeriesLabels.set(param, labels[param].label);
+        });
 
         // Set tomorrow's date for default control set-up
         this.tomorrowDate = new Date();
-        this.tomorrowDate.setDate(this.tomorrowDate.getDate() + 1)
+        this.tomorrowDate.setDate(this.tomorrowDate.getDate() + 1);
 
         // Reset time to 0 hours, minutes, seconds, miroseconds
-        this.tomorrowDate.setHours(0,0,0,0);
+        this.tomorrowDate.setHours(0, 0, 0, 0);
 
         // Init chart data to null
         this.chartData = null;
         this.rawReadings = null;
     }
 
-    ngOnDestroy(){
+    ngOnDestroy(): void{
         this.breakpointSubscription.unsubscribe();
     }
 
@@ -90,8 +91,8 @@ export class DynamicChartViewComponent implements OnInit, OnDestroy{
      * Updates selectedFromDate with the user's input
      * @param selectedDate event emitted when datetimepicker's value changes
      */
-    fromDateSelected(selectedDate:Date){
-        this.selectedToDate = selectedDate
+    fromDateSelected(selectedDate: Date): void{
+        this.selectedToDate = selectedDate;
         this.requestData();
     }
 
@@ -99,7 +100,7 @@ export class DynamicChartViewComponent implements OnInit, OnDestroy{
      * Updates selectedToDate with the user's input
      * @param selectedDate event emitted when datetimepicker's value changes
      */
-    toDateSelected(selectedDate:Date){
+    toDateSelected(selectedDate: Date): void{
         this.selectedFromDate = selectedDate;
         this.requestData();
     }
@@ -107,13 +108,13 @@ export class DynamicChartViewComponent implements OnInit, OnDestroy{
     /**
      * Requests data from reading-api service between to/from datetime selections.
      */
-    requestData(){
+    requestData(): void{
         this.readingApi
             .getReadingsBetween(this.selectedFromDate, this.selectedToDate)
             .subscribe(
                 res => {
                     this.rawReadings = res;
-                    this.chartData = this.chartUtil.generateChartDataFromReading(this.rawReadings, this.chartSeriesLabels)
+                    this.chartData = this.chartUtil.generateChartDataFromReading(this.rawReadings, this.chartSeriesLabels);
                 },
                 err => {
                     // Report Error to the user

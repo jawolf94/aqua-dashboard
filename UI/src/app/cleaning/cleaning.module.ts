@@ -22,7 +22,7 @@ import { CommonComponentsModule } from '@app/common-components/common-components
         CleaningLogComponent,
         CleaningViewComponent,
     ],
-    imports:[
+    imports: [
         CleaningRoutingModule,
         CommonComponentsModule,
         CommonModule,

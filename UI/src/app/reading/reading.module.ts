@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms'; 
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
@@ -19,11 +19,11 @@ import { ReadingApiService } from '@app/services/reading-api.service';
  * Defines module which handles display and routing for all tank reading info.
  */
 @NgModule({
-    declarations:[
+    declarations: [
         ReadingDashboardComponent,
         ReadingFormComponent,
     ],
-    imports:[
+    imports: [
         CommonModule,
         CommonComponentsModule,
         MatButtonModule,
@@ -36,7 +36,7 @@ import { ReadingApiService } from '@app/services/reading-api.service';
         ReadingRoutingModule,
         RouterModule
     ],
-    exports:[
+    exports: [
         ReadingFormComponent
     ],
     providers: [ReadingApiService]

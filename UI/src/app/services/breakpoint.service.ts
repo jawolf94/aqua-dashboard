@@ -14,7 +14,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 export class BreakpointService{
 
     // Defines layouts for Desktop and Mobile views for the app
-    layoutOptions:DeviceLayouts = {
+    layoutOptions: DeviceLayouts = {
         desktop: {
             overviewCards: {
                 columns: 3,
@@ -53,13 +53,13 @@ export class BreakpointService{
                 rowHeight: '225px',
             }
         }
-    }
+    };
 
     // Layout matching the current breakpoint
-    selectedLayout:BehaviorSubject<LayoutOptions>;    
+    selectedLayout: BehaviorSubject<LayoutOptions>;
 
 
-    constructor(private breakpointObserver:BreakpointObserver){
+    constructor(private breakpointObserver: BreakpointObserver){
 
         // Subscribe to changes in the window size
         this.breakpointObserver
@@ -67,23 +67,23 @@ export class BreakpointService{
             .subscribe(
                 res => {
                     // Prevent updates to selected layout before constructor completes
-                    if(this.selectedLayout){
+                    if (this.selectedLayout){
 
                         // Update layout options based on returned bp state
                         this.updateLayoutOptions(res);
-                    }       
+                    }
                 },
                 err => {
                     // Log errors to the console if observable fails
                     console.error(err);
                 }
-            )
+            );
 
         // Create BehaviorSubject with inital value set to the current screen size
-        if(this.breakpointObserver.isMatched(Breakpoints.Handset)){
+        if (this.breakpointObserver.isMatched(Breakpoints.Handset)){
 
             // Set inital layout options for mobile
-            this.selectedLayout = new BehaviorSubject<LayoutOptions>(this.layoutOptions.mobile)
+            this.selectedLayout = new BehaviorSubject<LayoutOptions>(this.layoutOptions.mobile);
         }
         else{
 
@@ -95,7 +95,7 @@ export class BreakpointService{
     /**
      * @returns An observable representing the current layout configuration based on screen size.
      */
-    getLayoutOptions():Observable<LayoutOptions>{
+    getLayoutOptions(): Observable<LayoutOptions>{
         return this.selectedLayout.asObservable();
     }
 
@@ -103,10 +103,10 @@ export class BreakpointService{
      * Sets selected layout options based on current screensize
      * @param state - BreakpointState used to determine layout options
      */
-    private updateLayoutOptions(state:BreakpointState){
+    private updateLayoutOptions(state: BreakpointState): void{
 
         // Set state to Mobile if matches - otherwise Desktop
-        var newLayout:LayoutOptions = state.matches ?
+        const newLayout: LayoutOptions = state.matches ?
             this.layoutOptions.mobile
             : this.layoutOptions.desktop;
 

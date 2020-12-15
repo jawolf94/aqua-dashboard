@@ -18,26 +18,27 @@ import { MessageService } from '@app/services/message.service';
 export class CleaningViewComponent implements OnInit, OnDestroy{
 
     // overview-card labels for each cleaning value
-    displayedCards:string[] = ["pct_change", "filter_change", "timestamp"];
-    cardLabels:ParamLabels;
+    displayedCards: string[] = ['pct_change', 'filter_change', 'timestamp'];
+    cardLabels: ParamLabels;
 
     // BreakpointService subscription and latest layout options
-    breakpointSubscription:Subscription;
-    layout:LayoutOptions;
+    breakpointSubscription: Subscription;
+    layout: LayoutOptions;
 
     // Cleaning log data
-    allCleaningLogs:Cleaning[];
-    latestCleaning:Cleaning;
+    allCleaningLogs: Cleaning[];
+    latestCleaning: Cleaning;
 
     // Constructor and ng method implmentations
 
     constructor(
-        private breakpointService:BreakpointService, 
-        private cleaningApi:CleaningApiService,
-        private labelService:LabelService, 
-        private messages:MessageService){}
+        private breakpointService: BreakpointService,
+        private cleaningApi: CleaningApiService,
+        private labelService: LabelService,
+        private messages: MessageService
+    ){}
 
-    ngOnInit(){
+    ngOnInit(): void{
 
         // Subscribe to breakpoint service
         this.breakpointSubscription = this.breakpointService
@@ -69,9 +70,9 @@ export class CleaningViewComponent implements OnInit, OnDestroy{
                     this.allCleaningLogs = res;
                     this.setLatestCleaning();
                 },
-                err => { 
+                err => {
                     // Display error message to the user
-                    this.messages.setMessage(err) 
+                    this.messages.setMessage(err);
 
                     // Ensure cleaning log is set to empty set of data
                     this.allCleaningLogs = [];
@@ -79,16 +80,16 @@ export class CleaningViewComponent implements OnInit, OnDestroy{
             );
     }
 
-    ngOnDestroy(){
+    ngOnDestroy(): void{
         this.breakpointSubscription.unsubscribe();
     }
 
     /**
      * Sets latestCleaning from allCleaningLogs
      */
-    setLatestCleaning(){
+    setLatestCleaning(): void{
         // Check if allCleaningLogs has data
-        if(this.allCleaningLogs && this.allCleaningLogs.length > 0){
+        if (this.allCleaningLogs && this.allCleaningLogs.length > 0){
             // Set latest cleaning. Data is guaranteed in desc timestamp order.
             this.latestCleaning = this.allCleaningLogs[0];
         }
