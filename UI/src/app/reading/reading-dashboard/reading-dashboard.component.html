@@ -36,7 +36,7 @@
 
     <!-- Today Overview Graphs -->
     <h1>Today's Trends</h1>
-    <chart-card-line *ngFor="let chart of chartData" class="trends-charts"
+    <chart-card-line *ngFor="let chart of chartData" class="trends-charts chart-height"
         [chartData]="chart"
         [sampling]="layout?.chartCards.sampling"
         [lineColors]="chartLineColor"

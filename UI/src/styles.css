@@ -1,8 +1,39 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
+/*
+ * CSS for content layouts
+ */
+
 body {
     margin: 0;
 }
+
+/*
+ * CSS for button layouts
+ */
+
+
+ .overview-button-wrapper{
+    align-items: center; 
+    justify-content: flex-start;  
+    
+    padding-left: 15px; 
+    margin-bottom: 1.5rem;
+}
+
+ .form-button-wrapper{
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+div.overview-button-wrapper, div.form-button-wrapper{
+    display: flex; 
+    flex-direction: row;
+}
+
+/*
+ * CSS for buttons
+ */
 
 button.new-reading{
     top: 15px;
@@ -13,24 +44,16 @@ button.form-button{
     min-width: min-content; 
 }
 
-.form-button-wrapper{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
 
 a.overview-button{
     width: 25%;
     min-width: min-content;
 }
 
-.overview-button-wrapper{
-    display: flex; 
-    flex-direction: row;
-    align-items: center; 
-    justify-content: flex-start;  
-    
-    padding-left: 15px; 
-    margin-bottom: 1.5rem;
-}
+/*
+ * CSS for charts
+ */
+
+ .chart-height{
+    height: 400px;
+ }

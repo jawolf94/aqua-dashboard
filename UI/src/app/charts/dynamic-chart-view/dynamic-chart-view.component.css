@@ -3,10 +3,6 @@
     flex-direction: column;
 }
 
-.chart{
-    height: 400px;
-}
-
 .option-card{
     position: absolute; 
     top: 25px; 
