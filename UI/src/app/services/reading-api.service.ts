@@ -1,11 +1,11 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 import { Observable} from 'rxjs';
 import { catchError} from 'rxjs/operators';
 
 import { API_URL } from '@app/env';
-import { DateTimeModel } from '@app/models/common/datetime.model'
+import { DateTimeModel } from '@app/models/common/datetime.model';
 import { ParameterStatus } from '@app/models/reading/parameter_status.model';
 import { Reading } from '@app/models/reading/reading.model';
 import { ServiceUtil } from '@app/services/service-util.service';
@@ -18,7 +18,7 @@ import { ServiceUtil } from '@app/services/service-util.service';
 })
 export class ReadingApiService{
 
-    constructor(private httpClient: HttpClient, private utils:ServiceUtil){}
+    constructor(private httpClient: HttpClient, private utils: ServiceUtil){}
 
     /**
      * @returns Observable<Reading> which represents latest reading from tank.
@@ -28,7 +28,7 @@ export class ReadingApiService{
             .get<Reading>(`${API_URL}/latest-reading`)
             .pipe(
                 catchError(this.utils.handleError)
-            )
+            );
     }
 
     /**
@@ -44,24 +44,24 @@ export class ReadingApiService{
 
     /**
      * Requests readings between the start and end time specified.
-     * @param start - Datetime. The earliest readings to
-     * @param end 
-     * @returns
+     * @param start - Datetime. The earliest readings to retrieve
+     * @param end - Datetime. The latest readings to retrieve. Gets all readings after start if not passed.
+     * @returns - Observable representing a list of readings between specified times.
      */
-    getReadingsBetween(start:Date, end?:Date): Observable<Reading[]>{
+    getReadingsBetween(start: Date, end?: Date): Observable<Reading[]>{
 
         // Create Datetime models for request
         // All dates are serialized from local time to UTC time
-        // Flask API will deserialize a UTC datetime as expected. 
-        var requestParams:HttpParams = new HttpParams()
+        // Flask API will deserialize a UTC datetime as expected.
+        let requestParams: HttpParams = new HttpParams()
             .set(
-                'start', 
+                'start',
                 JSON.stringify(
                     { datetime: start } as DateTimeModel
                 )
             );
 
-        if(end){
+        if (end){
             // Set end param if passed in.
             requestParams = requestParams
                 .set(
@@ -78,18 +78,18 @@ export class ReadingApiService{
             .pipe(
                 catchError(this.utils.handleError)
             );
-           
+
     }
 
     /**
-     * @param reading ParamaterStatus object with ID set to desired reading to check. 
-     * @returns Observable<ParameterStatus> which represents the status of an invdivdual reading. 
+     * @param reading ParamaterStatus object with ID set to desired reading to check.
+     * @returns Observable<ParameterStatus> which represents the status of an invdivdual reading.
      */
-    checkParameterStatus(readingID:number): Observable<ParameterStatus>{
+    checkParameterStatus(readingID: number): Observable<ParameterStatus>{
 
         // Format request header
-        var header:HttpHeaders = new HttpHeaders()
-        header = header.append('reading_id', readingID.toString())
+        let header: HttpHeaders = new HttpHeaders();
+        header = header.append('reading_id', readingID.toString());
 
         // Send the request
         return this.httpClient

@@ -164,8 +164,7 @@ def check_parameter_status():
             return jsonify(status), 200
 
         else:
-            # Return 404 if reading cannot be found
-            return jsonify("{}"), 404
+            raise ValueError("Invalid Reading ID")
 
     except (TypeError, ValueError) as err:
         # Return 400 error if request is mal-formed

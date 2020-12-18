@@ -1,11 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+
+import { Subscription } from 'rxjs';
 
 /**
  * Defines string/value pairs for time selection display
  */
 interface TimeSelectOption{
-    option:string;
+    option: string;
     value: number;
 }
 
@@ -17,7 +19,7 @@ interface TimeSelectOption{
     templateUrl: './datetime-picker.component.html',
     styleUrls: ['datetime-picker.component.css']
 })
-export class DateTimePickerComponent implements OnInit{
+export class DateTimePickerComponent implements OnInit, OnDestroy{
 
     // Inital values for date, hour and, minutes
     @Input() initalHour: number;
@@ -25,70 +27,77 @@ export class DateTimePickerComponent implements OnInit{
     @Input() initalDate: Date;
 
     // Parent FormGroup - passed in when used with ngForms
-    @Input() parentForm:FormGroup = null;
+    @Input() parentForm: FormGroup = null;
 
     // Output of full datetime selection
     @Output() dateTimeEvent: EventEmitter<Date>  = new EventEmitter<Date>();
 
     // Arrays used to populate hour and minute select options
-    hours:TimeSelectOption[];
-    minutes:TimeSelectOption[];
+    hours: TimeSelectOption[];
+    minutes: TimeSelectOption[];
 
     // ngForm for user inputs
-    dateForm:FormGroup;
+    dateForm: FormGroup;
+    formSub: Subscription;
 
     // Interal represenation of the ngModel as a Date object
-    dateSelection:Date;
+    dateSelection: Date;
 
 
     /**
      * Initalizes time selections with hour and minute values
      */
-    ngOnInit(){
+    ngOnInit(): void{
 
-         // Set values for hours, minutes and timePeriod
-         this.hours = this.setTimeOptions(0,23);
-         this.minutes = this.setTimeOptions(0,59);
+        // Set values for hours, minutes and timePeriod
+        this.hours = this.setTimeOptions(0, 23);
+        this.minutes = this.setTimeOptions(0, 59);
 
         // Make sure default inputs are in range - default to 12hr 00min otherwise
-        if(this.invalidHours()){
+        if (this.invalidHours()){
             this.initalHour = 0;
         }
-        if(this.invalidMinutes()){
+
+        if (this.invalidMinutes()){
             this.initalMinute = 0;
         }
 
         // Check if user provided a defualt date
-        if(!this.initalDate){
+        if (!this.initalDate){
             // Use today for intital values if none was provided
             this.initalDate = new Date();
         }
-       
 
-        //Create form for datetime inputs
+
+        // Create form for datetime inputs
         this.dateForm = new FormGroup({
             date: new FormControl(this.initalDate),
             hour: new FormControl(this.initalHour),
             minute: new FormControl(this.initalMinute)
-        })
+        });
 
         // Add timestamp input field to parentComponent if specified
-        if(this.parentForm){
-            this.parentForm.addControl('timestamp',new FormControl(this.dateSelection))
+        if (this.parentForm){
+            this.parentForm.addControl('timestamp', new FormControl(this.dateSelection));
         }
 
         // Set internal model to match inital inputs
         this.modelChange();
 
-        
+
         // Subscribe to future model changes
-        this.dateForm.valueChanges.subscribe(
+        this.formSub = this.dateForm.valueChanges.subscribe(
            () => this.modelChange()
-        )  
+        );
 
     }
 
-    modelChange(){
+    ngOnDestroy(): void{
+        // Unsubscribe from date model changes
+        this.formSub.unsubscribe();
+    }
+
+    modelChange(): void{
 
         // Create a new date object with the user's input
         this.dateSelection = new Date(this.dateForm.value.date);
@@ -98,13 +107,13 @@ export class DateTimePickerComponent implements OnInit{
         this.dateSelection.setHours(
             this.dateForm.value.hour,
             this.dateForm.value.minute,
-            0,0);
+            0, 0);
 
         // Update field value if used in a FormGroup
-        if(this.parentForm){
+        if (this.parentForm){
             this.parentForm.patchValue({
-                'timestamp': this.dateSelection
-            })
+                timestamp: this.dateSelection
+            });
         }
 
         // Emit output for non FormGroup use cases
@@ -114,7 +123,7 @@ export class DateTimePickerComponent implements OnInit{
     /**
      * Emit a Date object based on the user's datetime selection
      */
-    emitDateOutput(){
+    emitDateOutput(): void{
 
         // Emit new date value
         this.dateTimeEvent.emit(this.dateSelection);
@@ -126,15 +135,15 @@ export class DateTimePickerComponent implements OnInit{
      * @param highestValue - Highest value in returned array
      * @returns List of TimeSelectOptions between the values passed
      */
-    setTimeOptions(lowestValue:number, highestValue:number):TimeSelectOption[] {
+    setTimeOptions(lowestValue: number, highestValue: number): TimeSelectOption[] {
         // Declare array to populate as empty array
-        var options:TimeSelectOption[] = [];
+        const options: TimeSelectOption[] = [];
 
         // Loop from lowestValue to highestValue
-        for(let i=lowestValue; i<=highestValue; i++){
+        for (let i = lowestValue; i <= highestValue; i++){
 
             // String which is 0 when time value is below 10
-            var zeroDigit:string = i<10 ? "0" : "";
+            const zeroDigit: string = i < 10 ? '0' : '';
 
             // Push string value par into list
             options.push(
@@ -142,14 +151,14 @@ export class DateTimePickerComponent implements OnInit{
                     option: zeroDigit + i.toString(),
                     value: i
                 }
-            )
+            );
         }
 
         // Return array of TimeSelectOptions
         return options;
     }
 
-        /**
+    /**
      * @returns True if defaultHours is a valid number between 1 & 12
      */
     invalidHours(): boolean{
@@ -164,6 +173,6 @@ export class DateTimePickerComponent implements OnInit{
     invalidMinutes(): boolean{
         return !this.initalMinute
             || this.initalMinute < 0
-            || this.initalMinute > 59
+            || this.initalMinute > 59;
     }
 }

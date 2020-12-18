@@ -1,9 +1,9 @@
 /**
- * Cleaning Class represents a singular cleaning log entry.
+ * Cleaning interface represents a singular cleaning log entry.
  */
-export class Cleaning{
-    pct_change:number;
-    filter_change:Boolean;
-    timestamp:Date;
-    id?:number;
+export interface Cleaning{
+    pct_change: number;
+    filter_change: boolean;
+    timestamp: Date;
+    id?: number;
 }

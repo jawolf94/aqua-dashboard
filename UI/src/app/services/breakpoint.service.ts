@@ -1,8 +1,10 @@
 import { Breakpoints, BreakpointState, BreakpointObserver } from '@angular/cdk/layout';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
+
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 
 import { DeviceLayouts, LayoutOptions } from '@app/models/common/layout-options.model';
-import { Observable, BehaviorSubject } from 'rxjs';
+
 
 
 /**
@@ -11,10 +13,10 @@ import { Observable, BehaviorSubject } from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
-export class BreakpointService{
+export class BreakpointService implements OnDestroy{
 
     // Defines layouts for Desktop and Mobile views for the app
-    layoutOptions:DeviceLayouts = {
+    layoutOptions: DeviceLayouts = {
         desktop: {
             overviewCards: {
                 columns: 3,
@@ -53,37 +55,40 @@ export class BreakpointService{
                 rowHeight: '225px',
             }
         }
-    }
+    };
 
     // Layout matching the current breakpoint
-    selectedLayout:BehaviorSubject<LayoutOptions>;    
+    selectedLayout: BehaviorSubject<LayoutOptions>;
+
+    // Breakpoint Subscription
+    breakpointSub: Subscription;
 
 
-    constructor(private breakpointObserver:BreakpointObserver){
+    constructor(private breakpointObserver: BreakpointObserver){
 
         // Subscribe to changes in the window size
-        this.breakpointObserver
+        this.breakpointSub = this.breakpointObserver
             .observe(Breakpoints.Handset)
             .subscribe(
                 res => {
                     // Prevent updates to selected layout before constructor completes
-                    if(this.selectedLayout){
+                    if (this.selectedLayout){
 
                         // Update layout options based on returned bp state
                         this.updateLayoutOptions(res);
-                    }       
+                    }
                 },
                 err => {
                     // Log errors to the console if observable fails
                     console.error(err);
                 }
-            )
+            );
 
         // Create BehaviorSubject with inital value set to the current screen size
-        if(this.breakpointObserver.isMatched(Breakpoints.Handset)){
+        if (this.breakpointObserver.isMatched(Breakpoints.Handset)){
 
             // Set inital layout options for mobile
-            this.selectedLayout = new BehaviorSubject<LayoutOptions>(this.layoutOptions.mobile)
+            this.selectedLayout = new BehaviorSubject<LayoutOptions>(this.layoutOptions.mobile);
         }
         else{
 
@@ -92,10 +97,15 @@ export class BreakpointService{
         }
     }
 
+    ngOnDestroy(): void{
+        // Unsubscribe from breakpoint observer on destory
+        this.breakpointSub.unsubscribe();
+    }
+
     /**
      * @returns An observable representing the current layout configuration based on screen size.
      */
-    getLayoutOptions():Observable<LayoutOptions>{
+    getLayoutOptions(): Observable<LayoutOptions>{
         return this.selectedLayout.asObservable();
     }
 
@@ -103,10 +113,10 @@ export class BreakpointService{
      * Sets selected layout options based on current screensize
      * @param state - BreakpointState used to determine layout options
      */
-    private updateLayoutOptions(state:BreakpointState){
+    private updateLayoutOptions(state: BreakpointState): void{
 
         // Set state to Mobile if matches - otherwise Desktop
-        var newLayout:LayoutOptions = state.matches ?
+        const newLayout: LayoutOptions = state.matches ?
             this.layoutOptions.mobile
             : this.layoutOptions.desktop;
 

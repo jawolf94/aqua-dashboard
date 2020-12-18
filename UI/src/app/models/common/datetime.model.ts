@@ -1,6 +1,6 @@
 /**
  * Defines a Date object for requests using datetime parameters
  */
-export class DateTimeModel{
+export interface DateTimeModel{
     datetime: Date;
 }

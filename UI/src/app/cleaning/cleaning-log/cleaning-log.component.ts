@@ -2,7 +2,7 @@ import { Component, Input, OnInit, OnChanges, ViewChild} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { TIMEZONE } from '@app/env'; 
+import { TIMEZONE } from '@app/env';
 import { Cleaning } from '@app/models/cleaning/cleaning.model';
 
 
@@ -21,34 +21,34 @@ export class CleaningLogComponent implements OnInit, OnChanges{
     tablePageSize = [10, 25, 50];
 
     // List of all Reading objects to display
-    @Input() cleaningData:Cleaning[] = [];
-    displayData:MatTableDataSource<Cleaning>;
+    @Input() cleaningData: Cleaning[] = [];
+    displayData: MatTableDataSource<Cleaning>;
 
     // Paginator
-    @ViewChild(MatPaginator, {static: true}) paginator:MatPaginator;
+    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
     // ng function implementations
 
-    ngOnInit(){
+    ngOnInit(): void{
         // Associate paginator with data
-        if(!this.cleaningData){
+        if (!this.cleaningData){
             this.cleaningData = [];
         }
 
         this.displayData = new MatTableDataSource<Cleaning>(this.cleaningData);
         this.displayData.paginator = this.paginator;
-        
+
     }
 
-    ngOnChanges(){
+    ngOnChanges(): void{
 
-        if(this.cleaningData && this.displayData){
+        if (this.cleaningData && this.displayData){
              // Create deep copy of chart data
             this.displayData.data = JSON.parse(JSON.stringify(this.cleaningData));
 
             // Set timezone for cleaning log dates
             this.displayData.data.forEach(entry => {
-                var date = entry.timestamp.toString() + "+00:00";
+                const date = entry.timestamp.toString() + TIMEZONE;
                 entry.timestamp = new Date(date);
             });
         }

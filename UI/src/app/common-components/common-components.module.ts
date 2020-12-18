@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule} from '@angular/forms'; 
+import { ReactiveFormsModule} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -18,7 +18,7 @@ import { OverviewCardComponent } from '@app/common-components/overview-card/over
  * Defined module for all common UI elements used in other views.
  */
 
- @NgModule({
+@NgModule({
     declarations: [
         ChartCardLineComponent,
         DateTimePickerComponent,
@@ -41,5 +41,5 @@ import { OverviewCardComponent } from '@app/common-components/overview-card/over
         MessageComponent,
         OverviewCardComponent
     ]
- })
- export class CommonComponentsModule{}
+})
+export class CommonComponentsModule{}

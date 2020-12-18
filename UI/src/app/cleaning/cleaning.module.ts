@@ -8,7 +8,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
-import { RouterModule } from '@angular/router';
 
 import { AddCleaningComponent } from '@app/cleaning/add-cleaning/add-cleaning.component';
 import { CleaningLogComponent } from '@app/cleaning/cleaning-log/cleaning-log.component';
@@ -22,8 +21,7 @@ import { CommonComponentsModule } from '@app/common-components/common-components
         CleaningLogComponent,
         CleaningViewComponent,
     ],
-    imports:[
-        CleaningRoutingModule,
+    imports: [
         CommonComponentsModule,
         CommonModule,
         CommonComponentsModule,
@@ -34,8 +32,8 @@ import { CommonComponentsModule } from '@app/common-components/common-components
         MatSliderModule,
         MatSlideToggleModule,
         MatTableModule,
-        RouterModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        CleaningRoutingModule
     ]
 })
 export class CleaningModule{}
