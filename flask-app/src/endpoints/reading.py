@@ -1,18 +1,16 @@
 from datetime import datetime, timezone
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, jsonify, request
 import json
 from marshmallow import EXCLUDE, ValidationError
 
-from ..app_config import config
-from ..alerts.alert import send_param_alert
 from ..common.error import handle_error
+from ..common.param_common import param_store_alert
 from ..entities.reading import Reading
-from ..proceedures.parameter_status import read_parameter_status, store_parameter_status
+from ..proceedures.parameter_status import read_parameter_status
 from ..proceedures.tank_readings import get_latest_readings, get_readings_between, save_reading
 from ..schema.date import DateSchema
 from ..schema.parameter_status import ParameterStatusSchema
 from ..schema.reading import complete_reading_schema, ReadingSchema
-from ..common.reading_validators import validate_parameters
 
 reading = Blueprint('reading', __name__, url_prefix="/")
 
@@ -123,15 +121,11 @@ def save_manual_reading():
         # Save reading to table
         save_reading(reading)
 
-        # Check if parameters from reading are in expected ranges, store, & alert
-        results = validate_parameters(completed_reading, current_app.config["tank_parameters"])
-        store_parameter_status(reading.id, results["invalid_parameters"])
+        # Check parameter status and alert
+        completed_reading["reading_id"] = reading.id
+        param_store_alert(completed_reading)
 
-        # Alert on any paramaters if specified by callers
-        if not results["valid"] and config["ALERTS"]["ENABLED"]:
-            send_param_alert(results["invalid_parameters"], completed_reading)
-
-        # Return new reading
+        # Return new reading schema to caller
         return jsonify(completed_reading)
     
     except ValidationError as err:

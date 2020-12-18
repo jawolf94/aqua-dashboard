@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from ..alerts.alert import send_cleaning_alert
+from ..alerts.text import send_cleaning_alert
 from ..parameter_config import tank_parameters
 from ..proceedures.cleaning_logs import get_cleaning_logs 
 

@@ -43,6 +43,8 @@ def create_app():
 
     # Schedule regular cleaning alerts if config is enabled
     if config["ALERTS"]["ENABLED"]:
+
+        # Job scheduled daily 7am EST
         scheduler.add_job(func=alert_last_cleaning, trigger='cron', hour=12, minute=0, timezone=pytz.utc)
         
     # Start app scheduler

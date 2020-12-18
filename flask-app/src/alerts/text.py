@@ -28,7 +28,7 @@ def send_param_alert(alert_params, param_values):
     """ Call to send an email alert when paramaters are out of range.
 
         alert_params([string]) - Array of paramater names currently out of range.
-        param_values(entities.Reading) - Reading associated with alert_params.
+        param_values(schema.Reading) - Reading associated with alert_params.
     """
 
     # Get list of param alert subscribers & format emails
@@ -102,7 +102,7 @@ def format_param_message(alert_params, param_values):
     """ Formats an email message for one or more out of range parameters.
 
         alert_params([string]) - Array of paramater names currently out of range.
-        param_values(entities.Reading) - Reading associated with alert_params.
+        param_values(schema.reading.Reading) - Reading associated with alert_params.
 
         Returns (string) - Formatted message
     """
