@@ -26,6 +26,7 @@ export class CleaningViewComponent implements OnInit, OnDestroy{
     layout: LayoutOptions;
 
     // Cleaning log data
+    cleaningSub: Subscription;
     allCleaningLogs: Cleaning[];
     latestCleaning: Cleaning;
 
@@ -62,8 +63,7 @@ export class CleaningViewComponent implements OnInit, OnDestroy{
         this.latestCleaning = null;
 
         // Retrieve latest cleaning logs
-        this.latestCleaning = null;
-        this.cleaningApi.getCleanings()
+        this.cleaningSub = this.cleaningApi.getCleanings()
             .subscribe(
                 res => {
                     // Set Component instance vars
@@ -82,6 +82,7 @@ export class CleaningViewComponent implements OnInit, OnDestroy{
 
     ngOnDestroy(): void{
         this.breakpointSubscription.unsubscribe();
+        this.cleaningSub.unsubscribe();
     }
 
     /**

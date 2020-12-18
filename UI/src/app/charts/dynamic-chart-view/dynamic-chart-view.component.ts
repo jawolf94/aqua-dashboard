@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit} from '@angular/core';
 
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 import { CardChartData } from '@app/models/common/card-chart-data.model';
 import { LayoutOptions } from '@app/models/common/layout-options.model';
@@ -111,6 +112,7 @@ export class DynamicChartViewComponent implements OnInit, OnDestroy{
     requestData(): void{
         this.readingApi
             .getReadingsBetween(this.selectedFromDate, this.selectedToDate)
+            .pipe(take(1))
             .subscribe(
                 res => {
                     this.rawReadings = res;

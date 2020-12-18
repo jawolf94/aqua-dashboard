@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Subscription } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { MessageService } from '@app/services/message.service';
     templateUrl: './message-banner.component.html',
     styleUrls: ['./message-banner.component.css']
 })
-export class  MessageComponent implements OnInit{
+export class  MessageComponent implements OnInit, OnDestroy{
 
     // Subscription to message service
     messageSub: Subscription;
@@ -27,6 +27,11 @@ export class  MessageComponent implements OnInit{
                 res => {this.message = res; },
                 err => {console.error(err); }
             );
+    }
+
+    ngOnDestroy(): void {
+        // Unsubscribe from messageSub on destroy
+        this.messageSub.unsubscribe();
     }
 
     close(): void{

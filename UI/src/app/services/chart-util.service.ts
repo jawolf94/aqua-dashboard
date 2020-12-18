@@ -24,7 +24,7 @@ export class ChartUtilService{
         };
 
         // Check if readings & set labels were provided
-        if (!readings || readings.length <= 1 || !setLabels || setLabels.size <= 0){
+        if (!readings || readings.length <= 0 || !setLabels || setLabels.size <= 0){
 
             // Return empty chart data if lables or readings are not provided
             return data;

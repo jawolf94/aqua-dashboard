@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+
 import { Subscription } from 'rxjs';
 
 import { Color } from 'ng2-charts';
@@ -151,6 +152,8 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
     ngOnDestroy(): void{
         this.lastReadingSub.unsubscribe();
         this.breakpointSubscription.unsubscribe();
+        this.todaysReadingsSub.unsubscribe();
+        this.lastReadingStatusSub.unsubscribe();
     }
 
     /**

@@ -11,7 +11,7 @@
         <overview-card *ngIf="latestCleaning"
             [colspan]= "layout?.overviewCards.col_span"
             [rowspan]="layout?.overviewCards.row_span"
-            [value]="latestCleaning[card]"
+            [value]="card === 'pct_change'? latestCleaning[card] * 100 : latestCleaning[card] "
             [valueType]="cardLabels[card].type"
             [unit]="cardLabels[card].unit"
             [label]="cardLabels[card].label"

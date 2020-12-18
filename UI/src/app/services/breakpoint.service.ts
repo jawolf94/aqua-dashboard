@@ -1,8 +1,10 @@
 import { Breakpoints, BreakpointState, BreakpointObserver } from '@angular/cdk/layout';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
+
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 
 import { DeviceLayouts, LayoutOptions } from '@app/models/common/layout-options.model';
-import { Observable, BehaviorSubject } from 'rxjs';
+
 
 
 /**
@@ -11,7 +13,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
-export class BreakpointService{
+export class BreakpointService implements OnDestroy{
 
     // Defines layouts for Desktop and Mobile views for the app
     layoutOptions: DeviceLayouts = {
@@ -58,11 +60,14 @@ export class BreakpointService{
     // Layout matching the current breakpoint
     selectedLayout: BehaviorSubject<LayoutOptions>;
 
+    // Breakpoint Subscription
+    breakpointSub: Subscription;
+
 
     constructor(private breakpointObserver: BreakpointObserver){
 
         // Subscribe to changes in the window size
-        this.breakpointObserver
+        this.breakpointSub = this.breakpointObserver
             .observe(Breakpoints.Handset)
             .subscribe(
                 res => {
@@ -90,6 +95,11 @@ export class BreakpointService{
             // Set inital layout options for desktop
             this.selectedLayout = new BehaviorSubject<LayoutOptions>(this.layoutOptions.desktop);
         }
+    }
+
+    ngOnDestroy(): void{
+        // Unsubscribe from breakpoint observer on destory
+        this.breakpointSub.unsubscribe();
     }
 
     /**

@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+
+import { Subscription } from 'rxjs';
 
 /**
  * Defines string/value pairs for time selection display
@@ -17,7 +19,7 @@ interface TimeSelectOption{
     templateUrl: './datetime-picker.component.html',
     styleUrls: ['datetime-picker.component.css']
 })
-export class DateTimePickerComponent implements OnInit{
+export class DateTimePickerComponent implements OnInit, OnDestroy{
 
     // Inital values for date, hour and, minutes
     @Input() initalHour: number;
@@ -36,6 +38,7 @@ export class DateTimePickerComponent implements OnInit{
 
     // ngForm for user inputs
     dateForm: FormGroup;
+    formSub: Subscription;
 
     // Interal represenation of the ngModel as a Date object
     dateSelection: Date;
@@ -83,10 +86,15 @@ export class DateTimePickerComponent implements OnInit{
 
 
         // Subscribe to future model changes
-        this.dateForm.valueChanges.subscribe(
+        this.formSub = this.dateForm.valueChanges.subscribe(
            () => this.modelChange()
         );
 
+    }
+
+    ngOnDestroy(): void{
+        // Unsubscribe from date model changes
+        this.formSub.unsubscribe();
     }
 
     modelChange(): void{

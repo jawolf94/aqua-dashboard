@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup} from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { take } from 'rxjs/operators';
+
 import { Reading } from '@app/models/reading/reading.model';
 import { MessageService } from '@app/services/message.service';
 import { ReadingApiService } from '@app/services/reading-api.service';
@@ -49,6 +51,7 @@ export class ReadingFormComponent implements OnInit{
         // Send reading to backend and subscribe to the result
         this.readingApi
             .saveManualReading(reading)
+            .pipe(take(1))
             .subscribe(
                 () => this.router.navigate(['/']),
                 err => {

@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 import { Cleaning } from '@app/models/cleaning/cleaning.model';
 import { CleaningApiService } from '@app/services/cleaning-api.service';
@@ -11,7 +14,7 @@ import { MessageService } from '@app/services/message.service';
     templateUrl: 'add-cleaning.component.html',
     styleUrls: ['./add-cleaning.component.css']
 })
-export class AddCleaningComponent implements OnInit{
+export class AddCleaningComponent implements OnInit, OnDestroy{
 
     // Cleaning FormGroup to capture user inputs
     cleaningForm: FormGroup;
@@ -29,6 +32,9 @@ export class AddCleaningComponent implements OnInit{
         notChanged: 'No Filter Change',
         changed: 'Filter Changed'
     };
+
+    // Slide toggle value subscription
+    toggleSub: Subscription;
 
     constructor(
         private cleaningApi: CleaningApiService,
@@ -57,9 +63,13 @@ export class AddCleaningComponent implements OnInit{
         this.setToggleLabel();
 
         // Subscribe to model changes for label updates
-        this.cleaningForm.valueChanges.subscribe(
+        this.toggleSub = this.cleaningForm.valueChanges.subscribe(
             () => this.setToggleLabel()
         );
+    }
+
+    ngOnDestroy(): void{
+       this.toggleSub.unsubscribe();
     }
 
     /**
@@ -85,6 +95,7 @@ export class AddCleaningComponent implements OnInit{
         // Send to backend
         this.cleaningApi
             .addCleaning(cleaning)
+            .pipe(take(1))
             .subscribe(
                 () => { this.router.navigate(['/cleaning']); },
                 err => { this.messages.setMessage(err); }
