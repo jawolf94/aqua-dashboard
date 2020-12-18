@@ -29,6 +29,9 @@ export class DynamicChartViewComponent implements OnInit, OnDestroy{
     selectedToDate: Date;
     selectedFromDate: Date;
 
+    // True if toDate has initalized
+    toDateInit: boolean;
+
     // Chart Data
     chartData: CardChartData;
     displayedParams = ['ammonia_ppm', 'nitrite_ppm', 'nitrate_ppm', 'ph', 'temperature'];
@@ -82,6 +85,9 @@ export class DynamicChartViewComponent implements OnInit, OnDestroy{
         // Init chart data to null
         this.chartData = null;
         this.rawReadings = null;
+
+        // Set toDate to unitialized
+        this.toDateInit = false;
     }
 
     ngOnDestroy(): void{
@@ -103,7 +109,21 @@ export class DynamicChartViewComponent implements OnInit, OnDestroy{
      */
     toDateSelected(selectedDate: Date): void{
         this.selectedFromDate = selectedDate;
-        this.requestData();
+
+        // Prevent the first toDate Request from firing
+        // ToDate defaults to the next day so returned data will be correct in the first call
+
+        if (this.toDateInit){
+
+            // Request the data if toDate was previously initalized
+            this.requestData();
+        }
+        else{
+
+            // Set toDate as initalized - this was the first call.
+            this.toDateInit = true;
+        }
+
     }
 
     /**
