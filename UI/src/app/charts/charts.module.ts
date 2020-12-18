@@ -19,10 +19,10 @@ import { ReadingApiService } from '@app/services/reading-api.service';
     imports: [
         CommonComponentsModule,
         CommonModule,
-        ChartsRoutingModule,
         MatCardModule,
         MatCheckboxModule,
         MatGridListModule,
+        ChartsRoutingModule
     ],
     providers: [
         ReadingApiService
