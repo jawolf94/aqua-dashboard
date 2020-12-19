@@ -11,9 +11,9 @@ class Cleaning(Base, Entity):
 
     # Column definitions
     id = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp = Column(TIMESTAMP)
-    pct_change = Column(Float)
-    filter_change = Column(Boolean)
+    timestamp = Column(TIMESTAMP, nullable=False)
+    pct_change = Column(Float, nullable=False)
+    filter_change = Column(Boolean, nullable=False)
 
     def __init__(self, timestamp, pct_change, filter_change):
 

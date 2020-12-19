@@ -11,8 +11,8 @@ class TextAlert(Base, Entity):
 
     # Column definitions
     id = Column(Integer, primary_key=True)
-    cell_number = Column(Text)
-    provider = Column(Text)
+    cell_number = Column(Text, nullable=False)
+    provider = Column(Text, nullable=False)
     param_alerts = Column(Boolean)
     cleaning_alerts = Column(Boolean)
 
@@ -21,7 +21,7 @@ class TextAlert(Base, Entity):
         Entity.__init__(self)
 
         # Set instance vars for this this entity
-        self.cell_number =cell_number
+        self.cell_number = cell_number
         self.provider = provider
         self.param_alerts = param_alerts
         self.cleaning_alerts = cleaning_alerts

@@ -39,7 +39,7 @@ def complete_reading_schema(schema):
         last_reading = readings[0]
     else:
         # Create dummy reading if no reading exists in table
-        last_reading = Reading(None, None, None, None, None, None, None)
+        last_reading = Reading()
 
     # Check expected columns for existance in schema
     for column in inspect(last_reading).attrs:

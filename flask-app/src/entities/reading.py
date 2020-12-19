@@ -20,7 +20,7 @@ class Reading(Base, Entity):
     manual = Column(Integer)
 
 
-    def __init__(self, timestamp, ammonia_ppm, nitrite_ppm, nitrate_ppm, ph, temperature, manual):
+    def __init__(self, timestamp=None, ammonia_ppm=None, nitrite_ppm=None, nitrate_ppm=None, ph=None, temperature=None, manual=None):
         # Initalize parent class
         Entity.__init__(self)
 

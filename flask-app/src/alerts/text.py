@@ -4,7 +4,6 @@ import smtplib, ssl
 from threading import Thread
 
 from ..app_config import config
-from ..entities.text_alert import TextAlert
 from ..proceedures.text_alerts import get_cleaning_subs, get_param_subs
 
 def send_cleaning_alert(elapsed_days):

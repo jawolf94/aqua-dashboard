@@ -151,7 +151,7 @@ def check_parameter_status():
         status_obj = read_parameter_status(reading_id)
 
         if status_obj is not None:
-            # Create respnse schema and return
+            # Create response schema and return
             schema = ParameterStatusSchema()
             status = schema.dump(status_obj)
 

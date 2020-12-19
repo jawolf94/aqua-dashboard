@@ -5,6 +5,6 @@ class CleaningSchema(Schema):
 
     # Schema field definitions
     id = fields.Integer()
-    timestamp = fields.DateTime()
-    pct_change = fields.Float()
-    filter_change = fields.Boolean()
+    timestamp = fields.DateTime(required=True)
+    pct_change = fields.Float(required=True)
+    filter_change = fields.Boolean(required=True)
