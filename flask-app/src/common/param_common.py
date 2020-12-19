@@ -1,7 +1,6 @@
 """ Common helper functions to handle parameter data  """
 
 from ..app_config import config
-from ..parameter_config import tank_parameters
 
 from .reading_validators import validate_parameters
 from ..alerts.text import send_param_alert
@@ -14,7 +13,7 @@ def param_store_alert(reading):
     """
 
     # Check if parameters are in the expected range
-    results = validate_parameters(reading, tank_parameters)
+    results = validate_parameters(reading, config["TANK_PARAMETERS"])
 
     try:
         # Store results

@@ -8,7 +8,6 @@ from .database  import Base, Engine
 from .common.cleaning_common import alert_last_cleaning
 from .endpoints.cleaning import cleaning
 from .endpoints.reading import reading
-from .parameter_config import tank_parameters
 from .sensors.automatic_readings import create_reading
 
 
@@ -22,10 +21,6 @@ def create_app():
 
     # Allow Cross Origin Resource Sharing
     CORS(app)
-
-    # Store configs
-    app.config["tank_parameters"] = tank_parameters
-    app.config["app_config"] = config
 
     # Generate DB Schema
     Base.metadata.create_all(Engine)

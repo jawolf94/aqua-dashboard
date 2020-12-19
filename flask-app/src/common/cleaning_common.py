@@ -1,7 +1,8 @@
 from datetime import datetime, timezone
 
+from ..app_config import config
+
 from ..alerts.text import send_cleaning_alert
-from ..parameter_config import tank_parameters
 from ..proceedures.cleaning_logs import get_cleaning_logs 
 
 def alert_last_cleaning():
@@ -24,5 +25,5 @@ def alert_last_cleaning():
     days_passed = days_passed.days
 
     # Alert if number of days passed is at or more than the threshold
-    if days_passed >= tank_parameters["CLEANING_TIME"]:
+    if days_passed >= config["TANK_PARAMETERS"]["CLEANING_TIME"]:
         send_cleaning_alert(int(days_passed))
