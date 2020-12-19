@@ -11,11 +11,11 @@ class ParameterStatus(Base, Entity):
 
     # Column definitions
     reading_id = Column(Integer, primary_key=True)
-    ammonia_ppm = Column(Boolean)
-    nitrite_ppm = Column(Boolean)
-    nitrate_ppm = Column(Boolean)
-    ph = Column(Boolean)
-    temperature = Column(Boolean)
+    ammonia_ppm = Column(Boolean, nullable=False)
+    nitrite_ppm = Column(Boolean, nullable=False)
+    nitrate_ppm = Column(Boolean, nullable=False)
+    ph = Column(Boolean, nullable=False)
+    temperature = Column(Boolean, nullable=False)
 
     def __init__(self, reading_id, ammonia_ppm, nitrite_ppm, nitrate_ppm,  ph, temperature):
         # Init parent class
