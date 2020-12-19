@@ -1,11 +1,16 @@
 config = {
 
-    # ToDo: Email and password should not be configurable. Load them from persisted file or DB in app factory
-        "ALERTS": {
-            "ENABLED": True,
-            "SMTP_SERVER": "",
-            "SENDER_EMAIL": "",
-            "PASSWORD": "",
+    # Alert configs
+    "ALERTS": {
+        "ENABLED": True,
+        "NAME": "gmail",
+
+        # ! Important ! 
+        # SMTP configs are loaded from the DB at app start
+        # Any values here are overridden
+        "SMTP_SERVER": "",
+        "SENDER_EMAIL": "",
+        "PASSWORD": "",
     },
 
     # Database configs
