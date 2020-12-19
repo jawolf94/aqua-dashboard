@@ -16,9 +16,14 @@ def param_store_alert(reading):
     # Check if parameters are in the expected range
     results = validate_parameters(reading, tank_parameters)
 
-    # Store results
-    store_parameter_status(reading['reading_id'], results["invalid_parameters"])
+    try:
+        # Store results
+        store_parameter_status(reading['reading_id'], results["invalid_parameters"])
 
-    # Alert on any out of range parameters if alerts are enabled
-    if not results["valid"] and config["ALERTS"]["ENABLED"]:
-        send_param_alert(results["invalid_parameters"], reading)
+        # Alert on any out of range parameters if alerts are enabled
+        if not results["valid"] and config["ALERTS"]["ENABLED"]:
+            send_param_alert(results["invalid_parameters"], reading)
+
+    except Exception as exc:
+        # Catch & log on failure - do not interupt further execution
+        print(exc)

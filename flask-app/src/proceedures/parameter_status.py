@@ -24,9 +24,15 @@ def store_parameter_status(reading_id, invalid_params=[]):
 
     # Create Session and store in table
     session = Session()
-    session.add(status)
-    session.commit()
-    session.close()
+
+    try:
+        # Attempt to add status data
+        session.add(status)
+        session.commit()
+    
+    finally:
+        # Always close the session
+        session.close()
 
 def read_parameter_status(reading_id):
     """
@@ -45,6 +51,7 @@ def read_parameter_status(reading_id):
         status = session.query(ParameterStatus).\
             filter(ParameterStatus.reading_id == reading_id).\
             one()
+            
     except NoResultFound:
         # Return no results to the user if nothing could be found
         return None
@@ -53,8 +60,9 @@ def read_parameter_status(reading_id):
         # Return Error if multiple results match the reading_id.
         raise LookupError()
 
-    # Close session before returning
-    session.close()
+    finally:
+        # Always close the session
+        session.close()
 
     # Return result
     return status

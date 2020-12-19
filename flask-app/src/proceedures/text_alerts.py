@@ -13,14 +13,23 @@ def get_cleaning_subs():
 
     # Create a new session with the DB
     session = Session()
+    subscribers = []
 
-    # Query for rows where param_alerts is True (1)
-    subscribers = session.query(TextAlert).\
-        filter(TextAlert.cleaning_alerts == True).\
-        all()
+    try:
+        # Query for rows where param_alerts is True (1)
+        subscribers = session.query(TextAlert).\
+            filter(TextAlert.cleaning_alerts == True).\
+            all()
 
-    # Close session before returning
-    session.close()
+    except Exception as exc:
+            # Ensure that subscribers does not return value in error
+            print(exc)
+            subscribers = []
+
+    finally:
+
+        # Close session before returning
+        session.close()
 
     # Return array
     return subscribers
@@ -35,14 +44,21 @@ def get_param_subs():
 
     # Create a new session with the DB
     session = Session()
+    subscribers = []
 
-    # Query for rows where param_alerts is True (1)
-    subscribers = session.query(TextAlert).\
-        filter(TextAlert.param_alerts == True).\
-        all()
+    try:
+        # Query for rows where param_alerts is True (1)
+        subscribers = session.query(TextAlert).\
+            filter(TextAlert.param_alerts == True).\
+            all()
 
-    # Close session before returning
-    session.close()
+    except Exception as exc:
+            # Ensure that subscribers does not return value in error
+            print(exc)
+            subscribers = []
+    finally:
+        # Close session before returning
+        session.close()
 
     # Return array
     return subscribers

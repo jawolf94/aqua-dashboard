@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 import { Color } from 'ng2-charts';
 
@@ -29,7 +30,6 @@ import { LabelService } from '@app/services/label.service';
 export class ReadingDashboardComponent implements OnInit, OnDestroy{
 
     // Subscriptions to Reading endpoints
-    lastReadingStatusSub: Subscription;
     lastReadingSub: Subscription;
     todaysReadingsSub: Subscription;
 
@@ -153,7 +153,6 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
         this.lastReadingSub.unsubscribe();
         this.breakpointSubscription.unsubscribe();
         this.todaysReadingsSub.unsubscribe();
-        this.lastReadingStatusSub.unsubscribe();
     }
 
     /**
@@ -193,8 +192,9 @@ export class ReadingDashboardComponent implements OnInit, OnDestroy{
         if (this.latestReading.id){
 
             // Request status and subscribe.
-            this.lastReadingStatusSub = this.readingAPI
+            this.readingAPI
                 .checkParameterStatus(this.latestReading.id)
+                .pipe(take(1))
                 .subscribe(
                     res => {
 
