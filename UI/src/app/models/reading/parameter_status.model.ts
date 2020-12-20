@@ -6,9 +6,9 @@ export interface ParameterStatus{
     reading_id?: number;
 
     // Status of parameter. True if in expected range.
-    ammonia_ppm?: boolean;
-    nitrite_ppm?: boolean;
-    nitrate_ppm?: boolean;
-    ph?: boolean;
-    temperature?: boolean;
+    ammonia_ppm: boolean;
+    nitrite_ppm: boolean;
+    nitrate_ppm: boolean;
+    ph: boolean;
+    temperature: boolean;
 }

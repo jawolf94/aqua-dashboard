@@ -39,12 +39,18 @@ def complete_reading_schema(schema):
         last_reading = readings[0]
     else:
         # Create dummy reading if no reading exists in table
-        last_reading = Reading(None, None, None, None, None, None, None)
+        last_reading = Reading()
 
     # Check expected columns for existance in schema
     for column in inspect(last_reading).attrs:
+        # Is key is missing from schema?
+        missing = column.key not in schema.keys()
+
+        # Should key be filled from previous reading?
+        can_fill = column.key not in excluded_values
+
         # check for value in schema
-        if column.key not in schema.keys() and column.key not in excluded_values:
+        if missing and can_fill:
             schema[column.key] = column.value
 
     return schema

@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 from .app_config import config
 
-# Get Database config from current_app
+# Get Database config
 db_config = config["DATABASE"]
 db_path = db_config["DB_URL"] + db_config["DB_NAME"]
 

@@ -1,13 +1,12 @@
 from datetime import datetime, timezone
 
-from ..alerts.alert import send_param_alert
 from ..app_config import config
-from ..parameter_config import tank_parameters
+
+from ..common.param_common import param_store_alert
 from ..entities.reading import Reading
-from ..proceedures.parameter_status import store_parameter_status
 from ..proceedures.tank_readings import save_reading
 from ..schema.reading import ReadingSchema, complete_reading_schema
-from ..common.reading_validators import validate_parameters
+
 from .temp_io import TempIO
 
 sensor_config = config["READINGS"]["SENSORS"]
@@ -24,9 +23,10 @@ if sensor_config["TEMPERATURE"]:
         print(err)
         TempSensor = None
 
+
 def create_reading():
     """
-    Creates a reading using connected sensors. 
+    Creates a reading using connected sensors.
     Missing values are filled in from previous reading and saved to table.
     """
     # Create a new empty reading.
@@ -45,13 +45,11 @@ def create_reading():
     reading_schema = complete_reading_schema(reading)
 
     # Save reading to data base.
-    reading_entity = Reading(**reading_schema, manual=0, timestamp=datetime.now(tz=timezone.utc))
+    time = datetime.now(tz=timezone.utc)
+    reading_entity = Reading(**reading_schema, manual=0, timestamp=time)
+
     save_reading(reading_entity)
 
-    # Check paramater ranges
-    results = validate_parameters(reading, tank_parameters)
-    store_parameter_status(reading_entity.id, results["invalid_parameters"])
-
-    # Alert on any paramaters out of range
-    if not results["valid"] and config["ALERTS"]["ENABLED"]:
-        send_param_alert(results["invalid_parameters"], reading)
+    # Check parameter status and alert
+    reading_schema["reading_id"] = reading_entity.id
+    param_store_alert(reading_schema)
