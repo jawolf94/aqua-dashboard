@@ -1,11 +1,13 @@
+import pytz
+
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
 from flask_cors import CORS
-import pytz
 
 from .app_config import config
-from .database  import Base, Engine
+
 from .common.cleaning_common import alert_last_cleaning
+from .database  import Base, Engine
 from .endpoints.cleaning import cleaning
 from .endpoints.reading import reading
 from .proceedures.smtp_creds import get_creds

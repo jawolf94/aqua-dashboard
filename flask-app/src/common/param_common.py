@@ -2,9 +2,10 @@
 
 from ..app_config import config
 
-from .reading_validators import validate_parameters
 from ..alerts.text import send_param_alert
 from ..proceedures.parameter_status import store_parameter_status
+
+from .reading_validators import validate_parameters
 
 def param_store_alert(reading):
     """ Checks if parameters from reading are in expected ranges. Results are stored and alerted on. 

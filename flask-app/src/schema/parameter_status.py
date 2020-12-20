@@ -1,4 +1,4 @@
-from marshmallow import fields, Schema
+from marshmallow import Schema, fields
 
 class ParameterStatusSchema(Schema):
     """ Class which defines a template for serializaton of paramater_status data"""

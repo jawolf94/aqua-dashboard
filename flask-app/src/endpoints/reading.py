@@ -1,6 +1,7 @@
+import json
+
 from datetime import datetime, timezone
 from flask import Blueprint, jsonify, request
-import json
 from marshmallow import EXCLUDE, ValidationError
 
 from ..common.error import handle_error
@@ -10,7 +11,7 @@ from ..proceedures.parameter_status import read_parameter_status
 from ..proceedures.tank_readings import get_latest_readings, get_readings_between, save_reading
 from ..schema.date import DateSchema
 from ..schema.parameter_status import ParameterStatusSchema
-from ..schema.reading import complete_reading_schema, ReadingSchema
+from ..schema.reading import ReadingSchema, complete_reading_schema
 
 reading = Blueprint('reading', __name__, url_prefix="/")
 

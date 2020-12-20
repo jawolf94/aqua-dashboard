@@ -1,4 +1,4 @@
-from marshmallow import fields, Schema
+from marshmallow import  Schema, fields
 
 class CleaningSchema(Schema):
     """ Represents a single tank cleaning log entry"""

@@ -1,6 +1,7 @@
 """ Functions in this file define all operations to create and send text messages"""
 
 import smtplib, ssl
+
 from threading import Thread
 
 from ..app_config import config

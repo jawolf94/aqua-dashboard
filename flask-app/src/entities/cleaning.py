@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Float, Integer
-from sqlalchemy.types import Boolean, TIMESTAMP
+from sqlalchemy.types import TIMESTAMP, Boolean
 
 from ..database import Base
 from .entity import Entity
