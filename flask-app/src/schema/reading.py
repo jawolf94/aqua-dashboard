@@ -43,8 +43,14 @@ def complete_reading_schema(schema):
 
     # Check expected columns for existance in schema
     for column in inspect(last_reading).attrs:
+        # Is key is missing from schema?
+        missing = column.key not in schema.keys()
+
+        # Should key be filled from previous reading?
+        can_fill = column.key not in excluded_values
+
         # check for value in schema
-        if column.key not in schema.keys() and column.key not in excluded_values:
+        if missing and can_fill:
             schema[column.key] = column.value
 
     return schema

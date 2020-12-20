@@ -4,6 +4,7 @@ from sqlalchemy.types import Boolean, Text
 from ..database import Base
 from .entity import Entity
 
+
 class TextAlert(Base, Entity):
     """ Defines a row in the text_alerts table"""
 

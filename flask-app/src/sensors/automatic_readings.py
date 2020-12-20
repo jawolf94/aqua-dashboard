@@ -23,9 +23,10 @@ if sensor_config["TEMPERATURE"]:
         print(err)
         TempSensor = None
 
+
 def create_reading():
     """
-    Creates a reading using connected sensors. 
+    Creates a reading using connected sensors.
     Missing values are filled in from previous reading and saved to table.
     """
     # Create a new empty reading.
@@ -44,9 +45,11 @@ def create_reading():
     reading_schema = complete_reading_schema(reading)
 
     # Save reading to data base.
-    reading_entity = Reading(**reading_schema, manual=0, timestamp=datetime.now(tz=timezone.utc))
+    time = datetime.now(tz=timezone.utc)
+    reading_entity = Reading(**reading_schema, manual=0, timestamp=time)
+
     save_reading(reading_entity)
 
-     # Check parameter status and alert
+    # Check parameter status and alert
     reading_schema["reading_id"] = reading_entity.id
     param_store_alert(reading_schema)

@@ -7,7 +7,7 @@ from flask_cors import CORS
 from .app_config import config
 
 from .common.cleaning_common import alert_last_cleaning
-from .database  import Base, Engine
+from .database import Base, Engine
 from .endpoints.cleaning import cleaning
 from .endpoints.reading import reading
 from .proceedures.smtp_creds import get_creds
@@ -44,11 +44,10 @@ def create_app():
         else:
             # Disbale alerts if no credentials can be loaded
             raise ValueError("SMTP Config could not be loaded.")
-             
+
     except Exception as exc:
         print(exc)
-        alert_config["ENABLED"] = False 
-
+        alert_config["ENABLED"] = False
 
     # Register Blueprints with application
     app.register_blueprint(reading)
@@ -59,15 +58,21 @@ def create_app():
 
     # Schedule task to automatically generate tank readings
     if config["READINGS"]["AUTOMATIC"]:
-        scheduler.add_job(func=create_reading, trigger='interval', minutes=config["READINGS"]["INTERVAL"])
+        scheduler.add_job(func=create_reading,
+                          trigger='interval',
+                          minutes=config["READINGS"]["INTERVAL"])
 
     # Schedule regular cleaning alerts if config is enabled
     if alert_config["ENABLED"]:
 
         # Job scheduled daily 7am EST
-        scheduler.add_job(func=alert_last_cleaning, trigger='cron', hour=12, minute=0, timezone=pytz.utc)
-        
+        scheduler.add_job(func=alert_last_cleaning,
+                          trigger='cron',
+                          hour=12,
+                          minute=0,
+                          timezone=pytz.utc)
+
     # Start app scheduler
     scheduler.start()
-        
+
     return app

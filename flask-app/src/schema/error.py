@@ -1,4 +1,5 @@
-from marshmallow import Schema, fields 
+from marshmallow import Schema, fields
+
 
 class ErrorSchema(Schema):
     """ Defines a schema to serialize/deserialize error information """

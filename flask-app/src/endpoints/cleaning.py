@@ -5,10 +5,15 @@ from marshmallow import EXCLUDE, ValidationError
 
 from ..common.error import handle_error
 from ..entities.cleaning import Cleaning
-from ..proceedures.cleaning_logs import add_cleaning_log_entry, get_cleaning_logs
+from ..proceedures.cleaning_logs import (
+    add_cleaning_log_entry,
+    get_cleaning_logs
+)
+
 from ..schema.cleaning import CleaningSchema
 
 cleaning = Blueprint('cleaning', __name__, url_prefix='/cleaning')
+
 
 @cleaning.route('/add-cleaning', methods=['POST'])
 def add_cleaning():
@@ -29,12 +34,24 @@ def add_cleaning():
 
     except ValidationError as va:
         # Catch Validation Errors when request object is mal-formatted
-        message = "Error: Your entry is formatted incorrectly. Please re-enter & try again."
-        return handle_error(va, code = 400, message=message)
+        message = (
+            "Error: "
+            "Your entry is formatted incorrectly. "
+            "Please re-enter & try again."
+        )
+
+        return handle_error(va, code=400, message=message)
 
     except Exception as ex:
         # Catch generic exceptions
-        return handle_error(ex, message="Error: An unknown issue occured while saving your cleaning data. Please try again.")
+        msg = (
+            "Error: "
+            "An unknown issue occured while saving your cleaning data. "
+            "Please try again."
+        )
+
+        return handle_error(ex, message=msg)
+
 
 @cleaning.route('/get-cleanings')
 def get_cleanings():
@@ -49,9 +66,14 @@ def get_cleanings():
         schema = CleaningSchema(many=True)
         cleanings = schema.dump(cleaning_objs)
 
-        #Serialize and send data
+        # Serialize and send data
         return jsonify(cleanings)
 
     except Exception as ex:
-        # Catch generic exceptions 
-        return handle_error(ex, message="Error: Could not fetch the tank's cleaning logs. Please try again later.")
+        # Catch generic exceptions
+        msg = (
+            "Error: "
+            "Could not fetch the tank's cleaning logs. "
+            "Please try again later."
+        )
+        return handle_error(ex, message=msg)

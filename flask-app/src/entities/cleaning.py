@@ -4,10 +4,11 @@ from sqlalchemy.types import TIMESTAMP, Boolean
 from ..database import Base
 from .entity import Entity
 
+
 class Cleaning(Base, Entity):
     """Entity representing a single row in the cleaning_log table"""
 
-    __tablename__="cleaning_logs"
+    __tablename__ = "cleaning_logs"
 
     # Column definitions
     id = Column(Integer, primary_key=True, autoincrement=True)

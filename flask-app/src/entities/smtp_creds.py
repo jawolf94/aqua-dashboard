@@ -4,6 +4,7 @@ from sqlalchemy.types import Text
 from ..database import Base
 from .entity import Entity
 
+
 class SMTPCred(Base, Entity):
     """ Defines a single row in the credentials table """
 
@@ -24,5 +25,3 @@ class SMTPCred(Base, Entity):
         self.server = server
         self.sender_email = sender
         self.password = password
-
-

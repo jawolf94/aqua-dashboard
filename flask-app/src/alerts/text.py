@@ -1,14 +1,18 @@
-""" Functions in this file define all operations to create and send text messages"""
+""" Functions in this file define all operations to
+    create and send text messages.
+"""
 
-import smtplib, ssl
+import smtplib
+import ssl
 
 from threading import Thread
 
 from ..app_config import config
 from ..proceedures.text_alerts import get_cleaning_subs, get_param_subs
 
+
 def send_cleaning_alert(elapsed_days):
-    """ Call to send an email alert when the tank has not been cleaned. 
+    """ Call to send an email alert when the tank has not been cleaned.
         elapsed_days (int) - number of whole days since last cleaning
     """
 
@@ -22,12 +26,14 @@ def send_cleaning_alert(elapsed_days):
     # Send alert in another thread. Do not await
     thread = Thread(target=send_alert_message, args=(message, sub_emails))
     thread.start()
-    
+
 
 def send_param_alert(alert_params, param_values):
     """ Call to send an email alert when paramaters are out of range.
 
-        alert_params([string]) - Array of paramater names currently out of range.
+        alert_params([string]) - Array of paramater names currently
+        out of range.
+
         param_values(schema.Reading) - Reading associated with alert_params.
     """
 
@@ -45,7 +51,9 @@ def send_param_alert(alert_params, param_values):
 
 def send_alert_message(message, recipients):
     """ Sends an email to the list of recipients.
+
         message (string) - message to send
+
         recipients ([string]) - list of recipient email addresses
     """
 
@@ -65,7 +73,7 @@ def send_alert_message(message, recipients):
         # Create secure SSL Context
         context = ssl.create_default_context()
 
-        with smtplib.SMTP_SSL(smtp_server,context=context) as server:
+        with smtplib.SMTP_SSL(smtp_server, context=context) as server:
 
             # Login to smtp server
             server.login(sender_email, sender_password)
@@ -76,7 +84,7 @@ def send_alert_message(message, recipients):
     except Exception as ex:
         # Log and take no action if send fails
         print(ex)
-    
+
 
 def format_cleaning_message(elapsed_days):
     """ Formats an email message for one or more out of range parameters.
@@ -87,10 +95,9 @@ def format_cleaning_message(elapsed_days):
     """
 
     # Define message body - incorrect tabbing is intended
-    message = """Subject: TANK CLEANING ALERT
-
-Your fish tank has not been cleaned in {0} day(s). Consider cleaning the tank today.
-"""
+    message = "Subject: TANK CLEANING ALERT"
+    message = message + "\nYour fish tank has not been cleaned in {0} day(s). "
+    message = message + "Consider cleaning the tank today."
 
     # Format message with variable text
     message = message.format(elapsed_days)
@@ -101,8 +108,11 @@ Your fish tank has not been cleaned in {0} day(s). Consider cleaning the tank to
 def format_param_message(alert_params, param_values):
     """ Formats an email message for one or more out of range parameters.
 
-        alert_params([string]) - Array of paramater names currently out of range.
-        param_values(schema.reading.Reading) - Reading associated with alert_params.
+        alert_params([string]) - Array of paramater names currently out of
+        range.
+
+        param_values(schema.reading.Reading) - Reading associated with
+        alert_params.
 
         Returns (string) - Formatted message
     """
@@ -116,7 +126,7 @@ def format_param_message(alert_params, param_values):
     }
 
     # Define the message body - tabbing is intentional
-    message="""Subject: TANK PARAMETER ALERT
+    message = """Subject: TANK PARAMETER ALERT
 
 The following tank parameters are outside of the ideal range:"""
 
@@ -124,7 +134,7 @@ The following tank parameters are outside of the ideal range:"""
     for param in alert_params:
 
         # Make the param value title case with no trailing unit labels
-        name = param.replace("_ppm","").title()
+        name = param.replace("_ppm", "").title()
 
         # Get value of paramater as string
         value = ""
@@ -137,7 +147,7 @@ The following tank parameters are outside of the ideal range:"""
             unit = units[param]
 
         # Append to message
-        message = message + "\n\t\t" + name +": " + value + " " + unit
+        message = message + "\n\t\t" + name + ": " + value + " " + unit
 
     return message
 
@@ -145,9 +155,10 @@ The following tank parameters are outside of the ideal range:"""
 def format_sub_emails(subscribers):
     """ Generates email addresses from a list of TextAlerts
 
-        subscribers ([entities.TextAlert]) - List of TextAlert entities used to generate emails
+        subscribers ([entities.TextAlert]) - List of TextAlert entities used
+        to generate emails
 
-        returns ([string]) - Email addresses of the alert recipients 
+        returns ([string]) - Email addresses of the alert recipients
     """
 
     # List of email addresses

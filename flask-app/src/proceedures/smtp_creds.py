@@ -3,6 +3,7 @@
 from ..database import Session
 from ..entities.smtp_creds import SMTPCred
 
+
 def get_creds(name):
     """
         Get the credentials for the smtp set-up matching name
@@ -19,7 +20,7 @@ def get_creds(name):
 
     # Attempt to retreive credentials
     try:
-        
+
         # Query table for matching credentials
         creds = session.query(SMTPCred).\
             filter(SMTPCred.name == name).\

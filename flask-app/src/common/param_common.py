@@ -7,9 +7,11 @@ from ..proceedures.parameter_status import store_parameter_status
 
 from .reading_validators import validate_parameters
 
+
 def param_store_alert(reading):
-    """ Checks if parameters from reading are in expected ranges. Results are stored and alerted on. 
-        
+    """ Checks if parameters from reading are in expected ranges.
+        Results are stored and alerted on.
+
         reading (schema.reading.Reading) - Reading schema to check status of
     """
 
@@ -18,7 +20,8 @@ def param_store_alert(reading):
 
     try:
         # Store results
-        store_parameter_status(reading['reading_id'], results["invalid_parameters"])
+        inval_params = results["invalid_parameters"]
+        store_parameter_status(reading['reading_id'], inval_params)
 
         # Alert on any out of range parameters if alerts are enabled
         if not results["valid"] and config["ALERTS"]["ENABLED"]:

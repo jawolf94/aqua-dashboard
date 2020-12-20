@@ -5,7 +5,7 @@ config = {
         "ENABLED": True,
         "NAME": "gmail",
 
-        # ! Important ! 
+        # ! Important !
         # SMTP configs are loaded from the DB at app start
         # Any values here are overridden
         "SMTP_SERVER": "",
@@ -26,13 +26,13 @@ config = {
         "AUTOMATIC": True,
         "INTERVAL": 5,
         "SENSORS": {
-            "TEMPERATURE": True
+            "TEMPERATURE": False
         }
     },
 
-   "TANK_PARAMETERS": {
+    "TANK_PARAMETERS": {
 
-       # Min & Max ranges for each tank parameter
+        # Min & Max ranges for each tank parameter
 
         "AMMONIA_PPM": {
             "MIN": 0.0,

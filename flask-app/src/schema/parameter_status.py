@@ -1,7 +1,10 @@
 from marshmallow import Schema, fields
 
+
 class ParameterStatusSchema(Schema):
-    """ Class which defines a template for serializaton of paramater_status data"""
+    """ Class which defines a template for serializaton of paramater_status
+        data
+    """
 
     # Field definitions for serialization
     reading_id = fields.Integer()

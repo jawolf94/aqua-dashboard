@@ -1,5 +1,5 @@
 # Defines all proccedures that read and write data to tank_readings SQL Table
-from ..database import Base, Session
+from ..database import Session
 from ..entities.reading import Reading
 
 
@@ -36,12 +36,17 @@ def get_latest_readings(num_readings=None):
     # Return query results
     return reading_objs
 
+
 def get_readings_between(start, end=None):
     """ Gets all readings between given timestamps.
-        If no end time is given func will return all readings from start to latest.
+        If no end time is given func will return all readings from start to
+        latest.
 
-        start (datetime.datetime): All returned readings will occur on or after this time.
-        end (datetime.datetime): All returned readings will occur on or before this time.
+        start (datetime.datetime): All returned readings will occur on or
+        after this time.
+
+        end (datetime.datetime): All returned readings will occur on or before
+        this time.
     """
 
     # Create a session with SQL DB
@@ -68,6 +73,7 @@ def get_readings_between(start, end=None):
 
     # Return retrieved readings
     return reading_objs
+
 
 def save_reading(reading):
     """ Saves a tank reading as a row in the tank_readings table

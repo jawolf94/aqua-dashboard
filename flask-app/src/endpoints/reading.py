@@ -8,12 +8,17 @@ from ..common.error import handle_error
 from ..common.param_common import param_store_alert
 from ..entities.reading import Reading
 from ..proceedures.parameter_status import read_parameter_status
-from ..proceedures.tank_readings import get_latest_readings, get_readings_between, save_reading
+from ..proceedures.tank_readings import (
+    get_latest_readings,
+    get_readings_between,
+    save_reading
+)
 from ..schema.date import DateSchema
 from ..schema.parameter_status import ParameterStatusSchema
 from ..schema.reading import ReadingSchema, complete_reading_schema
 
 reading = Blueprint('reading', __name__, url_prefix="/")
+
 
 @reading.route('/all-readings')
 def all_readings():
@@ -31,7 +36,13 @@ def all_readings():
 
     except Exception as ex:
         # Handle generic errors
-        return handle_error(ex, message="Error: An unknown issue occured while fetching your tank's readings. Please try again.")
+        msg = (
+            "Error: "
+            "An unknown issue occured while fetching your tank's readings. "
+            "Please try again."
+        )
+        return handle_error(ex, message=msg)
+
 
 @reading.route('/latest-reading')
 def latest_reading():
@@ -53,14 +64,20 @@ def latest_reading():
 
     except Exception as ex:
         # Handle generic errors
-        return handle_error(ex, message="Error: An unknown issue occured while fetching the latest tank reading. Please try again.")
+        msg = (
+            "Error: "
+            "An unknown issue occured while fetching the latest tank reading. "
+            "Please try again."
+        )
+        return handle_error(ex, message=msg)
+
 
 @reading.route('/readings-between')
 def readings_between():
     """Returns serialized list of readings between given timestamps"""
 
     # Define error message for except blocks.
-    error_message = "Error: Could not fetch readings between the dates provided."
+    msg = "Error: Could not fetch readings between the dates provided."
     try:
         # Parse request data from the query string
         start = request.args.get('start')
@@ -80,10 +97,13 @@ def readings_between():
                 end = end["datetime"].replace(tzinfo=timezone.utc)
 
             # Retreive readings
-            readings = get_readings_between(start,end)
-            
+            readings = get_readings_between(start, end)
+
         else:
-            raise ValueError(error_message + " Please indicate a starting timestamp for your query.")
+            val_err = msg
+            val_err += " Please indicate a starting timestamp for your query."
+
+            raise ValueError(val_err)
 
         # Serialize and return readings
         reading_schema = ReadingSchema(many=True)
@@ -93,16 +113,16 @@ def readings_between():
 
     except ValidationError as err:
         # Return 400 error if request is mal-formed
-        return handle_error(err,code=400, message=error_message)
+        return handle_error(err, code=400, message=msg)
 
     except ValueError as err:
         # Return 400 error if timestamp is missing
         message = str(err)
         return handle_error(err, code=400, message=message)
-        
+
     except Exception as e:
         # Catch any exceptions thrown and return error code
-        return handle_error(e, message=error_message)
+        return handle_error(e, message=msg)
 
 
 @reading.route('/save-manual-reading', methods=['POST'])
@@ -111,13 +131,20 @@ def save_manual_reading():
 
     try:
         # Deserialize request data
-        posted_reading = ReadingSchema(exclude=("timestamp", "manual"), unknown=EXCLUDE).load(request.get_json())
+        posted_reading = ReadingSchema(
+            exclude=("timestamp", "manual"),
+            unknown=EXCLUDE
+        ).load(request.get_json())
 
         # Fill in blank values from user's request
         completed_reading = complete_reading_schema(posted_reading)
 
         # Load Reading object from the request into SQL entity
-        reading = Reading(**completed_reading, manual=1, timestamp=datetime.now(tz=timezone.utc))
+        reading = Reading(
+            **completed_reading,
+            manual=1,
+            timestamp=datetime.now(tz=timezone.utc)
+        )
 
         # Save reading to table
         save_reading(reading)
@@ -128,23 +155,34 @@ def save_manual_reading():
 
         # Return new reading schema to caller
         return jsonify(completed_reading)
-    
+
     except ValidationError as err:
         # Return 400 error if request is mal-formed
-        return handle_error(err,code=400, message="Error: Your entry is formatted incorrectly. Please re-enter & try again.")
+        msg = (
+            "Error: "
+            "Your entry is formatted incorrectly. "
+            "Please re-enter & try again."
+        )
+
+        return handle_error(err, code=400, message=msg)
 
     except Exception as err:
         # Handle generic error
-        return handle_error(err, message="Error: Your reading could not be saved. Please try again.")
+        msg = (
+            "Error: "
+            "Your reading could not be saved. "
+            "Please try again."
+        )
+
+        return handle_error(err, message=msg)
 
 
 @reading.route('/check-parameter-status')
 def check_parameter_status():
-    
+
     # Define error message for except blocks
     error_message = "Error: Could not fetch parameter stats."
     try:
-
         # Deserialize request data
         reading_id = int(request.headers.get('reading_id'))
 
@@ -163,15 +201,17 @@ def check_parameter_status():
 
     except (TypeError, ValueError) as err:
         # Return 400 error if request is mal-formed
-        return handle_error(err,code=400, message= error_message)
+        return handle_error(err, code=400, message=error_message)
 
     except KeyError as err:
         # Return 400 Error if reading_id was not specified.
-        return handle_error(err, code=400, message= error_message + " Reading ID not specifed.")
+        err = " Reading ID not specifed."
+        return handle_error(err, code=400, message=error_message + err)
 
     except LookupError as err:
         # Return 409 if multiple keys were found
-        return handle_error(err,code = 409, message= error_message + " Multiple readings were found for this ID.")
+        err = " Multiple readings were found for this ID."
+        return handle_error(err, code=409, message=error_message + err)
 
     except Exception as err:
         # Handle generic error

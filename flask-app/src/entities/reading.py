@@ -4,6 +4,7 @@ from sqlalchemy.types import TIMESTAMP
 from ..database import Base
 from .entity import Entity
 
+
 class Reading(Base, Entity):
     """Class which defines schema for tank_readings table"""
 
@@ -19,8 +20,12 @@ class Reading(Base, Entity):
     temperature = Column(Float)
     manual = Column(Integer)
 
+    def __init__(self, timestamp=None, ammonia_ppm=None, nitrite_ppm=None,
+                 nitrate_ppm=None,
+                 ph=None,
+                 temperature=None,
+                 manual=None):
 
-    def __init__(self, timestamp=None, ammonia_ppm=None, nitrite_ppm=None, nitrate_ppm=None, ph=None, temperature=None, manual=None):
         # Initalize parent class
         Entity.__init__(self)
 
