@@ -28,6 +28,12 @@ def create_app():
     # Generate DB Schema
     Base.metadata.create_all(Engine)
 
+    # Set application global configurations
+    app.config.from_mapping(
+        SECRET_KEY=config["SECRET_KEY"]
+    )
+
+    # Get alert configuration values
     alert_config = config["ALERTS"]
 
     # Get smtp config from the DB
