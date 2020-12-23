@@ -1,8 +1,11 @@
 # Ignore VS Code Settings
 .vscode/
 
-# Ignore pycache files
+# Ignored python files
 __pycache__/
+flask-app/build/
+flask-app/dist/
+flask-app/src.egg*
 
 # Ignore DB files
 *.db

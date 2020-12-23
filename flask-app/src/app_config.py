@@ -1,7 +1,7 @@
 config = {
 
     # Secret key used to sign session cookies
-    # !Important! This value should be overriden before deploying 
+    # !Important! This value should be overriden before deploying
     "SECRET_KEY": "dev",
 
     # Alert configs
