@@ -87,13 +87,9 @@ export class ReadingApiService{
      */
     checkParameterStatus(readingID: number): Observable<ParameterStatus>{
 
-        // Format request header
-        let header: HttpHeaders = new HttpHeaders();
-        header = header.append('reading_id', readingID.toString());
-
         // Send the request
         return this.httpClient
-            .get<ParameterStatus>(`${API_URL}/check-parameter-status`, {headers: header})
+            .get<ParameterStatus>(`${API_URL}/check-parameter-status/${readingID.toString()}`)
             .pipe(
                 catchError(this.utils.handleError)
             );

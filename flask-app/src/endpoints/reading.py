@@ -177,14 +177,12 @@ def save_manual_reading():
         return handle_error(err, message=msg)
 
 
-@reading.route('/check-parameter-status')
-def check_parameter_status():
+@reading.route('/check-parameter-status/<int:reading_id>')
+def check_parameter_status(reading_id):
 
     # Define error message for except blocks
     error_message = "Error: Could not fetch parameter stats."
     try:
-        # Deserialize request data
-        reading_id = int(request.headers.get('reading_id'))
 
         # Get status from database
         status_obj = read_parameter_status(reading_id)
@@ -199,7 +197,7 @@ def check_parameter_status():
         else:
             raise ValueError("Invalid Reading ID")
 
-    except (TypeError, ValueError) as err:
+    except ValueError as err:
         # Return 400 error if request is mal-formed
         return handle_error(err, code=400, message=error_message)
 
